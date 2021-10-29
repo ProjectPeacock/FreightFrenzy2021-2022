@@ -65,6 +65,10 @@ public class HardwareProfile {
     public DcMotor motorL1 = null;  // Left Front Drive Motor
     public DcMotor motorL2 = null;  // Left Rear  Drive Motor
     public DcMotor motorR2 = null;  // Right Rear Drive Motor
+//    public DcMotor motorBeater = null; // motor for beater bar
+//    public DcMotor motorArm = null; //Arm angle idk
+//    public DcMotor motorTurretTurner = null; // Motor that turns the turret
+//    public DcMotor motorTSEArm = null; // Team Scoring Element Arm
 
 //    public DcMotor motorChainsaw = null;  // Duck Carousel motor
 
@@ -118,9 +122,38 @@ public class HardwareProfile {
 
 //        motorChainsaw = hwMap.get(DcMotor.class,"motorChainsaw");
 //        motorChainsaw.setDirection(DcMotor.Direction.FORWARD);
-     //   motorShooter2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+     //   motorChainsaw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
      //   motorChainsaw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        motorChainsaw.setPower(0);
+
+/*        motorBeater = hwMap.dcMotor.get("motorBeater");
+        motorBeater.setDirection(DcMotor.Direction.FORWARD);
+        motorBeater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBeater.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorBeater.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBeater.setPower(0);
+
+        motorArm = hwMap.dcMotor.get("motorArm");
+        motorArm.setDirection(DcMotor.Direction.FORWARD);
+        motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorArm.setPower(0);
+
+        motorTurretTurner = hwMap.dcMotor.get("motorTurretTurner");
+        motorTurretTurner.setDirection(DcMotor.Direction.FORWARD);
+        motorTurretTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorTurretTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorTurretTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorTurretTurner.setPower(0);
+
+        motorTSEArm = hwMap.dcMotor.get("motorTSEArm");
+        motorTSEArm.setDirection(DcMotor.Direction.FORWARD);
+        motorTSEArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorTSEArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorTSEArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorTSEArm.setPower(0);
+*/
 /*
         motorOdometry = hwMap.dcMotor.get("motorOdometry");
         motorOdometry.setDirection(DcMotor.Direction.FORWARD);
