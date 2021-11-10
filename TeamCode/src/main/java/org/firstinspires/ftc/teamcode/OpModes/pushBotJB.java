@@ -104,7 +104,7 @@ public class pushBotJB extends OpMode{
         robot.rightDrive.setPower(right);
 
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
+    /*    if (gamepad1.right_bumper)
             clawOffset += CLAW_SPEED;
         else if (gamepad1.left_bumper)
             clawOffset -= CLAW_SPEED;
@@ -130,8 +130,8 @@ public class pushBotJB extends OpMode{
 
     /*
      * Code to run ONCE after the driver hits STOP
-     */
+     *
     @Override
-    public void stop() {
+    public void stop() { */
     }
 }

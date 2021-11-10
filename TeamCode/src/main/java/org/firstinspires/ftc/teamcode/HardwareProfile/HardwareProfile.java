@@ -3,9 +3,10 @@ package org.firstinspires.ftc.teamcode.HardwareProfile;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+ @Disabled
 public class HardwareProfile {
 
     /*
@@ -26,7 +27,7 @@ public class HardwareProfile {
      *  Constants & variables for wheel parameters
      */
     private final double DRIVE_TICKS_PER_ROTATION = 400;       // 3 x 4 x 1.5 x 28
-    private final double WHEEL_RADIUS = 1.88976;         // 96mm wheel in inches
+    private final double WHEEL_RADIUS = 1.968505;         // 100mm wheel in inches
     private final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;    // circumference in inches
     public final double DRIVE_TICKS_PER_INCH = DRIVE_TICKS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
 

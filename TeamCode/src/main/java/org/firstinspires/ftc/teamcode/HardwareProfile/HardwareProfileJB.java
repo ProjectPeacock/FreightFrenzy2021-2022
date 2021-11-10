@@ -70,7 +70,6 @@ public class HardwareProfileJB {
     public DcMotor motorArmPivot = null; // Pivoting elbow for arm
     public DcMotor motorBeater = null; // motor for beater bar
     public DcMotor motorChainsaw = null; // motor for chainsaw
-//    public DcMotor motorArm = null; //Arm angle idk
 //    public DcMotor motorTurretTurner = null; // Motor that turns the turret
 //    public DcMotor motorTSEArm = null; // Team Scoring Element Arm
 
