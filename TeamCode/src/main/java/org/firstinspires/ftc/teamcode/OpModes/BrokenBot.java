@@ -76,6 +76,10 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
             /*
              * Calibrate / initialize the gyro sensor
              */
+            robot.intakeDeployBlue.setPosition(0.5);
+            robot.intakeDeployPink.setPosition(0.5);
+            robot.intakeTilt.setPosition(0.5);
+            robot.bucketDump.setPosition(0.5);
 
             telemetry.addData("Robot state = ", "INITIALIZED");
             telemetry.update();

@@ -6,7 +6,8 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
- @Disabled
+import com.qualcomm.robotcore.hardware.Servo;
+
 public class HardwareProfile {
 
     /*
@@ -62,20 +63,24 @@ public class HardwareProfile {
     /*
      * Hardware devices
      */
+    //Motors
     public DcMotor motorR1 = null;  // Right Front Drive Motor
     public DcMotor motorL1 = null;  // Left Front Drive Motor
     public DcMotor motorL2 = null;  // Left Rear  Drive Motor
     public DcMotor motorR2 = null;  // Right Rear Drive Motor
-//    public DcMotor motorBeater = null; // motor for beater bar
-//    public DcMotor motorArm = null; //Arm angle idk
-//    public DcMotor motorTurretTurner = null; // Motor that turns the turret
-//    public DcMotor motorTSEArm = null; // Team Scoring Element Arm
-
-//    public DcMotor motorChainsaw = null;  // Duck Carousel motor
+    public DcMotor motorArmAngle2 = null; // Arm upper angle motor
+    public DcMotor motorArmAngle1 = null; // Arm base angle motor
+    public DcMotor motorIntake = null; // Intake motor
+    public DcMotor motorChainsaw = null; // Chainsaw motor
 
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
 
-//    public WebcamName webcam;
+    //Servos
+    public Servo intakeDeployBlue = null; //Right intake deploy servo
+    public Servo intakeDeployPink = null; //Left intake deploy servo
+    public Servo intakeTilt = null; //Intake ramp position servo
+    public Servo bucketDump = null; //Bucket turning servo
+    //public WebcamName webcam;
 
     public RevBlinkinLedDriver LEDPort;
 
@@ -121,40 +126,12 @@ public class HardwareProfile {
         motorR2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorR2.setPower(0);
 
-//        motorChainsaw = hwMap.get(DcMotor.class,"motorChainsaw");
-//        motorChainsaw.setDirection(DcMotor.Direction.FORWARD);
-     //   motorChainsaw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-     //   motorChainsaw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorChainsaw.setPower(0);
+        intakeDeployBlue = hwMap.servo.get("intakeDeployBlue");
+        intakeDeployPink = hwMap.servo.get("intakeDeployPink");
+        intakeTilt = hwMap.servo.get("intakeTilt");
+        bucketDump = hwMap.servo.get("bucketDump");
 
-/*        motorBeater = hwMap.dcMotor.get("motorBeater");
-        motorBeater.setDirection(DcMotor.Direction.FORWARD);
-        motorBeater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBeater.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorBeater.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBeater.setPower(0);
 
-        motorArm = hwMap.dcMotor.get("motorArm");
-        motorArm.setDirection(DcMotor.Direction.FORWARD);
-        motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorArm.setPower(0);
-
-        motorTurretTurner = hwMap.dcMotor.get("motorTurretTurner");
-        motorTurretTurner.setDirection(DcMotor.Direction.FORWARD);
-        motorTurretTurner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorTurretTurner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorTurretTurner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorTurretTurner.setPower(0);
-
-        motorTSEArm = hwMap.dcMotor.get("motorTSEArm");
-        motorTSEArm.setDirection(DcMotor.Direction.FORWARD);
-        motorTSEArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorTSEArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorTSEArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorTSEArm.setPower(0);
-*/
 /*
         motorOdometry = hwMap.dcMotor.get("motorOdometry");
         motorOdometry.setDirection(DcMotor.Direction.FORWARD);
