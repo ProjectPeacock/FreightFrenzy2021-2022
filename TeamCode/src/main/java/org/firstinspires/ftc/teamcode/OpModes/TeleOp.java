@@ -39,8 +39,8 @@ public class TeleOp extends LinearOpMode {
 
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
-        robot.intakeDeployBlue.setPosition(0.45);
-        robot.intakeDeployPink.setPosition(0.55);
+        robot.intakeDeployBlue.setPosition(0.4);
+        robot.intakeDeployPink.setPosition(0.6);
 
         waitForStart();
 
@@ -74,18 +74,40 @@ public class TeleOp extends LinearOpMode {
                 robot.motorIntake.setPower(-1);
                 robot.intakeDeployBlue.setPosition(0.15);
                 robot.intakeDeployPink.setPosition(0.95);
-
+            }else if(gamepad1.y){
+                robot.motorIntake.setPower((0.4));
+                robot.intakeDeployBlue.setPosition(0.35);
+                robot.intakeDeployPink.setPosition(0.65);
             }  else {
-                robot.motorIntake.setPower(0);
-                robot.intakeDeployBlue.setPosition(0.45);
-                robot.intakeDeployPink.setPosition(0.55);
+                robot.motorIntake.setPower(-1);
+                robot.intakeDeployBlue.setPosition(0.4);
+                robot.intakeDeployPink.setPosition(0.6);
             }// end of if(gamepad.a)
 
-            if(gamepad1.b){
-                robot.motorChainsaw.setPower(0.85);
+            if(gamepad1.left_bumper){
+                robot.motorChainsaw.setPower(0.4);
+            }else if(gamepad1.right_bumper){
+                robot.motorChainsaw.setPower(-0.4);
             }else{
                 robot.motorChainsaw.setPower(0);
             }
+            if(gamepad1.x){
+                robot.motorIntake.setPower(0);
+            }else {
+
+            }
+
+            if(gamepad1.dpad_left){
+                double angle=robot.intakeTilt.getPosition();
+                robot.intakeTilt.setPosition(angle+0.05);
+            } else if(gamepad1.dpad_right){
+                double angle=robot.intakeTilt.getPosition();
+                robot.intakeTilt.setPosition(angle-0.05);
+            } else{
+
+            }
+
+
 
             /**
              * #################################################################################
