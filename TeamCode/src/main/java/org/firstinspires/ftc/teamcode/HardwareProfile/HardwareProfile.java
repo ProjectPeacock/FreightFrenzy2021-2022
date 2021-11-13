@@ -126,6 +126,20 @@ public class HardwareProfile {
         motorR2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorR2.setPower(0);
 
+        motorIntake = hwMap.dcMotor.get("motorIntake");
+        motorIntake.setDirection(DcMotor.Direction.FORWARD);
+        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorIntake.setPower(0);
+
+        motorChainsaw = hwMap.dcMotor.get("motorChainsaw");
+        motorChainsaw.setDirection(DcMotor.Direction.FORWARD);
+        motorChainsaw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorChainsaw.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorChainsaw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorChainsaw.setPower(0);
+
         intakeDeployBlue = hwMap.servo.get("intakeDeployBlue");
         intakeDeployPink = hwMap.servo.get("intakeDeployPink");
         intakeTilt = hwMap.servo.get("intakeTilt");

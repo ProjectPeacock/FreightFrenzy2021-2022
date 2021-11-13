@@ -39,6 +39,8 @@ public class TeleOp extends LinearOpMode {
 
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
+        robot.intakeDeployBlue.setPosition(0.45);
+        robot.intakeDeployPink.setPosition(0.55);
 
         waitForStart();
 
@@ -68,6 +70,22 @@ public class TeleOp extends LinearOpMode {
             robot.motorR1.setPower(right);
             robot.motorR2.setPower(right);
 
+            if(gamepad1.a) {
+                robot.motorIntake.setPower(-1);
+                robot.intakeDeployBlue.setPosition(0.15);
+                robot.intakeDeployPink.setPosition(0.95);
+
+            }  else {
+                robot.motorIntake.setPower(0);
+                robot.intakeDeployBlue.setPosition(0.45);
+                robot.intakeDeployPink.setPosition(0.55);
+            }// end of if(gamepad.a)
+
+            if(gamepad1.b){
+                robot.motorChainsaw.setPower(0.85);
+            }else{
+                robot.motorChainsaw.setPower(0);
+            }
 
             /**
              * #################################################################################
