@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,6 +14,21 @@ public class HardwareProfile {
     /*
      * Constants
      */
+    //intake deployment servos
+    public final double BLUE_ZERO = 0.4; //IntakeDeployBlue zero pos
+    public final double PINK_ZERO = 0.6; //IntakeDeployPink zero pos
+    public final double BLUE_DEPLOY = 0.15; //IntakeDeployBlue deployed pos
+    public final double PINK_DEPLOY = 0.95; //IntakeDeployPink deployed pos
+    public final double BLUE_OUTTAKE = 0.35; //IntakeDeployBlue outtake pos
+    public final double PINK_OUTTAKE = 0.65; //IntakeDeployPink outtake pos
+
+    //chainsaw power
+    public final double CHAIN_POW = 0.4; //motorChainsaw power
+
+    //intake power
+    public final double INTAKE_POW = 1; //intaking power
+    public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
+    public final double INTAKE_REVERSE_POW = -0.4; //intake reverse power (for using intake as outtake)
 //        public final double COUNTS_PER_INCH = 307.699557;
     public final double PIVOT_SPEED = 0.5;
     //    public final double USD_COUNTS_PER_ROTATION = 360;  // US Digital encoder value - Odometry
@@ -127,7 +143,7 @@ public class HardwareProfile {
         motorR2.setPower(0);
 
         motorIntake = hwMap.dcMotor.get("motorIntake");
-        motorIntake.setDirection(DcMotor.Direction.FORWARD);
+        motorIntake.setDirection(DcMotor.Direction.REVERSE);
         motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

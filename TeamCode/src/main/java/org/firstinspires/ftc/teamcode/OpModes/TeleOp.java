@@ -39,8 +39,8 @@ public class TeleOp extends LinearOpMode {
 
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
-        robot.intakeDeployBlue.setPosition(0.4);
-        robot.intakeDeployPink.setPosition(0.6);
+        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 
         waitForStart();
 
@@ -70,33 +70,22 @@ public class TeleOp extends LinearOpMode {
             robot.motorR1.setPower(right);
             robot.motorR2.setPower(right);
 
+            //intake controls (GP1, A button and Y Button)
             if(gamepad1.a) {
-                robot.motorIntake.setPower(-1);
-                robot.intakeDeployBlue.setPosition(0.15);
-                robot.intakeDeployPink.setPosition(0.95);
+                robot.motorIntake.setPower(robot.INTAKE_POW);
+                robot.intakeDeployBlue.setPosition(robot.BLUE_DEPLOY);
+                robot.intakeDeployPink.setPosition(robot.PINK_DEPLOY);
             }else if(gamepad1.y){
-                robot.motorIntake.setPower((0.4));
-                robot.intakeDeployBlue.setPosition(0.35);
-                robot.intakeDeployPink.setPosition(0.65);
+                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
+                robot.intakeDeployBlue.setPosition(robot.BLUE_OUTTAKE);
+                robot.intakeDeployPink.setPosition(robot.PINK_OUTTAKE);
             }  else {
-                robot.motorIntake.setPower(-1);
-                robot.intakeDeployBlue.setPosition(0.4);
-                robot.intakeDeployPink.setPosition(0.6);
-            }// end of if(gamepad.a)
-
-            if(gamepad1.left_bumper){
-                robot.motorChainsaw.setPower(0.4);
-            }else if(gamepad1.right_bumper){
-                robot.motorChainsaw.setPower(-0.4);
-            }else{
-                robot.motorChainsaw.setPower(0);
-            }
-            if(gamepad1.x){
-                robot.motorIntake.setPower(0);
-            }else {
-
+                robot.motorIntake.setPower(robot.INTAKE_IDLE);
+                robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+                robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
             }
 
+            //intake ramp controls (GP1, Dpad)
             if(gamepad1.dpad_left){
                 double angle=robot.intakeTilt.getPosition();
                 robot.intakeTilt.setPosition(angle+0.05);
@@ -104,10 +93,20 @@ public class TeleOp extends LinearOpMode {
                 double angle=robot.intakeTilt.getPosition();
                 robot.intakeTilt.setPosition(angle-0.05);
             } else{
-
             }
-
-
+            
+            //chainssaw controls (GP1, Bumpers)
+            if(gamepad1.left_bumper){
+                robot.motorChainsaw.setPower(robot.CHAIN_POW);
+            }else if(gamepad1.right_bumper){
+                robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+            }else{
+                robot.motorChainsaw.setPower(0);
+            }
+            if(gamepad1.x){
+                robot.motorIntake.setPower(0);
+            }else {
+            }
 
             /**
              * #################################################################################
