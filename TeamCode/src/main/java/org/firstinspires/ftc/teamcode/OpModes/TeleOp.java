@@ -47,8 +47,9 @@ public class TeleOp extends LinearOpMode {
         while(opModeIsActive()) {
 
             /*
-             * Mecanum Drive Control section
+             *Drive Control section
             */
+
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
 
@@ -73,12 +74,12 @@ public class TeleOp extends LinearOpMode {
             //intake controls (GP1, A button and Y Button)
             if(gamepad1.a) {
                 robot.motorIntake.setPower(robot.INTAKE_POW);
-                robot.intakeDeployBlue.setPosition(robot.BLUE_DEPLOY);
-                robot.intakeDeployPink.setPosition(robot.PINK_DEPLOY);
+                robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_DEPLOY); //subtracting because it needs to rotate counterclockwise
+                robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_DEPLOY); //adding because it needs to rotate clockwise
             }else if(gamepad1.y){
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
-                robot.intakeDeployBlue.setPosition(robot.BLUE_OUTTAKE);
-                robot.intakeDeployPink.setPosition(robot.PINK_OUTTAKE);
+                robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_OUTTAKE); //counterclockwise
+                robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_OUTTAKE); //clockwise
             }  else {
                 robot.motorIntake.setPower(robot.INTAKE_IDLE);
                 robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
@@ -87,15 +88,13 @@ public class TeleOp extends LinearOpMode {
 
             //intake ramp controls (GP1, Dpad)
             if(gamepad1.dpad_left){
-                double angle=robot.intakeTilt.getPosition();
-                robot.intakeTilt.setPosition(angle+0.05);
+                robot.intakeTilt.setPosition(robot.intakeTilt.getPosition()+0.05);
             } else if(gamepad1.dpad_right){
-                double angle=robot.intakeTilt.getPosition();
-                robot.intakeTilt.setPosition(angle-0.05);
+                robot.intakeTilt.setPosition(robot.intakeTilt.getPosition()-0.05);
             } else{
             }
-            
-            //chainssaw controls (GP1, Bumpers)
+
+            //chainsaw controls (GP1, Bumpers)
             if(gamepad1.left_bumper){
                 robot.motorChainsaw.setPower(robot.CHAIN_POW);
             }else if(gamepad1.right_bumper){

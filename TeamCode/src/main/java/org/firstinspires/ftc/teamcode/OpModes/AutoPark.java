@@ -63,8 +63,8 @@ public class AutoPark extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        robot.intakeDeployBlue.setPosition(0.4);
-        robot.intakeDeployPink.setPosition(0.6);
+        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 
         waitForStart();
 
