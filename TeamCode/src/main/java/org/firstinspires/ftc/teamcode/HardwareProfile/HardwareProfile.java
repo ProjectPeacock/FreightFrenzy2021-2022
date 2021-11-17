@@ -15,8 +15,8 @@ public class HardwareProfile {
      * Constants
      */
     //intake deployment servos
-    public final double BLUE_ZERO = 0.4; //IntakeDeployBlue zero pos
-    public final double PINK_ZERO = 0.6; //IntakeDeployPink zero pos
+    public final double BLUE_ZERO = 0.5; //IntakeDeployBlue zero pos
+    public final double PINK_ZERO = 0.5; //IntakeDeployPink zero pos
     public final double INTAKE_DEPLOY = 0.35; //Distance to deploy intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
 
@@ -160,7 +160,19 @@ public class HardwareProfile {
         intakeTilt = hwMap.servo.get("intakeTilt");
         bucketDump = hwMap.servo.get("bucketDump");
 
+        motorArmAngle1 = hwMap.dcMotor.get("motorArmAngle1");
+        motorArmAngle1.setDirection(DcMotor.Direction.REVERSE);
+        motorArmAngle1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArmAngle1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorArmAngle1.setPower(0);
 
+        motorArmAngle2 = hwMap.dcMotor.get("motorArmAngle2");
+        motorArmAngle2.setDirection(DcMotor.Direction.REVERSE);
+        motorArmAngle2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArmAngle2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorArmAngle2.setPower(0);
 /*
         motorOdometry = hwMap.dcMotor.get("motorOdometry");
         motorOdometry.setDirection(DcMotor.Direction.FORWARD);

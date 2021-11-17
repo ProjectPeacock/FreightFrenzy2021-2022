@@ -49,7 +49,9 @@ public class TeleOp extends LinearOpMode {
             /*
              *Drive Control section
             */
-
+            telemetry.addData("Arm base angle = ", robot.motorArmAngle1.getCurrentPosition());
+            telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
+            telemetry.update();
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
 
@@ -76,12 +78,13 @@ public class TeleOp extends LinearOpMode {
                 robot.motorIntake.setPower(robot.INTAKE_POW);
                 robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_DEPLOY); //subtracting because it needs to rotate counterclockwise
                 robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_DEPLOY); //adding because it needs to rotate clockwise
-            }else if(gamepad1.y){
+            }else if(gamepad1.y) {
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
-                robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_OUTTAKE); //counterclockwise
-                robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_OUTTAKE); //clockwise
-            }  else {
-                robot.motorIntake.setPower(robot.INTAKE_IDLE);
+                robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO - robot.INTAKE_OUTTAKE); //counterclockwise
+                robot.intakeDeployPink.setPosition(robot.PINK_ZERO + robot.INTAKE_OUTTAKE); //clockwise
+            }else if(gamepad1.x) {
+                robot.motorIntake.setPower(0);
+            }else{
                 robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
                 robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
             }
@@ -101,10 +104,6 @@ public class TeleOp extends LinearOpMode {
                 robot.motorChainsaw.setPower(-robot.CHAIN_POW);
             }else{
                 robot.motorChainsaw.setPower(0);
-            }
-            if(gamepad1.x){
-                robot.motorIntake.setPower(0);
-            }else {
             }
 
             /**
