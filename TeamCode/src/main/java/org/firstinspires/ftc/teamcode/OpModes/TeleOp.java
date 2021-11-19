@@ -49,7 +49,7 @@ public class TeleOp extends LinearOpMode {
             /*
              *Drive Control section
             */
-            telemetry.addData("Arm base angle = ", robot.motorArmAngle1.getCurrentPosition());
+            telemetry.addData("Test = ", robot.motorArmAngle1.getCurrentPosition());
             telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
             telemetry.update();
             double drive = -gamepad1.left_stick_y;
@@ -77,7 +77,7 @@ public class TeleOp extends LinearOpMode {
             if(gamepad1.a) {
                 robot.motorIntake.setPower(robot.INTAKE_POW);
                 robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_DEPLOY); //subtracting because it needs to rotate counterclockwise
-                robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_DEPLOY); //adding because it needs to rotate clockwise
+                robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_DEPLOY+0.07); //adding because it needs to rotate clockwise
             }else if(gamepad1.y) {
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
                 robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO - robot.INTAKE_OUTTAKE); //counterclockwise
