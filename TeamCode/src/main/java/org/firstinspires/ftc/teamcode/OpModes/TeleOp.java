@@ -76,8 +76,8 @@ public class TeleOp extends LinearOpMode {
             //intake controls (GP1, A button and Y Button)
             if(gamepad1.a) {
                 robot.motorIntake.setPower(robot.INTAKE_POW);
-                robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_DEPLOY); //subtracting because it needs to rotate counterclockwise
-                robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_DEPLOY+0.07); //adding because it needs to rotate clockwise
+                robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_DEPLOY_BLUE); //subtracting because it needs to rotate counterclockwise
+                robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_DEPLOY_PINK); //adding because it needs to rotate clockwise
             }else if(gamepad1.y) {
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
                 robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO - robot.INTAKE_OUTTAKE); //counterclockwise

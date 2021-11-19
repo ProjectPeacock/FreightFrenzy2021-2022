@@ -17,7 +17,8 @@ public class HardwareProfile {
     //intake deployment servos
     public final double BLUE_ZERO = 0.5; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.5; //IntakeDeployPink zero pos
-    public final double INTAKE_DEPLOY = 0.35; //Distance to deploy intake
+    public final double INTAKE_DEPLOY_BLUE = 0.35; //Distance to deploy intake
+    public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.1; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
 
     //chainsaw power
