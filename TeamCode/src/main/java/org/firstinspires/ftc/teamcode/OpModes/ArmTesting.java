@@ -53,7 +53,6 @@ public class ArmTesting extends LinearOpMode {
             telemetry.update();
 
             if(gamepad1.left_stick_y<=-0.5){
-                robot.motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorArmAngle1.setPower(0.01);
             }else if(gamepad1.left_stick_y>=0.5){
                 robot.motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -80,6 +79,20 @@ public class ArmTesting extends LinearOpMode {
                 angle2Pos = robot.motorArmAngle1.getCurrentPosition();
                 flag=false;
             }
+
+
+            /***
+             * CTS Sample Code for testing
+             *
+             */
+
+            int targetEncoderValue1 = robot.motorArmAngle1.getCurrentPosition() + 20;
+            robot.motorArmAngle1.setTargetPosition(targetEncoderValue1);
+            robot.motorArmAngle1.setPower(0.3);
+
+            int targetEncoderValue2 = robot.motorArmAngle2.getCurrentPosition() + 20;
+            robot.motorArmAngle2.setTargetPosition(targetEncoderValue2);
+            robot.motorArmAngle2.setPower(0.3);
 
             /**
              * #################################################################################

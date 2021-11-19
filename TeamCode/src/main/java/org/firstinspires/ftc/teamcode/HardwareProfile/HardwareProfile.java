@@ -171,6 +171,7 @@ public class HardwareProfile {
         motorArmAngle2.setDirection(DcMotor.Direction.REVERSE);
         motorArmAngle2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArmAngle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArmAngle2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArmAngle2.setPower(0);
 /*
