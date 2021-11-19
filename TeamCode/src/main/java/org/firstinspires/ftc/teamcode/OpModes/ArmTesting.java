@@ -55,25 +55,21 @@ public class ArmTesting extends LinearOpMode {
             if(gamepad1.left_stick_y<=-0.5){
                 robot.motorArmAngle1.setPower(0.01);
             }else if(gamepad1.left_stick_y>=0.5){
-                robot.motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorArmAngle1.setPower(-0.01);
             }else{
             }
 
             boolean flag=false;
             if(gamepad1.right_stick_y<=-0.5){
-                robot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorArmAngle2.setPower(-0.25);
                 flag=true;
 
             } else if(gamepad1.right_stick_y>=0.5){
-                robot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorArmAngle2.setPower(0.25);
                 flag=true;
             } else{
                 robot.motorArmAngle2.setTargetPosition(angle2Pos);
                 //robot.motorArmAngle2.setPower(1);
-                robot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             if(flag) {
                 angle2Pos = robot.motorArmAngle1.getCurrentPosition();
