@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 
@@ -39,69 +39,101 @@ public class ArmTest2 extends LinearOpMode {
 
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
-        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+//        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+//        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+
+        // declare arm control constants
+        double motorArm1Power = 0.02;
+        double motorArm2Power = 0.02;
+        int angle1Increment = 25;
+        int angle2Increment = 25;
+        int angle1Threshold = 10;
+        int angle2Threshold = 10;
+        int angle1Min = -250;
+        int angle1Max = 250;
+
+        // declare arm control variables
+        int angle1TargetPos=0;
+        int angle2TargetPos=0;
+        int angle1StartPos=0;
+        int angle2StartPos=0;
+
+        // set both arm motors to position zero
+        robot.motorArmAngle1.setTargetPosition(angle1TargetPos);
+        robot.motorArmAngle2.setTargetPosition(angle2TargetPos);
+
+        // position arm1
+        robot.motorArmAngle1.setPower(motorArm1Power);
+        while(Math.abs(angle1TargetPos - robot.motorArmAngle1.getCurrentPosition())>angle1Threshold){
+            telemetry.addData("Arm1","initializing...");
+            telemetry.update();
+            sleep(250);
+        }
+        // stop arm1
+        robot.motorArmAngle1.setPower(0);
+
+        // position arm1
+        robot.motorArmAngle2.setPower(motorArm2Power);
+        while(Math.abs(angle2TargetPos - robot.motorArmAngle2.getCurrentPosition())>angle2Threshold){
+            telemetry.addData("Arm2","initializing...");
+            telemetry.update();
+            sleep(250);
+        }
+        // stop arm2
+        robot.motorArmAngle2.setPower(0);
+
+        // save starting arm positions
+        angle1StartPos = robot.motorArmAngle1.getCurrentPosition();
+        angle2StartPos = robot.motorArmAngle2.getCurrentPosition();
 
         waitForStart();
 
-        int angle1Pos=0;
-        int angle2Pos=0;
-        int checkAngle2Pos=0;
-        boolean bucketPosCaptured = false;
-        boolean bucketMoving=false;
-        double armAngle2Power = 0.25;
-
         while(opModeIsActive()) {
-            telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
-            telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
+            telemetry.addData("Arm Angle 1 current  = ", robot.motorArmAngle1.getCurrentPosition());
+            telemetry.addData("Arm Angle 1 target = ", robot.motorArmAngle1.getTargetPosition());
+            telemetry.addData("Arm Angle 2 current = ", robot.motorArmAngle2.getCurrentPosition());
+            telemetry.addData("Arm Angle 2 target = ", robot.motorArmAngle2.getTargetPosition());
             telemetry.update();
 
+            // check for left stick movement
             if(gamepad1.left_stick_y<=-0.5){
-                robot.motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorArmAngle1.setPower(0.01);
+                angle1TargetPos += angle1Increment;
             }else if(gamepad1.left_stick_y>=0.5){
-                robot.motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorArmAngle1.setPower(-0.01);
+                angle1TargetPos -= angle1Increment;
             }else{
             }
 
-            if(gamepad1.right_stick_y<=-0.5){
-                robot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorArmAngle2.setPower(armAngle2Power * -1);
-                bucketMoving=true;
-                // reset flag to capture bucket position when it stops
-                bucketPosCaptured = false;
-            } else if(gamepad1.right_stick_y>=0.5){
-                robot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorArmAngle2.setPower(armAngle2Power);
-                bucketMoving=true;
-                // reset flag to capture bucket position when it stops
-                bucketPosCaptured = false;
-            } else{
-                //stop motors if stick not up or down
-                robot.motorArmAngle2.setPower(0);
-                // if position not captured, get it
-                if (!bucketPosCaptured){
-                    robot.motorArmAngle2.getCurrentPosition();
-                    bucketPosCaptured = true;
+            // ensure arm1 stays within the limits
+            Range.clip(angle1TargetPos,angle1Min,angle1Max);
+
+            // change position if arm1 value changed or if we drifted
+            if (Math.abs(angle1TargetPos - robot.motorArmAngle1.getCurrentPosition())>angle1Threshold) {
+                robot.motorArmAngle1.setPower(motorArm1Power);
+                while(Math.abs(angle1TargetPos - robot.motorArmAngle1.getCurrentPosition())>angle1Threshold){
+                    telemetry.addData("Arm1 moving to: ",angle1TargetPos);
+                    telemetry.update();
+                    sleep(250);
                 }
-                bucketMoving = false;
+                robot.motorArmAngle1.setPower(0);
             }
 
+            // check for right stick movement
+            if(gamepad1.right_stick_y<=-0.5){
+                angle2TargetPos += angle2Increment;
+            }else if(gamepad1.right_stick_y>=0.5){
+                angle2TargetPos -= angle2Increment;
+            }else{
+            }
 
-            // if bucket not moving check for drift
-            if(!bucketMoving) {
-                checkAngle2Pos = robot.motorArmAngle2.getCurrentPosition();
-                // check for drift & adjust if need be
-                if (checkAngle2Pos != angle2Pos){
-                    robot.motorArmAngle2.setTargetPosition(angle2Pos);
-                    if (checkAngle2Pos > angle2Pos){
-                        robot.motorArmAngle2.setPower(armAngle2Power * -1);
-                    }else{
-                        robot.motorArmAngle2.setPower(armAngle2Power);
-                    }
-                    robot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // change position if arm2 value changed or if we drifted
+            if (Math.abs(angle2TargetPos - robot.motorArmAngle2.getCurrentPosition())>angle2Threshold) {
+                robot.motorArmAngle2.setPower(motorArm2Power);
+                while(Math.abs(angle1TargetPos - robot.motorArmAngle2.getCurrentPosition())>angle2Threshold){
+                    telemetry.addData("Arm2 moving to: ",angle2TargetPos);
+                    telemetry.update();
+                    sleep(250);
                 }
+                robot.motorArmAngle2.setPower(0);
             }
 
             /**
