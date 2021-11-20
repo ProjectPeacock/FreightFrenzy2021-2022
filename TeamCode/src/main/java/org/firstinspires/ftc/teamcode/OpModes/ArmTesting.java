@@ -40,13 +40,13 @@ public class ArmTesting extends LinearOpMode {
 
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
-        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+//        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+//        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+        int angle1Pos=0;
+        int angle2Pos=0;
 
         waitForStart();
 
-        int angle1Pos=0;
-        int angle2Pos=0;
         while(opModeIsActive()) {
             telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
             telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
@@ -82,13 +82,23 @@ public class ArmTesting extends LinearOpMode {
              *
              */
 
-            int targetEncoderValue1 = robot.motorArmAngle1.getCurrentPosition() + 20;
-            robot.motorArmAngle1.setTargetPosition(targetEncoderValue1);
-            robot.motorArmAngle1.setPower(0.3);
+            if(gamepad2.dpad_up){
+//                int targetEncoderValue1 = robot.motorArmAngle1.getCurrentPosition() + 1;
+                angle2Pos = -250;
+                angle1Pos = -125;
+            }
 
-            int targetEncoderValue2 = robot.motorArmAngle2.getCurrentPosition() + 20;
-            robot.motorArmAngle2.setTargetPosition(targetEncoderValue2);
-            robot.motorArmAngle2.setPower(0.3);
+            if(gamepad2.dpad_down) {
+//                int targetEncoderValue2 = robot.motorArmAngle2.getCurrentPosition() + 20;
+                angle2Pos = 60;
+                angle1Pos = 125;
+
+            }
+
+            robot.motorArmAngle2.setTargetPosition(angle2Pos);
+            robot.motorArmAngle2.setPower(-1);
+            robot.motorArmAngle1.setTargetPosition(angle1Pos);
+            robot.motorArmAngle1.setPower(-0.25);
 
             /**
              * #################################################################################
