@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -84,8 +85,8 @@ public class HardwareProfile {
     public DcMotor motorL1 = null;  // Left Front Drive Motor
     public DcMotor motorL2 = null;  // Left Rear  Drive Motor
     public DcMotor motorR2 = null;  // Right Rear Drive Motor
-    public DcMotor motorArmAngle2 = null; // Arm upper angle motor
-    public DcMotor motorArmAngle1 = null; // Arm base angle motor
+    public DcMotorEx motorArmAngle2 = null; // Arm upper angle motor
+    public DcMotorEx motorArmAngle1 = null; // Arm base angle motor
     public DcMotor motorIntake = null; // Intake motor
     public DcMotor motorChainsaw = null; // Chainsaw motor
 
@@ -161,7 +162,7 @@ public class HardwareProfile {
         intakeTilt = hwMap.servo.get("intakeTilt");
         bucketDump = hwMap.servo.get("bucketDump");
 
-        motorArmAngle1 = hwMap.dcMotor.get("motorArmAngle1");
+        motorArmAngle1 = hwMap.get(DcMotorEx.class,"motorArmAngle1");
         motorArmAngle1.setDirection(DcMotor.Direction.REVERSE);
         motorArmAngle1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -169,7 +170,7 @@ public class HardwareProfile {
         motorArmAngle1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArmAngle1.setPower(0);
 
-        motorArmAngle2 = hwMap.dcMotor.get("motorArmAngle2");
+        motorArmAngle2 = hwMap.get(DcMotorEx.class, "motorArmAngle2");
         motorArmAngle2.setDirection(DcMotor.Direction.REVERSE);
         motorArmAngle2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
