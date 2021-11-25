@@ -43,6 +43,10 @@ public class ArmTesting extends LinearOpMode {
 //        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         int angle1Pos=0;
         int angle2Pos=0;
+        double bucketAngle=0.5;
+        int bumpCount=0;
+        boolean toggleReadyDown=false;
+        boolean toggleReadyUp=false;
         telemetry.addData("Arm Angle 1:",robot.motorArmAngle1.getCurrentPosition());
         telemetry.addData("Arm Angle 2:",robot.motorArmAngle2.getCurrentPosition());
         telemetry.update();
@@ -54,20 +58,76 @@ public class ArmTesting extends LinearOpMode {
             telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
             telemetry.update();
 
-            if(gamepad2.dpad_up){
-
-                angle2Pos=-950;
-            } else if(gamepad2.dpad_down){
-                angle2Pos=0;
-            } else{
+            //move arm to intake position
+            if(gamepad2.right_bumper){
+                angle2Pos=45;
+                robot.motorArmAngle2.setTargetPosition(angle2Pos);
+                while (robot.motorArmAngle2.getCurrentPosition()>800){
+                }
+                angle1Pos=1150;
+                bumpCount=0;
+            }else{
 
             }
-            robot.motorArmAngle2.setTargetPosition(angle2Pos);
-            robot.motorArmAngle2.setPower(1);
+            //allows for toggling between arm positions and not only going to lowest one because of button being held
+            if(gamepad2.left_bumper==false){
+                toggleReadyDown=true;
+            }
+            if(gamepad2.dpad_up==false){
+                toggleReadyUp=true;
+            }
+
+            //move arm to scoring position
+            if(gamepad2.left_bumper && toggleReadyDown){
+                toggleReadyDown=false;
+                if(bumpCount<3) {
+                    bumpCount += 1;
+                }
+            }
+
+            if(gamepad2.dpad_up && toggleReadyUp){
+                toggleReadyUp=false;
+                if(bumpCount>1) {
+                    bumpCount -= 1;
+                }
+            }
+
+            //scoring positions
+            if(bumpCount==1){
+                angle1Pos=0;
+                robot.motorArmAngle1.setTargetPosition(angle1Pos);
+                while(robot.motorArmAngle1.getCurrentPosition()>750){
+
+                }
+                angle2Pos=robot.HIGH_PLATFORM;
+            }else if(bumpCount==2){
+                angle1Pos=0;
+                angle2Pos=robot.MID_PLATFORM;
+            }else if(bumpCount==3){
+                angle1Pos=-500;
+                angle2Pos=robot.LOW_PLATFORM;
+            }
 
             if(gamepad2.a){
-                robot.bucketDump.setPosition(-1);
-            } else robot.bucketDump.setPosition(0.5);
+                bucketAngle=-1;
+            } else{
+                bucketAngle=0.5;
+            }
+
+            if(gamepad2.dpad_down){
+                bumpCount=0;
+                angle1Pos=0;
+                angle2Pos=0;
+            }else{
+
+            }
+
+            robot.motorArmAngle2.setTargetPosition(angle2Pos);
+            robot.motorArmAngle2.setPower(1);
+            robot.motorArmAngle1.setTargetPosition(angle1Pos);
+            robot.motorArmAngle1.setPower(1);
+            robot.bucketDump.setPosition(bucketAngle);
+
 
 
             /**

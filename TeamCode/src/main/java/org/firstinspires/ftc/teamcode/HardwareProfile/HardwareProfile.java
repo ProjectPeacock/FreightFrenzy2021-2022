@@ -31,6 +31,11 @@ public class HardwareProfile {
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
     public final double INTAKE_REVERSE_POW = -0.4; //intake reverse power (for using intake as outtake)
 
+    //arm scoring positions
+    public final int HIGH_PLATFORM=1700;
+    public final int MID_PLATFORM=2250;
+    public final int LOW_PLATFORM=2500;
+
     /*
      * Hardware devices
      */
@@ -117,7 +122,7 @@ public class HardwareProfile {
         motorArmAngle1 = hwMap.get(DcMotorEx.class,"motorArmAngle1");
         motorArmAngle1.setDirection(DcMotor.Direction.REVERSE);
         motorArmAngle1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArmAngle1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArmAngle1.setTargetPosition(0);
         motorArmAngle1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArmAngle1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArmAngle1.setPower(0);
@@ -125,7 +130,7 @@ public class HardwareProfile {
         motorArmAngle2 = hwMap.get(DcMotorEx.class, "motorArmAngle2");
         motorArmAngle2.setDirection(DcMotor.Direction.REVERSE);
         motorArmAngle2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArmAngle2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArmAngle2.setTargetPosition(0);
         motorArmAngle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArmAngle2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArmAngle2.setPower(0);
