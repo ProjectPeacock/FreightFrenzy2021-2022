@@ -21,23 +21,8 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 
         public void runOpMode(){
             double currentTick, currentTime, currentRPM;
-            double idleRPM = robot.SHOOTER_IDLE_RPM;
-            double highGoalRPM = robot.SHOOTER_TARGET_RPM;
-            double setRPM = idleRPM;
-            double v1, v2, v3, v4, robotAngle, powerLevel=1;
-            double dpadup, dpaddown, dpadleft, dpadright;
-            double modePower = 1;
-            double theta=0;
-            double r;
-            double rightX, rightY;
-            double peakPower = 0.30;
-            boolean fieldCentric = true;
             boolean servoGrabFlag=false, servoKickFlag=false, servoTransferFlag=false, servoIntakeFlag=false, servoRingFlag=false;
-            boolean motorIntakeFlag = false;
             double armPosition = 0.5;
-            double wobbleArmPosition = 0.5;
-            boolean setup = true;
-            double time = 0;
 
 
             boolean intake = false,             // tracks whether the user has enabled or disabled the intake system
@@ -49,6 +34,7 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
             double shooterPower = 0.80;
             double buttonPress = 0;
             boolean readyToShoot = false;
+            boolean motorIntakeFlag = false;
 
             /*
              * ServoRing in the up and ready to receive position:   robot.servoRing.setPosition(0.2);
@@ -150,29 +136,22 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
                     telemetry.addData("Motor = ", "MotorR1");
                 }
 
-                // toggle servoIntake Position
-                if (gamepad2.a && (currentTime - buttonPress) > 0.3){
-                    servoIntakeFlag = toggleFlag(servoIntakeFlag);
-                    buttonPress = currentTime;
+                //intake controls (GP1, A button and Y Button)
+                if(gamepad1.a) {
+                    robot.motorIntake.setPower(robot.INTAKE_POW);
+                    robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO-robot.INTAKE_DEPLOY_BLUE); //subtracting because it needs to rotate counterclockwise
+                    robot.intakeDeployPink.setPosition(robot.PINK_ZERO+robot.INTAKE_DEPLOY_PINK); //adding because it needs to rotate clockwise
+                }else if(gamepad1.y) {
+                    robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
+                    robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO - robot.INTAKE_OUTTAKE); //counterclockwise
+                    robot.intakeDeployPink.setPosition(robot.PINK_ZERO + robot.INTAKE_OUTTAKE); //clockwise
+                }else if(gamepad1.x) {
+                    robot.motorIntake.setPower(0);
+                }else{
+                    robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+                    robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
                 }
 
-                // toggle servoRing Position
-                if (gamepad2.b && (currentTime - buttonPress) > 0.3){
-                    servoRingFlag = toggleFlag(servoRingFlag);
-                    buttonPress = currentTime;
-                }
-
-                // toggle servoTransfer Position
-                if (gamepad2.x && (currentTime - buttonPress) > 0.3){
-                    servoTransferFlag = toggleFlag(servoTransferFlag);
-                    buttonPress = currentTime;
-                }
-
-                // toggle servoGrab Position
-                if (gamepad2.y && (currentTime - buttonPress) > 0.3){
-                    grabOpen = toggleFlag(grabOpen);
-                    buttonPress = currentTime;
-                }
 
                 /*
                  * Toggle the intake forward and reverse based on user pressing gamepad1.y

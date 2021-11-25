@@ -41,7 +41,7 @@ public class TeleOp extends LinearOpMode {
         telemetry.update();
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-
+        robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
         waitForStart();
 
         while(opModeIsActive()) {
@@ -51,6 +51,7 @@ public class TeleOp extends LinearOpMode {
             */
             telemetry.addData("Test = ", robot.motorArmAngle1.getCurrentPosition());
             telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
+            telemetry.addData("tilt = ", robot.intakeTilt.getPosition());
             telemetry.update();
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
@@ -91,9 +92,9 @@ public class TeleOp extends LinearOpMode {
 
             //intake ramp controls (GP1, Dpad)
             if(gamepad1.dpad_left){
-                robot.intakeTilt.setPosition(robot.intakeTilt.getPosition()+0.05);
+                robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
             } else if(gamepad1.dpad_right){
-                robot.intakeTilt.setPosition(robot.intakeTilt.getPosition()-0.05);
+                robot.intakeTilt.setPosition(robot.INTAKE_TILT_OUTPUT);
             } else{
             }
 

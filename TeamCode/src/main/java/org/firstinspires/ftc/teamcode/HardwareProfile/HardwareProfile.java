@@ -18,10 +18,11 @@ public class HardwareProfile {
     //intake deployment servos
     public final double BLUE_ZERO = 0.5; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.5; //IntakeDeployPink zero pos
-    public final double INTAKE_DEPLOY_BLUE = 0.35; //Distance to deploy intake
-    public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.1; // distance to deploy pink intake
+    public final double INTAKE_DEPLOY_BLUE = 0.3; //Distance to deploy intake
+    public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
-
+    public final double INTAKE_TILT_INPUT= 0.75;
+    public final double INTAKE_TILT_OUTPUT= 0.5;
     //chainsaw power
     public final double CHAIN_POW = 0.4; //motorChainsaw power
 
@@ -29,53 +30,6 @@ public class HardwareProfile {
     public final double INTAKE_POW = 1; //intaking power
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
     public final double INTAKE_REVERSE_POW = -0.4; //intake reverse power (for using intake as outtake)
-
-//        public final double COUNTS_PER_INCH = 307.699557;
-    public final double PIVOT_SPEED = 0.5;
-    //    public final double USD_COUNTS_PER_ROTATION = 360;  // US Digital encoder value - Odometry
-    //        public final double USD_COUNTS_PER_INCH = 76.59556369;  // US Digital encoder value - Odometry
-    public final double USD_COUNTS_PER_INCH = 307.699557;  // US Digital encoder value - Odometry
-    public final double GB_COUNTS_PER_ROTATION = 28;    // goBilda encoder value
-
-
-    public final int FOUR_RING_THRESHOLD = 137;
-    public final int ONE_RING_THRESHOLD = 130;
-
-    /*
-     *  Constants & variables for wheel parameters
-     */
-    private final double DRIVE_TICKS_PER_ROTATION = 400;       // 3 x 4 x 1.5 x 28
-    private final double WHEEL_RADIUS = 1.968505;         // 100mm wheel in inches
-    private final double WHEEL_CIRCUMFERENCE = 2 * Math.PI * WHEEL_RADIUS;    // circumference in inches
-    public final double DRIVE_TICKS_PER_INCH = DRIVE_TICKS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
-
-    /*
-     *  Constants & variables for different shooting positions
-     */
-    public final double SHOOTER_TARGET_RPM= 4550;       // Target RPM is normal game shooting
-    public final double SHOOTER_PS_RPM = 4150;          // PS_RPM is for power shoot shooting
-    public final double SHOOTER_AUTO_RPM = 4500;        // AUTO_RPM is for shooting position for auto QUAD shooting
-    public final double SHOOTER_IDLE_RPM = 3500;        // IDLE_RPM is for
-    public final double SHOOTER_AUTO_FIELD_RPM = 4000;
-
-    /*
-     * Servo Position parameters
-     */
-    public final double SERVO_RING_UP = 0.10;
-    public final double SERVO_RING_DOWN = 0.53;
-    public final double SERVO_TRANSFER_UP = 0.80;
-    public final double SERVO_TRANSFER_DOWN = 0.6;
-    public final double SERVO_KICK_OUT = 0.43;
-    public final double SERVO_KICK_IN = 0.68;
-    public final double SERVO_WOBBLE_GRAB_OPEN = 0.4;
-    public final double SERVO_WOBBLE_GRAB_CLOSE = 0.00;
-    public final double SERVO_INTAKE_EXTEND = 0.65;
-    public final double SERVO_INTAKE_RETRACT = 0.20;
-    public final double SERVO_WOBBLE_ARM_EXTEND = 0.8;
-    public final double SERVO_WOBBLE_ARM_STOW = 0.22;
-    public final double SERVO_WOBBLE_ARM_UP = 0.4;
-    public final long SERVO_RING_DOWN_DELAY = 175;          // delay in milliseconds
-    public final long SERVO_TRANSFER_UP_DELAY = 100;        // delay in milliseconds
 
     /*
      * Hardware devices
@@ -118,41 +72,39 @@ public class HardwareProfile {
         motorL1 = hwMap.dcMotor.get("motorL1");
         motorL1.setDirection(DcMotor.Direction.REVERSE);
         motorL1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorL1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorL1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorL1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorL1.setPower(0);
 
         motorL2 = hwMap.dcMotor.get("motorL2");
         motorL2.setDirection(DcMotor.Direction.REVERSE);
         motorL2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorL2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorL2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorL2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorL2.setPower(0);
 
         motorR1 = hwMap.dcMotor.get("motorR1");
         motorR1.setDirection(DcMotor.Direction.FORWARD);
         motorR1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorR1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorR1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorR1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorR1.setPower(0);
 
         motorR2 = hwMap.dcMotor.get("motorR2");
         motorR2.setDirection(DcMotor.Direction.FORWARD);
         motorR2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorR2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorR2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorR2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorR2.setPower(0);
 
         motorIntake = hwMap.dcMotor.get("motorIntake");
         motorIntake.setDirection(DcMotor.Direction.REVERSE);
-        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntake.setPower(0);
 
         motorChainsaw = hwMap.dcMotor.get("motorChainsaw");
         motorChainsaw.setDirection(DcMotor.Direction.FORWARD);
-        motorChainsaw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorChainsaw.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorChainsaw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorChainsaw.setPower(0);
@@ -193,7 +145,8 @@ public class HardwareProfile {
         /*
          * Initialize Sensors
          */
-/*
+        imu = hwMap.get(BNO055IMU.class, "imu");
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -202,7 +155,7 @@ public class HardwareProfile {
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters);
-*/
+
         /* Webcam device will go here */
 //        webcam = hwMap.get(WebcamName.class, "Webcam 1");
     }   // end of init() method

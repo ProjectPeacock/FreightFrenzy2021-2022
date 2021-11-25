@@ -39,11 +39,13 @@ public class ArmTesting extends LinearOpMode {
          */
 
         telemetry.addData("Robot state = ", "INITIALIZED");
-        telemetry.update();
 //        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
 //        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         int angle1Pos=0;
         int angle2Pos=0;
+        telemetry.addData("Arm Angle 1:",robot.motorArmAngle1.getCurrentPosition());
+        telemetry.addData("Arm Angle 2:",robot.motorArmAngle2.getCurrentPosition());
+        telemetry.update();
 
         waitForStart();
 
@@ -52,53 +54,21 @@ public class ArmTesting extends LinearOpMode {
             telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
             telemetry.update();
 
-            if(gamepad1.left_stick_y<=-0.5){
-                robot.motorArmAngle1.setPower(0.01);
-            }else if(gamepad1.left_stick_y>=0.5){
-                robot.motorArmAngle1.setPower(-0.01);
-            }else{
-            }
-
-            boolean flag=false;
-            if(gamepad1.right_stick_y<=-0.5){
-                robot.motorArmAngle2.setPower(-0.25);
-                flag=true;
-
-            } else if(gamepad1.right_stick_y>=0.5){
-                robot.motorArmAngle2.setPower(0.25);
-                flag=true;
-            } else{
-                robot.motorArmAngle2.setTargetPosition(angle2Pos);
-                //robot.motorArmAngle2.setPower(1);
-            }
-            if(flag) {
-                angle2Pos = robot.motorArmAngle1.getCurrentPosition();
-                flag=false;
-            }
-
-
-            /***
-             * CTS Sample Code for testing
-             *
-             */
-
             if(gamepad2.dpad_up){
-//                int targetEncoderValue1 = robot.motorArmAngle1.getCurrentPosition() + 1;
-                angle2Pos = -250;
-                angle1Pos = -125;
-            }
 
-            if(gamepad2.dpad_down) {
-//                int targetEncoderValue2 = robot.motorArmAngle2.getCurrentPosition() + 20;
-                angle2Pos = 60;
-                angle1Pos = 125;
+                angle2Pos=-950;
+            } else if(gamepad2.dpad_down){
+                angle2Pos=0;
+            } else{
 
             }
-
             robot.motorArmAngle2.setTargetPosition(angle2Pos);
-            robot.motorArmAngle2.setPower(-1);
-            robot.motorArmAngle1.setTargetPosition(angle1Pos);
-            robot.motorArmAngle1.setPower(-0.25);
+            robot.motorArmAngle2.setPower(1);
+
+            if(gamepad2.a){
+                robot.bucketDump.setPosition(-1);
+            } else robot.bucketDump.setPosition(0.5);
+
 
             /**
              * #################################################################################
