@@ -13,8 +13,6 @@ import org.firstinspires.ftc.teamcode.Libs.ArmControlLibrary;
 public class TeleOpThreads extends LinearOpMode {
 
     private final static HardwareProfile robot = new HardwareProfile();
-    private final static ArmControlLibrary armControl = new ArmControlLibrary(robot);
-    Thread armController = new Thread(armControl);
     private LinearOpMode opMode = this;
 
     public TeleOpThreads(){
@@ -22,9 +20,8 @@ public class TeleOpThreads extends LinearOpMode {
     }   // end of BrokenBotTS constructor
 
     public void runOpMode(){
-
-
-
+        ArmControlLibrary armControl = new ArmControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread armController = new Thread(armControl);
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
 
@@ -55,6 +52,7 @@ public class TeleOpThreads extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
+            armControl.run();
             armControl.setPower(1,1);
             /*
             DRIVE CONTROLS:
@@ -216,6 +214,7 @@ public class TeleOpThreads extends LinearOpMode {
             telemetry.addData("Shooter RPM = ", (robot.motorShooter1.getVelocity() / 28 * 60));
             telemetry.update(); */
         }   // end of while opModeIsActive()
+        armControl.stop();
     }   // end of runOpMode method
 
 }   // end of TeleOp.java class

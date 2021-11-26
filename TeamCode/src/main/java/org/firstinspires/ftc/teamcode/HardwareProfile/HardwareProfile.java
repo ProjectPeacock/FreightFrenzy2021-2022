@@ -15,6 +15,8 @@ public class HardwareProfile {
     /*
      * Constants
      */
+    public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
+
     //intake deployment servos
     public final double BLUE_ZERO = 0.5; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.5; //IntakeDeployPink zero pos
