@@ -2,19 +2,22 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
+import org.firstinspires.ftc.teamcode.Libs.ArmControlLibrary;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ArmTesting", group = "Competition")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads", group = "Competition")
 //  @Disabled
 
-public class ArmTesting extends LinearOpMode {
+public class TeleOpThreads extends LinearOpMode {
 
     private final static HardwareProfile robot = new HardwareProfile();
+    private final static ArmControlLibrary armControl = new ArmControlLibrary(robot);
+    Thread armController = new Thread(armControl);
     private LinearOpMode opMode = this;
 
-    public ArmTesting(){
+    public TeleOpThreads(){
 
     }   // end of BrokenBotTS constructor
 
@@ -29,6 +32,7 @@ public class ArmTesting extends LinearOpMode {
          * Setup the initial state of the robot
          */
         robot.init(hardwareMap);
+        armController.start();
 
         /*
          * Initialize the drive class
@@ -39,56 +43,70 @@ public class ArmTesting extends LinearOpMode {
          */
 
         telemetry.addData("Robot state = ", "INITIALIZED");
-//        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-//        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-        int angle1Pos=0;
-        int angle2Pos=0;
+        telemetry.update();
+        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+        robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
         double bucketAngle=0.5;
         int bumpCount=0;
         boolean toggleReadyDown=false;
         boolean toggleReadyUp=false;
         boolean isDeployed=false;
-        telemetry.addData("Arm Angle 1:",robot.motorArmAngle1.getCurrentPosition());
-        telemetry.addData("Arm Angle 2:",robot.motorArmAngle2.getCurrentPosition());
-        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-        robot.intakeTilt.setPosition(0.6);
-        telemetry.update();
-
         waitForStart();
 
         while(opModeIsActive()) {
-            telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
-            telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
-            telemetry.update();
+            armControl.setPower(1,1);
+            /*
+            DRIVE CONTROLS:
+            Left Stick - forward/backward
+            Right Stick - turn
+            A - intake
+            B - reverse intake
+            X - toggle scoring position down
+            Y - intake position
+            Dpad up - toggle scoring position up
+            Dpad down - reset arm to zero
+            Dpad right - dump bucket
+            Left bumper - chainsaw direction 1
+            Right bumper - chainsaw direction 2
 
+             *Drive Control section
+            */
+            telemetry.addData("Test = ", robot.motorArmAngle1.getCurrentPosition());
+            telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
+            telemetry.addData("tilt = ", robot.intakeTilt.getPosition());
+            telemetry.update();
+            double drive = -gamepad1.left_stick_y;
+            double turn  =  gamepad1.right_stick_x;
+
+            // Combine drive and turn for blended motion.
+            double left  = drive + turn;
+            double right = drive - turn;
+
+            // Normalize the values so neither exceed +/- 1.0
+            double max = Math.max(Math.abs(left), Math.abs(right));
+            if (max > 1.0)
+            {
+                left /= max;
+                right /= max;
+            }
+
+            // Output the safe vales to the motor drives.
+            robot.motorL1.setPower(left);
+            robot.motorL2.setPower(left);
+            robot.motorR1.setPower(right);
+            robot.motorR2.setPower(right);
+
+            //intake control
             if(gamepad1.a) {
-                if(!isDeployed) {
-                    robot.motorIntake.setPower(robot.INTAKE_POW);
-                    robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO - robot.INTAKE_DEPLOY_BLUE); //subtracting because it needs to rotate counterclockwise
-                    robot.intakeDeployPink.setPosition(robot.PINK_ZERO + robot.INTAKE_DEPLOY_PINK); //adding because it needs to rotate clockwise
-                    robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
-                    angle2Pos = robot.ARM_2_INTAKE;
-                    robot.motorArmAngle2.setTargetPosition(angle2Pos);
-                    while (robot.motorArmAngle2.getCurrentPosition() > 800) {
-                    }
-                    angle1Pos = robot.ARM_1_INTAKE;
-                }
+                //turns intake on
+                armControl.intakeOn(isDeployed);
             }else if(gamepad1.b) {
+                //reverses intake
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
             }else{
-                robot.motorIntake.setPower(0);
-                if(!isDeployed) {
-                    angle1Pos = 0;
-                    angle2Pos = 0;
-                    robot.motorArmAngle1.setTargetPosition(angle1Pos);
-                    robot.motorArmAngle2.setTargetPosition(angle2Pos);
-                }
-                if(robot.motorArmAngle1.getCurrentPosition()<900) {
-                    robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-                    robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-                }
-                robot.intakeTilt.setPosition(0.6);
+                //turns intake off
+                armControl.intakeOff(isDeployed);
             }
 
             //intake ramp controls (GP1, Dpad)
@@ -125,7 +143,7 @@ public class ArmTesting extends LinearOpMode {
                 toggleReadyUp=true;
             }
 
-            //move arm to scoring position
+            //adds 1 to bumpCount if x isn't held down
             if(gamepad1.x && toggleReadyDown){
                 toggleReadyDown=false;
                 if(bumpCount<3) {
@@ -133,6 +151,7 @@ public class ArmTesting extends LinearOpMode {
                 }
             }
 
+            //removes 1 from bumpCount if dpad up isn't held down
             if(gamepad1.dpad_up && toggleReadyUp){
                 toggleReadyUp=false;
                 if(bumpCount>1) {
@@ -140,63 +159,45 @@ public class ArmTesting extends LinearOpMode {
                 }
             }
 
+            //counts how many times x has been pressed (what position to go to to score)
             if(bumpCount>0){
                 isDeployed=true;
             }
 
-            //scoring positions
+            //move arm to scoring positions
             if(bumpCount==1){
-                angle1Pos=0;
-                robot.motorArmAngle1.setTargetPosition(angle1Pos);
-                while(robot.motorArmAngle1.getCurrentPosition()>750){
-
-                }
-                angle2Pos=robot.HIGH_PLATFORM;
+                armControl.scoringPos1();
             }else if(bumpCount==2){
-                angle1Pos=0;
-                angle2Pos=robot.MID_PLATFORM;
+                armControl.scoringPos2();
             }else if(bumpCount==3){
-                angle1Pos=-500;
-                angle2Pos=robot.LOW_PLATFORM;
+                armControl.scoringPos3();
             }
 
-            if(gamepad1.dpad_right){
-                bucketAngle=-1;
-            } else{
-                bucketAngle=0.5;
-            }
-
+            //reset arm to zero with or without scoring
             if(gamepad1.dpad_down){
                 bumpCount=0;
                 isDeployed=false;
-                angle1Pos=0;
-                angle2Pos=0;
+                armControl.moveToZero();
             }else{
 
             }
 
+            //reset arm to zero AFTER SCORING
             if(gamepad1.y){
                 if(isDeployed){
-                    angle1Pos=0;
-                    angle2Pos=2786;
-                    robot.motorArmAngle2.setTargetPosition(angle2Pos);
-                    while(robot.motorArmAngle2.getCurrentPosition()!=angle2Pos){
-
-                    }
-                    robot.motorArmAngle2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    robot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    armControl.resetArm();
                     bumpCount=0;
                     isDeployed=false;
                 }
             }
 
-            robot.motorArmAngle2.setTargetPosition(angle2Pos);
-            robot.motorArmAngle2.setPower(1);
-            robot.motorArmAngle1.setTargetPosition(angle1Pos);
-            robot.motorArmAngle1.setPower(1);
+            //bucket control
+            if(gamepad1.dpad_right){
+                bucketAngle=-1;
+            } else{
+                bucketAngle=0.5;
+            }
             robot.bucketDump.setPosition(bucketAngle);
-
-
 
             /**
              * #################################################################################
