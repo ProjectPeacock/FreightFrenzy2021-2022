@@ -8,6 +8,8 @@ public class ArmControlLibrary implements Runnable{
     public HardwareProfile localRobot=null;
     private int angle1=0;
     private int angle2=0;
+    private double arm1Power=1;
+    private double arm2Power=1;
     private int sleepTime;
     private boolean isRunning=true;
     public ArmControlLibrary(HardwareProfile robotIn, int threadSleepDelay){
@@ -15,8 +17,8 @@ public class ArmControlLibrary implements Runnable{
         this.sleepTime=threadSleepDelay;
     }
     public void setPower(double a, double b){
-        localRobot.motorArmAngle1.setPower(a);
-        localRobot.motorArmAngle2.setPower(b);
+        arm1Power=a;
+        arm2Power=b;
     }
     public void intakeOn(boolean deployed){
         if(!deployed) {
@@ -25,7 +27,7 @@ public class ArmControlLibrary implements Runnable{
             localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
             localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
             angle1=localRobot.ARM_1_INTAKE;
-            angle1=localRobot.ARM_2_INTAKE;
+            angle2=localRobot.ARM_2_INTAKE;
         }
     }
     //intake controls
@@ -94,6 +96,8 @@ public class ArmControlLibrary implements Runnable{
 
     //method that runs whenever thread is running
     public void activeArmControl(){
+        localRobot.motorArmAngle1.setPower(arm1Power);
+        localRobot.motorArmAngle2.setPower(arm2Power);
         localRobot.motorArmAngle1.setTargetPosition(angle1);
         localRobot.motorArmAngle2.setTargetPosition(angle2);
     }

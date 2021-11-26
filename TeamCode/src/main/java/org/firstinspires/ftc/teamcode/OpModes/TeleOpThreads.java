@@ -29,7 +29,6 @@ public class TeleOpThreads extends LinearOpMode {
          * Setup the initial state of the robot
          */
         robot.init(hardwareMap);
-        armController.start();
 
         /*
          * Initialize the drive class
@@ -50,10 +49,9 @@ public class TeleOpThreads extends LinearOpMode {
         boolean toggleReadyUp=false;
         boolean isDeployed=false;
         waitForStart();
+        armController.start();
 
         while(opModeIsActive()) {
-            armControl.run();
-            armControl.setPower(1,1);
             /*
             DRIVE CONTROLS:
             Left Stick - forward/backward
@@ -134,10 +132,10 @@ public class TeleOpThreads extends LinearOpMode {
             telemetry.update();
 
             //allows for toggling between arm positions and not only going to lowest one because of button being held
-            if(gamepad1.x==false){
+            if(!gamepad1.x){
                 toggleReadyDown=true;
             }
-            if(gamepad1.dpad_up==false){
+            if(!gamepad1.dpad_up){
                 toggleReadyUp=true;
             }
 
