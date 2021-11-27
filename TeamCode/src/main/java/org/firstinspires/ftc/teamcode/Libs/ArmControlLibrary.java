@@ -40,8 +40,8 @@ public class ArmControlLibrary implements Runnable{
         if(localRobot.motorArmAngle1.getCurrentPosition()<900){
             localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
             localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
+            localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
         }
-        localRobot.intakeTilt.setPosition(0.6);
     }
     //high platform scoring, default
     public void scoringPos1(){
@@ -58,7 +58,7 @@ public class ArmControlLibrary implements Runnable{
     }
     //low platform scoring
     public void scoringPos3(){
-        angle1=-700;
+        angle1=-1000;
         angle2=localRobot.LOW_PLATFORM;
     }
     //moves arm to new zero (through the bottom)
@@ -70,6 +70,14 @@ public class ArmControlLibrary implements Runnable{
         }
         localRobot.motorArmAngle2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         localRobot.motorArmAngle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void resetIntake(){
+        localRobot.motorIntake.setPower(0);
+        if(localRobot.motorArmAngle1.getCurrentPosition()<900){
+            localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
+            localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
+            localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
+        }
     }
     //moves arm to 0 (over the top)
     public void moveToZero(){

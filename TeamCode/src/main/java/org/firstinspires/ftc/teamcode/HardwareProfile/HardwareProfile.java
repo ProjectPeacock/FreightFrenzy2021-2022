@@ -22,13 +22,13 @@ public class HardwareProfile {
     public final double DRIVE_MULTIPLIER=0.50;
     public final double TURN_POWER=0.35;
     //intake deployment servos
-    public final double BLUE_ZERO = 0.5; //IntakeDeployBlue zero pos
-    public final double PINK_ZERO = 0.5; //IntakeDeployPink zero pos
-    public final double INTAKE_DEPLOY_BLUE = 0.3; //Distance to deploy intake
+    public final double BLUE_ZERO = 0.55; //IntakeDeployBlue zero pos
+    public final double PINK_ZERO = 0.45; //IntakeDeployPink zero pos
+    public final double INTAKE_DEPLOY_BLUE = 0.35; //Distance to deploy intake
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.72;
-    public final double INTAKE_TILT_OUTPUT= 0.5;
+    public final double INTAKE_STARTING_POS= 0.7;
     //chainsaw power
     public final double CHAIN_POW = 0.4; //motorChainsaw power
 
@@ -40,10 +40,10 @@ public class HardwareProfile {
     //arm scoring positions
     public final int HIGH_PLATFORM=1700;
     public final int MID_PLATFORM=2350;
-    public final int LOW_PLATFORM=2350;
+    public final int LOW_PLATFORM=2100;
 
     //arm intake positions
-    public final int ARM_1_INTAKE=1100;
+    public final int ARM_1_INTAKE=1075;
     public final int ARM_2_INTAKE=45;
     /*
      * Hardware devices

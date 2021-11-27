@@ -40,20 +40,23 @@ public class TeleOpThreads extends LinearOpMode {
 
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
-        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-        robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
         double bucketAngle=0.5;
         int bumpCount=0;
         boolean toggleReadyDown=false;
         boolean toggleReadyUp=false;
         boolean isDeployed=false;
+        boolean intakeDown=false;
+        boolean toggleIntake=false;
         double turn, drive, left, right, max;
 
         waitForStart();
+        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+        robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
         armController.start();
 
         while(opModeIsActive()) {
+
             /*
             DRIVE CONTROLS:
             Left Stick - forward/backward
@@ -95,6 +98,24 @@ public class TeleOpThreads extends LinearOpMode {
             robot.motorR1.setPower(right);
             robot.motorR2.setPower(right);
 
+            if(!gamepad1.a){
+                toggleIntake=true;
+            }
+
+            if(gamepad1.a&&toggleIntake&&!isDeployed){
+                toggleIntake=false;
+                intakeDown=!intakeDown;
+            }
+            if(intakeDown){
+                armControl.intakeOn(isDeployed);
+            }else if(gamepad1.b){
+                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
+            }else{
+                armControl.intakeOff(isDeployed);
+            }
+
+
+            /*
             //intake control
             if(gamepad1.a) {
                 //turns intake on
@@ -106,7 +127,7 @@ public class TeleOpThreads extends LinearOpMode {
                 //turns intake off
                 armControl.intakeOff(isDeployed);
             }
-
+            */
             //intake ramp controls (GP1, Dpad)
             /*
             if(gamepad1.dpad_left){
@@ -160,6 +181,8 @@ public class TeleOpThreads extends LinearOpMode {
             //counts how many times x has been pressed (what position to go to to score)
             if(bumpCount>0){
                 isDeployed=true;
+                armControl.resetIntake();
+                intakeDown=false;
             }
 
             //move arm to scoring positions
@@ -202,6 +225,9 @@ public class TeleOpThreads extends LinearOpMode {
                 bucketAngle=-1;
             } else{
                 bucketAngle=0.5;
+                if(bumpCount==3){
+                    bucketAngle=0.75;
+                }
             }
             robot.bucketDump.setPosition(bucketAngle);
 
