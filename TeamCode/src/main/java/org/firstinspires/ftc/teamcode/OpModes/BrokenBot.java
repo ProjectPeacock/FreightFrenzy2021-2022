@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 
     @TeleOp(name = "Broken Bot TS", group = "Troubleshooting")
@@ -73,8 +74,19 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
             waitForStart();
 
             while(opModeIsActive()) {
-                currentTime = runTime.time();
+                telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
+                telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
 
+                currentTime = runTime.time();
+                if(robot.sensorDistPink.getDistance(DistanceUnit.CM)<60){
+                    telemetry.addData("Pink shipping element present","");
+                }
+                if(robot.sensorDistBlue.getDistance(DistanceUnit.CM)<60){
+                    telemetry.addData("Blue shipping element present","");
+                }
+                telemetry.addData("Pink distance:",robot.sensorDistPink.getDistance(DistanceUnit.CM));
+                telemetry.addData("Blue distance:",robot.sensorDistBlue.getDistance(DistanceUnit.CM));
+                telemetry.update();
                 /*
                  * Mecanum Drive Control section
                 */

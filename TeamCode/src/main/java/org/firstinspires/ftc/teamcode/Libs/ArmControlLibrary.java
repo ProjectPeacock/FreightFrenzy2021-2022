@@ -58,7 +58,7 @@ public class ArmControlLibrary implements Runnable{
     }
     //low platform scoring
     public void scoringPos3(){
-        angle1=-500;
+        angle1=-700;
         angle2=localRobot.LOW_PLATFORM;
     }
     //moves arm to new zero (through the bottom)
@@ -94,6 +94,12 @@ public class ArmControlLibrary implements Runnable{
         localRobot.motorArmAngle2.setTargetPosition(b);
     }
 
+    public void incrementUp(){
+        angle2+=5;
+    }
+    public void incrementDown(){
+        angle2-=5;
+    }
     //method that runs whenever thread is running
     public void activeArmControl(){
         localRobot.motorArmAngle1.setPower(arm1Power);

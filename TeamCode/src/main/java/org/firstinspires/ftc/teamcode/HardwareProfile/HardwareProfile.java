@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.HardwareProfile;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -17,13 +19,15 @@ public class HardwareProfile {
      */
     public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
 
+    public final double DRIVE_MULTIPLIER=0.50;
+    public final double TURN_POWER=0.35;
     //intake deployment servos
     public final double BLUE_ZERO = 0.5; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.5; //IntakeDeployPink zero pos
-    public final double INTAKE_DEPLOY_BLUE = 0.27; //Distance to deploy intake
+    public final double INTAKE_DEPLOY_BLUE = 0.3; //Distance to deploy intake
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
-    public final double INTAKE_TILT_INPUT= 0.73;
+    public final double INTAKE_TILT_INPUT= 0.72;
     public final double INTAKE_TILT_OUTPUT= 0.5;
     //chainsaw power
     public final double CHAIN_POW = 0.4; //motorChainsaw power
@@ -31,12 +35,12 @@ public class HardwareProfile {
     //intake power
     public final double INTAKE_POW = 1; //intaking power
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
-    public final double INTAKE_REVERSE_POW = -0.4; //intake reverse power (for using intake as outtake)
+    public final double INTAKE_REVERSE_POW = -0.8; //intake reverse power (for using intake as outtake)
 
     //arm scoring positions
     public final int HIGH_PLATFORM=1700;
-    public final int MID_PLATFORM=2250;
-    public final int LOW_PLATFORM=2500;
+    public final int MID_PLATFORM=2350;
+    public final int LOW_PLATFORM=2650;
 
     //arm intake positions
     public final int ARM_1_INTAKE=1100;
@@ -62,7 +66,8 @@ public class HardwareProfile {
     public Servo intakeTilt = null; //Intake ramp position servo
     public Servo bucketDump = null; //Bucket turning servo
     //public WebcamName webcam;
-
+    public DistanceSensor sensorDistPink=null;
+    public DistanceSensor sensorDistBlue=null;
     public RevBlinkinLedDriver LEDPort;
 
     /* Constructor */
@@ -155,6 +160,8 @@ public class HardwareProfile {
         /*
          * Initialize Sensors
          */
+        sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
+        sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
         imu = hwMap.get(BNO055IMU.class, "imu");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

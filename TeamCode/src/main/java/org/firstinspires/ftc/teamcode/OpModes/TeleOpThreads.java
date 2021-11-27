@@ -48,6 +48,8 @@ public class TeleOpThreads extends LinearOpMode {
         boolean toggleReadyDown=false;
         boolean toggleReadyUp=false;
         boolean isDeployed=false;
+        double turn, drive, left, right, max;
+
         waitForStart();
         armController.start();
 
@@ -72,15 +74,15 @@ public class TeleOpThreads extends LinearOpMode {
             telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
             telemetry.addData("tilt = ", robot.intakeTilt.getPosition());
             telemetry.update();
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
+            drive = -gamepad1.left_stick_y*robot.DRIVE_MULTIPLIER - gamepad1.right_stick_y;
+            turn  =  gamepad1.right_stick_x*robot.TURN_POWER;
 
             // Combine drive and turn for blended motion.
-            double left  = drive + turn;
-            double right = drive - turn;
+            left  = drive + turn;
+            right = drive - turn;
 
             // Normalize the values so neither exceed +/- 1.0
-            double max = Math.max(Math.abs(left), Math.abs(right));
+            max = Math.max(Math.abs(left), Math.abs(right));
             if (max > 1.0)
             {
                 left /= max;
@@ -186,6 +188,14 @@ public class TeleOpThreads extends LinearOpMode {
                     isDeployed=false;
                 }
             }
+            if(gamepad1.right_trigger>0.25){
+                armControl.incrementUp();
+            }else if(gamepad1.left_trigger>0.25){
+                armControl.incrementDown();
+            }else{
+
+            }
+
 
             //bucket control
             if(gamepad1.dpad_right){

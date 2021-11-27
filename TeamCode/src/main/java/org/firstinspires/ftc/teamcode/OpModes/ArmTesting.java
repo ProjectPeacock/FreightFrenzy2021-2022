@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
+import org.firstinspires.ftc.teamcode.Libs.ArmControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ArmTesting", group = "Competition")
 //  @Disabled
@@ -19,7 +20,8 @@ public class ArmTesting extends LinearOpMode {
     }   // end of BrokenBotTS constructor
 
     public void runOpMode(){
-
+        ArmControlLibrary armControl = new ArmControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread armController = new Thread(armControl);
 
 
         telemetry.addData("Robot State = ", "NOT READY");
@@ -58,38 +60,107 @@ public class ArmTesting extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
+            //intake control
+            if(gamepad1.a) {
+                //turns intake on
+                armControl.intakeOn(isDeployed);
+            }else if(gamepad1.b) {
+                //reverses intake
+                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
+            }else{
+                //turns intake off
+                armControl.intakeOff(isDeployed);
+            }
+
+            //intake ramp controls (GP1, Dpad)
+            /*
+            if(gamepad1.dpad_left){
+                robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
+            } else if(gamepad1.dpad_right){
+                robot.intakeTilt.setPosition(robot.INTAKE_TILT_OUTPUT);
+            } else{
+            }
+            */
+
+
+            //chainsaw controls (GP1, Bumpers)
+            if(gamepad1.left_bumper){
+                robot.motorChainsaw.setPower(robot.CHAIN_POW);
+            }else if(gamepad1.right_bumper){
+                robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+            }else{
+                robot.motorChainsaw.setPower(0);
+            }
+
+
+            //arm control section
             telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
             telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
             telemetry.update();
 
-            if(gamepad1.a) {
-                if(!isDeployed) {
-                    robot.motorIntake.setPower(robot.INTAKE_POW);
-                    robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO - robot.INTAKE_DEPLOY_BLUE); //subtracting because it needs to rotate counterclockwise
-                    robot.intakeDeployPink.setPosition(robot.PINK_ZERO + robot.INTAKE_DEPLOY_PINK); //adding because it needs to rotate clockwise
-                    robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
-                    angle2Pos = robot.ARM_2_INTAKE;
-                    robot.motorArmAngle2.setTargetPosition(angle2Pos);
-                    while (robot.motorArmAngle2.getCurrentPosition() > 800) {
-                    }
-                    angle1Pos = robot.ARM_1_INTAKE;
-                }
-            }else if(gamepad1.b) {
-                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
-            }else{
-                robot.motorIntake.setPower(0);
-                if(!isDeployed) {
-                    angle1Pos = 0;
-                    angle2Pos = 0;
-                    robot.motorArmAngle1.setTargetPosition(angle1Pos);
-                    robot.motorArmAngle2.setTargetPosition(angle2Pos);
-                }
-                if(robot.motorArmAngle1.getCurrentPosition()<900) {
-                    robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-                    robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-                }
-                robot.intakeTilt.setPosition(0.6);
+            //allows for toggling between arm positions and not only going to lowest one because of button being held
+            if(!gamepad1.x){
+                toggleReadyDown=true;
             }
+            if(!gamepad1.dpad_up){
+                toggleReadyUp=true;
+            }
+
+            //adds 1 to bumpCount if x isn't held down
+            if(gamepad1.x && toggleReadyDown){
+                toggleReadyDown=false;
+                if(bumpCount<3) {
+                    bumpCount += 1;
+                }
+            }
+
+            //removes 1 from bumpCount if dpad up isn't held down
+            if(gamepad1.dpad_up && toggleReadyUp){
+                toggleReadyUp=false;
+                if(bumpCount>1) {
+                    bumpCount -= 1;
+                }
+            }
+
+            //counts how many times x has been pressed (what position to go to to score)
+            if(bumpCount>0){
+                isDeployed=true;
+            }
+
+            //move arm to scoring positions
+            if(bumpCount==1){
+                armControl.scoringPos1();
+            }else if(bumpCount==2){
+                armControl.scoringPos2();
+            }else if(bumpCount==3){
+                armControl.scoringPos3();
+            }
+
+            //reset arm to zero with or without scoring
+            if(gamepad1.dpad_down){
+                bumpCount=0;
+                isDeployed=false;
+                armControl.moveToZero();
+            }else{
+
+            }
+
+            //reset arm to zero AFTER SCORING
+            if(gamepad1.y){
+                if(isDeployed){
+                    armControl.resetArm();
+                    bumpCount=0;
+                    isDeployed=false;
+                }
+            }
+
+            //bucket control
+            if(gamepad1.dpad_right){
+                bucketAngle=-1;
+            } else{
+                bucketAngle=0.5;
+            }
+            robot.bucketDump.setPosition(bucketAngle);
 
             //intake ramp controls (GP1, Dpad)
             /*
