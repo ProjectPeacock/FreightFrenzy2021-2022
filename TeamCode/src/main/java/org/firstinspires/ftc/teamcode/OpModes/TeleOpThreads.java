@@ -74,7 +74,7 @@ public class TeleOpThreads extends LinearOpMode {
             telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
             telemetry.addData("tilt = ", robot.intakeTilt.getPosition());
             telemetry.update();
-            drive = -gamepad1.left_stick_y*robot.DRIVE_MULTIPLIER - gamepad1.right_stick_y;
+            drive = -gamepad1.left_stick_y*robot.DRIVE_MULTIPLIER;
             turn  =  gamepad1.right_stick_x*robot.TURN_POWER;
 
             // Combine drive and turn for blended motion.

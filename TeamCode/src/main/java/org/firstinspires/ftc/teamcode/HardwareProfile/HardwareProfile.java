@@ -40,7 +40,7 @@ public class HardwareProfile {
     //arm scoring positions
     public final int HIGH_PLATFORM=1700;
     public final int MID_PLATFORM=2350;
-    public final int LOW_PLATFORM=2650;
+    public final int LOW_PLATFORM=2350;
 
     //arm intake positions
     public final int ARM_1_INTAKE=1100;
