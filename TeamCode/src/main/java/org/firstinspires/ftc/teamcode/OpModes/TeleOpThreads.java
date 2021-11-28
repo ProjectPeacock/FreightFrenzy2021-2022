@@ -56,7 +56,6 @@ public class TeleOpThreads extends LinearOpMode {
         armController.start();
 
         while(opModeIsActive()) {
-
             /*
             DRIVE CONTROLS:
             Left Stick - forward/backward
@@ -72,25 +71,35 @@ public class TeleOpThreads extends LinearOpMode {
             Right bumper - chainsaw direction 2
 
              *Drive Control section
-            */
+
             telemetry.addData("Test = ", robot.motorArmAngle1.getCurrentPosition());
             telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
             telemetry.addData("tilt = ", robot.intakeTilt.getPosition());
-            telemetry.update();
+            */
             drive = -gamepad1.left_stick_y*robot.DRIVE_MULTIPLIER;
-            turn  =  gamepad1.right_stick_x*robot.TURN_POWER;
+            turn  =  gamepad1.right_stick_x*robot.TURN_MULTIPLIER;
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
             right = drive - turn;
 
             // Normalize the values so neither exceed +/- 1.0
-            max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
-                left /= max;
-                right /= max;
+            if(Math.abs(left)>1){
+                left/=Math.abs(left);
             }
+            if(Math.abs(right)>1){
+                left/=Math.abs(right);
+            }
+
+            if(-gamepad1.left_stick_y>0.95&&-gamepad1.right_stick_y>0.95){
+                left=1;
+                right=1;
+            }
+            telemetry.addData("Left Stick Y: ",gamepad1.left_stick_y);
+            telemetry.addData("Right Stick Y: ",gamepad1.right_stick_y);
+            telemetry.addData("Left power:",left);
+            telemetry.addData("Right power:",right);
+            telemetry.update();
 
             // Output the safe vales to the motor drives.
             robot.motorL1.setPower(left);
@@ -150,10 +159,6 @@ public class TeleOpThreads extends LinearOpMode {
 
 
             //arm control section
-            telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
-            telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
-            telemetry.update();
-
             //allows for toggling between arm positions and not only going to lowest one because of button being held
             if(!gamepad1.x){
                 toggleReadyDown=true;

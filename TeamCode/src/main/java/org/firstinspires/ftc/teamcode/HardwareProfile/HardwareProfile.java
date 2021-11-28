@@ -19,12 +19,12 @@ public class HardwareProfile {
      */
     public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
 
-    public final double DRIVE_MULTIPLIER=0.50;
-    public final double TURN_POWER=0.35;
+    public final double DRIVE_MULTIPLIER=0.65;
+    public final double TURN_MULTIPLIER=0.65;
     //intake deployment servos
     public final double BLUE_ZERO = 0.55; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.45; //IntakeDeployPink zero pos
-    public final double INTAKE_DEPLOY_BLUE = 0.35; //Distance to deploy intake
+    public final double INTAKE_DEPLOY_BLUE = 0.31; //Distance to deploy intake
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.72;
@@ -87,28 +87,28 @@ public class HardwareProfile {
         motorL1 = hwMap.dcMotor.get("motorL1");
         motorL1.setDirection(DcMotor.Direction.REVERSE);
         motorL1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorL1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorL1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorL1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorL1.setPower(0);
 
         motorL2 = hwMap.dcMotor.get("motorL2");
         motorL2.setDirection(DcMotor.Direction.REVERSE);
         motorL2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorL2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorL2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorL2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorL2.setPower(0);
 
         motorR1 = hwMap.dcMotor.get("motorR1");
         motorR1.setDirection(DcMotor.Direction.FORWARD);
         motorR1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorR1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorR1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorR1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorR1.setPower(0);
 
         motorR2 = hwMap.dcMotor.get("motorR2");
         motorR2.setDirection(DcMotor.Direction.FORWARD);
         motorR2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorR2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorR2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorR2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorR2.setPower(0);
 
