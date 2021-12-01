@@ -45,7 +45,7 @@ public class ArmControlLibrary implements Runnable{
     }
     //high platform scoring, default
     public void scoringPos1(){
-        angle1=0;
+        angle1=-300;
         while(localRobot.motorArmAngle1.getCurrentPosition()>750){
 
         }
@@ -53,7 +53,7 @@ public class ArmControlLibrary implements Runnable{
     }
     //mid platform scoring
     public void scoringPos2(){
-        angle1=0;
+        angle1=-300;
         angle2=localRobot.MID_PLATFORM;
     }
     //low platform scoring

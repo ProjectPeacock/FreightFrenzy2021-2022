@@ -90,10 +90,15 @@ public class TeleOpThreads extends LinearOpMode {
             if(Math.abs(right)>1){
                 left/=Math.abs(right);
             }
-
+            //
             if(-gamepad1.left_stick_y>0.95&&-gamepad1.right_stick_y>0.95){
                 left=1;
                 right=1;
+            }
+            //100% power in reverse
+            if(-gamepad1.left_stick_y<0-.95&&-gamepad1.right_stick_y<-0.95){
+                left=-1;
+                right=-1;
             }
             telemetry.addData("Left Stick Y: ",gamepad1.left_stick_y);
             telemetry.addData("Right Stick Y: ",gamepad1.right_stick_y);
@@ -116,6 +121,7 @@ public class TeleOpThreads extends LinearOpMode {
                 intakeDown=!intakeDown;
             }
             if(intakeDown){
+
                 armControl.intakeOn(isDeployed);
             }else if(gamepad1.b){
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
@@ -149,14 +155,22 @@ public class TeleOpThreads extends LinearOpMode {
 
 
             //chainsaw controls (GP1, Bumpers)
+        //    if(gamepad1.left_bumper){
+        //        robot.motorChainsaw.setPower(robot.CHAIN_POW);
+        //    }else if(gamepad1.right_bumper){
+        //        robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+        //    }else{
+        //        robot.motorChainsaw.setPower(0);
+        //    }
             if(gamepad1.left_bumper){
-                robot.motorChainsaw.setPower(robot.CHAIN_POW);
+                robot.motorChainsaw.setPower(.10);
             }else if(gamepad1.right_bumper){
-                robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+                if (robot.motorChainsaw.getPower() < robot.CHAIN_POW){
+                    robot.motorChainsaw.setPower(robot.motorChainsaw.getPower()+.1);
+                }
             }else{
                 robot.motorChainsaw.setPower(0);
             }
-
 
             //arm control section
             //allows for toggling between arm positions and not only going to lowest one because of button being held
