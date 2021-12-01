@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
-import org.firstinspires.ftc.teamcode.Libs.ArmControlLibrary;
+import org.firstinspires.ftc.teamcode.Libs.MechControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ArmTesting", group = "Competition")
 //  @Disabled
@@ -20,7 +18,7 @@ public class ArmTesting extends LinearOpMode {
     }   // end of BrokenBotTS constructor
 
     public void runOpMode(){
-        ArmControlLibrary armControl = new ArmControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        MechControlLibrary armControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
         Thread armController = new Thread(armControl);
 
 

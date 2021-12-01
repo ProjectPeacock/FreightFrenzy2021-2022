@@ -18,10 +18,12 @@ public class HardwareProfile {
      * Constants
      */
     public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
-
+//drive control constants
     public final double DRIVE_MULTIPLIER=0.65;
     public final double TURN_MULTIPLIER=0.65;
-    //intake deployment servos
+
+//intake control constants
+    //intake servos
     public final double BLUE_ZERO = 0.55; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.45; //IntakeDeployPink zero pos
     public final double INTAKE_DEPLOY_BLUE = 0.335; //Distance to deploy intake
@@ -29,25 +31,28 @@ public class HardwareProfile {
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.75;
     public final double INTAKE_STARTING_POS= 0.7;
-    //chainsaw power
-    public final double CHAIN_POW = 0.6; //motorChainsaw power
-
-    //intake power
+    //intake motor
     public final double INTAKE_POW = 1; //intaking power
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
     public final double INTAKE_REVERSE_POW = -0.8; //intake reverse power (for using intake as outtake)
 
+//chainsaw control constants
+    public final double CHAIN_POW = 0.6; //motorChainsaw power
+    public final int CHAIN_INCREMENTS=6; //increments for accelerating chainsaw to full speed
+
+//arm control constants
     //arm scoring positions
     public final int HIGH_PLATFORM=1700;
     public final int MID_PLATFORM=2350;
     public final int LOW_PLATFORM=2100;
-
     //arm intake positions
     public final int ARM_1_INTAKE=1075;
     public final int ARM_2_INTAKE=45;
+
     /*
      * Hardware devices
      */
+
     //Motors
     public DcMotor motorR1 = null;  // Right Front Drive Motor
     public DcMotor motorL1 = null;  // Left Front Drive Motor
@@ -77,12 +82,7 @@ public class HardwareProfile {
 
     public void init(HardwareMap hwMap) {
 
-//        HardwareMap hwMap = ahwMap;
-
-        /*
-         * Initialize Motors
-         */
-
+//initialize DcMotor motors
 
         motorL1 = hwMap.dcMotor.get("motorL1");
         motorL1.setDirection(DcMotor.Direction.REVERSE);
@@ -124,10 +124,7 @@ public class HardwareProfile {
         motorChainsaw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorChainsaw.setPower(0);
 
-        intakeDeployBlue = hwMap.servo.get("intakeDeployBlue");
-        intakeDeployPink = hwMap.servo.get("intakeDeployPink");
-        intakeTilt = hwMap.servo.get("intakeTilt");
-        bucketDump = hwMap.servo.get("bucketDump");
+//initialize DcMotorEx motors (arm motors)
 
         motorArmAngle1 = hwMap.get(DcMotorEx.class,"motorArmAngle1");
         motorArmAngle1.setDirection(DcMotor.Direction.REVERSE);
@@ -144,6 +141,14 @@ public class HardwareProfile {
         motorArmAngle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArmAngle2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorArmAngle2.setPower(0);
+
+//initialize servos
+
+        intakeDeployBlue = hwMap.servo.get("intakeDeployBlue");
+        intakeDeployPink = hwMap.servo.get("intakeDeployPink");
+        intakeTilt = hwMap.servo.get("intakeTilt");
+        bucketDump = hwMap.servo.get("bucketDump");
+
 /*
         motorOdometry = hwMap.dcMotor.get("motorOdometry");
         motorOdometry.setDirection(DcMotor.Direction.FORWARD);
@@ -157,9 +162,8 @@ public class HardwareProfile {
   //      LEDPort = hwMap.get(RevBlinkinLedDriver.class, "LEDPort");
   //      LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
 
-        /*
-         * Initialize Sensors
-         */
+//initialize sensors
+
         sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
         sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
         imu = hwMap.get(BNO055IMU.class, "imu");

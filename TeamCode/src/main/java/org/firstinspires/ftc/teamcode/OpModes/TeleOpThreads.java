@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
-import org.firstinspires.ftc.teamcode.Libs.ArmControlLibrary;
+import org.firstinspires.ftc.teamcode.Libs.MechControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads", group = "Competition")
 //  @Disabled
@@ -20,8 +18,8 @@ public class TeleOpThreads extends LinearOpMode {
     }   // end of BrokenBotTS constructor
 
     public void runOpMode(){
-        ArmControlLibrary armControl = new ArmControlLibrary(robot, robot.ARM_THREAD_SLEEP);
-        Thread armController = new Thread(armControl);
+        MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread armController = new Thread(mechControl);
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
 
@@ -42,11 +40,13 @@ public class TeleOpThreads extends LinearOpMode {
         telemetry.update();
         double bucketAngle=0.5;
         int bumpCount=0;
+        int chainsawMode=0;
         boolean toggleReadyDown=false;
         boolean toggleReadyUp=false;
         boolean isDeployed=false;
         boolean intakeDown=false;
         boolean toggleIntake=false;
+        boolean chainsawReady=false;
         double turn, drive, left, right, max;
 
         waitForStart();
@@ -69,13 +69,9 @@ public class TeleOpThreads extends LinearOpMode {
             Dpad right - dump bucket
             Left bumper - chainsaw direction 1
             Right bumper - chainsaw direction 2
-
-             *Drive Control section
-
-            telemetry.addData("Test = ", robot.motorArmAngle1.getCurrentPosition());
-            telemetry.addData("Arm #2 angle = ", robot.motorArmAngle2.getCurrentPosition());
-            telemetry.addData("tilt = ", robot.intakeTilt.getPosition());
             */
+
+//drive control section (GP1, Joysticks)
             drive = -gamepad1.left_stick_y*robot.DRIVE_MULTIPLIER;
             turn  =  gamepad1.right_stick_x*robot.TURN_MULTIPLIER;
 
@@ -90,7 +86,7 @@ public class TeleOpThreads extends LinearOpMode {
             if(Math.abs(right)>1){
                 left/=Math.abs(right);
             }
-            //
+            //100% power forward
             if(-gamepad1.left_stick_y>0.95&&-gamepad1.right_stick_y>0.95){
                 left=1;
                 right=1;
@@ -100,79 +96,74 @@ public class TeleOpThreads extends LinearOpMode {
                 left=-1;
                 right=-1;
             }
-            telemetry.addData("Left Stick Y: ",gamepad1.left_stick_y);
-            telemetry.addData("Right Stick Y: ",gamepad1.right_stick_y);
-            telemetry.addData("Left power:",left);
-            telemetry.addData("Right power:",right);
-            telemetry.update();
 
             // Output the safe vales to the motor drives.
             robot.motorL1.setPower(left);
             robot.motorL2.setPower(left);
             robot.motorR1.setPower(right);
             robot.motorR2.setPower(right);
+//end of drive controls
 
+//intake control section (GP1, A)
+            //allows for intake toggle and not button hold down
             if(!gamepad1.a){
                 toggleIntake=true;
             }
 
+            //if intake isn't deployed, deploy it & vice versa
             if(gamepad1.a&&toggleIntake&&!isDeployed){
                 toggleIntake=false;
                 intakeDown=!intakeDown;
             }
-            if(intakeDown){
-
-                armControl.intakeOn(isDeployed);
-            }else if(gamepad1.b){
-                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
-            }else{
-                armControl.intakeOff(isDeployed);
-            }
-
-
-            /*
-            //intake control
-            if(gamepad1.a) {
-                //turns intake on
-                armControl.intakeOn(isDeployed);
-            }else if(gamepad1.b) {
-                //reverses intake
-                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
-            }else{
-                //turns intake off
-                armControl.intakeOff(isDeployed);
-            }
-            */
-            //intake ramp controls (GP1, Dpad)
-            /*
-            if(gamepad1.dpad_left){
-                robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
-            } else if(gamepad1.dpad_right){
-                robot.intakeTilt.setPosition(robot.INTAKE_TILT_OUTPUT);
-            } else{
-            }
-            */
-
-
-            //chainsaw controls (GP1, Bumpers)
-        //    if(gamepad1.left_bumper){
-        //        robot.motorChainsaw.setPower(robot.CHAIN_POW);
-        //    }else if(gamepad1.right_bumper){
-        //        robot.motorChainsaw.setPower(-robot.CHAIN_POW);
-        //    }else{
-        //        robot.motorChainsaw.setPower(0);
-        //    }
-            if(gamepad1.left_bumper){
-                robot.motorChainsaw.setPower(.10);
-            }else if(gamepad1.right_bumper){
-                if (robot.motorChainsaw.getPower() < robot.CHAIN_POW){
-                    robot.motorChainsaw.setPower(robot.motorChainsaw.getPower()+.1);
+            //check if intake needs to be reversed and then deploy or retract
+            if(!gamepad1.b) {
+                if (intakeDown) {
+                    mechControl.intakeOn(isDeployed);
+                } else {
+                    mechControl.intakeOff(isDeployed);
                 }
+            }else{
+                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
+            }
+//end of intake controls
+
+//chainsaw control section (GP1, Bumpers)
+            //chainsaw ready if bumpers are not held down
+            if(!gamepad1.right_bumper&&!gamepad1.left_bumper){
+                chainsawReady=true;
+            }
+            /*CHAINSAW MODES:
+            0: off
+            1: Blue side
+            2: Red side
+            */
+            //red side (left bumper) chainsaw toggle
+            if(gamepad1.right_bumper&&chainsawReady){
+                if(chainsawMode==0){
+                    chainsawMode=1;
+                }else if(chainsawMode==1){
+                    chainsawMode=0;
+                }
+            }
+            //blue side (right bumper) chainsaw toggle
+            if(gamepad1.left_bumper&&chainsawReady){
+                if(chainsawMode==0){
+                    chainsawMode=2;
+                }else if(chainsawMode==2){
+                    chainsawMode=0;
+                }
+            }
+            //start or stop chainsaw based on mode
+            if(chainsawMode==1){
+                mechControl.chainsawRampRed();
+            }else if(chainsawMode==2){
+                mechControl.chainsawRampBlue();
             }else{
                 robot.motorChainsaw.setPower(0);
             }
+//end of chainsaw controls
 
-            //arm control section
+//arm control section (GP1, X, Y, Dpad Down)
             //allows for toggling between arm positions and not only going to lowest one because of button being held
             if(!gamepad1.x){
                 toggleReadyDown=true;
@@ -180,6 +171,7 @@ public class TeleOpThreads extends LinearOpMode {
             if(!gamepad1.dpad_up){
                 toggleReadyUp=true;
             }
+            //end of arm toggle checks
 
             //adds 1 to bumpCount if x isn't held down
             if(gamepad1.x && toggleReadyDown){
@@ -200,24 +192,24 @@ public class TeleOpThreads extends LinearOpMode {
             //counts how many times x has been pressed (what position to go to to score)
             if(bumpCount>0){
                 isDeployed=true;
-                armControl.resetIntake();
+                mechControl.resetIntake();
                 intakeDown=false;
             }
 
             //move arm to scoring positions
             if(bumpCount==1){
-                armControl.scoringPos1();
+                mechControl.scoringPos1();
             }else if(bumpCount==2){
-                armControl.scoringPos2();
+                mechControl.scoringPos2();
             }else if(bumpCount==3){
-                armControl.scoringPos3();
+                mechControl.scoringPos3();
             }
 
             //reset arm to zero with or without scoring
             if(gamepad1.dpad_down){
                 bumpCount=0;
                 isDeployed=false;
-                armControl.moveToZero();
+                mechControl.moveToZero();
             }else{
 
             }
@@ -225,21 +217,14 @@ public class TeleOpThreads extends LinearOpMode {
             //reset arm to zero AFTER SCORING
             if(gamepad1.y){
                 if(isDeployed){
-                    armControl.resetArm();
+                    mechControl.resetArm();
                     bumpCount=0;
                     isDeployed=false;
                 }
             }
-            if(gamepad1.right_trigger>0.25){
-                armControl.incrementUp();
-            }else if(gamepad1.left_trigger>0.25){
-                armControl.incrementDown();
-            }else{
+//end of arm controls
 
-            }
-
-
-            //bucket control
+//bucket control section (GP1, Dpad Right)
             if(gamepad1.dpad_right){
                 bucketAngle=-1;
             } else{
@@ -249,6 +234,8 @@ public class TeleOpThreads extends LinearOpMode {
                 }
             }
             robot.bucketDump.setPosition(bucketAngle);
+//end of bucket controls
+
 
             /**
              * #################################################################################
@@ -267,7 +254,8 @@ public class TeleOpThreads extends LinearOpMode {
             telemetry.addData("Shooter RPM = ", (robot.motorShooter1.getVelocity() / 28 * 60));
             telemetry.update(); */
         }   // end of while opModeIsActive()
-        armControl.stop();
+        //stops mechanism thread
+        mechControl.stop();
     }   // end of runOpMode method
 
 }   // end of TeleOp.java class
