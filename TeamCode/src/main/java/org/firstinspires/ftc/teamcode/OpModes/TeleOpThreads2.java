@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.MechControlLibrary;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads", group = "Competition")
-@Disabled
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads2", group = "Competition")
+//  @Disabled
 
-public class TeleOpThreads extends LinearOpMode {
+public class TeleOpThreads2 extends LinearOpMode {
 
     private final static HardwareProfile robot = new HardwareProfile();
     private LinearOpMode opMode = this;
 
-    public TeleOpThreads(){
+    public TeleOpThreads2(){
 
     }   // end of BrokenBotTS constructor
 
@@ -112,9 +111,12 @@ public class TeleOpThreads extends LinearOpMode {
             }
 
             //if intake isn't deployed, deploy it & vice versa
-            if(gamepad1.a&&toggleIntake&&!isDeployed){
+
+            if(gamepad1.a&&toggleIntake){
                 toggleIntake=false;
                 intakeDown=!intakeDown;
+                isDeployed=false;
+                bumpCount=0;
             }
             //check if intake needs to be reversed and then deploy or retract
             if(!gamepad1.b) {
@@ -129,15 +131,28 @@ public class TeleOpThreads extends LinearOpMode {
 //end of intake controls
 
 //chainsaw control section (GP1, Bumpers)
-            //chainsaw ready if bumpers are not held down
-            if(!gamepad1.right_bumper&&!gamepad1.left_bumper){
-                chainsawReady=true;
+
+            if(gamepad1.right_bumper){
+                robot.motorChainsaw.setPower(0.6);
+                }
+            else if(gamepad1.left_bumper){
+                robot.motorChainsaw.setPower(-0.6);
             }
-            /*CHAINSAW MODES:
+            else if(gamepad1.right_trigger>0.5){
+                robot.motorChainsaw.setPower(1);
+            }
+            else if(gamepad1.left_trigger>0.5){
+                robot.motorChainsaw.setPower(-1);
+            }
+            else{ robot.motorChainsaw.setPower(0);
+            }
+
+
+           /* /*CHAINSAW MODES:
             0: off
             1: Blue side
             2: Red side
-            */
+            *
             //red side (left bumper) chainsaw toggle
             if(gamepad1.right_bumper&&chainsawReady){
                 if(chainsawMode==0){
@@ -162,7 +177,7 @@ public class TeleOpThreads extends LinearOpMode {
                 mechControl.chainsawRampBlue();
             }else{
                 robot.motorChainsaw.setPower(0);
-            }
+            } */
 //end of chainsaw controls
 
 //arm control section (GP1, X, Y, Dpad Down)

@@ -22,14 +22,16 @@ public class MechControlLibrary implements Runnable{
 
 //deploy intake method
     public void intakeOn(boolean deployed){
-        if(!deployed) {
-            localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
-            localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
-            localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
-            localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
-            angle1=localRobot.ARM_1_INTAKE;
-            angle2=localRobot.ARM_2_INTAKE;
+        localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
+        localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
+        localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
+        localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
+        angle2=localRobot.ARM_2_INTAKE;
+        localRobot.motorArmAngle2.setTargetPosition(angle2);
+        while(localRobot.motorArmAngle2.getCurrentPosition()>900){
+
         }
+        angle1=localRobot.ARM_1_INTAKE;
     }
 //end of deploy intake method
 
@@ -63,7 +65,7 @@ public class MechControlLibrary implements Runnable{
 //move to scoring positions methods
     //high platform scoring (default)
     public void scoringPos1(){
-        angle1=-300;
+        angle1=-350;
         while(localRobot.motorArmAngle1.getCurrentPosition()>750){
 
         }
@@ -71,7 +73,7 @@ public class MechControlLibrary implements Runnable{
     }
     //mid platform scoring
     public void scoringPos2(){
-        angle1=-300;
+        angle1=-350;
         angle2=localRobot.MID_PLATFORM;
     }
     //low platform & shared shiipping hub scoring

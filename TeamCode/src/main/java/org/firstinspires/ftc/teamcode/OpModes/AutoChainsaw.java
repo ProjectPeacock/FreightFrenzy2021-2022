@@ -30,16 +30,14 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 
 
-@Autonomous(name="AutoPark", group="compition")
-public class AutoPark extends LinearOpMode {
+@Autonomous(name="AutoChainsaw", group="compition")
+public class AutoChainsaw extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareProfile robot   = new HardwareProfile();   // Use a Pushbot's hardware
@@ -76,17 +74,14 @@ public class AutoPark extends LinearOpMode {
         robot.motorR2.setPower(FORWARD_SPEED);
         robot.motorL2.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+        while (opModeIsActive() && (runtime.seconds() < .3)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
 
         // Step 2
-        robot.motorR1.setPower(0);
-        robot.motorL1.setPower(0);
-        robot.motorR2.setPower(0.0);
-        robot.motorL2.setPower(0.0);
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
