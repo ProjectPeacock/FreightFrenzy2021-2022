@@ -185,7 +185,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
         // drive forward to park
         forwardSpeed = forwardSpeed * -1;
         forwardDistance = 26;
-        if (startPosition == "FIELD"){
+        if (startPosition.equals("FIELD")){
             forwardDistance = forwardDistance + 24;
         }
         drive.driveStraight(forwardSpeed, forwardDistance);
