@@ -38,6 +38,7 @@ import com.vuforia.State;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
+import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 
 @Autonomous(name="AutoParkDriveClassJG", group="Competition")
@@ -51,15 +52,26 @@ public class AutoParkDriveClassJG extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // arm control thread
+        MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread armController = new Thread(mechControl);
+
         boolean autoReady = false;
         String alliance = "";
         String startPosition = "";
+        String goalPosition = "";
         long startDelay = 0;
         double timeElapsed;
-        long positionFactor = 1;
+        int positionFactor = 1;
+        int scorePosition=3;
         double forwardSpeed = -0.4;
-        double forwardDistance = 26.0;
-        double turnAngle = 90;
+        double goalDistance = 26.0;
+        double turnDistance = 2.0;
+        double turnAngle = 60;
+        double parkDistance = 26.0;
+        double parkAdjust = 24.0;
+        double turnError = 0.5;
+        double bucketAngle=0.75;
 
         /*
          * Initialize the drive system variables.
@@ -142,10 +154,16 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                     break;
 
                 case VERIFY_CONFIG:
+                    if (positionFactor==1) {
+                        goalPosition="Right";
+                    }else{
+                        goalPosition="Left";
+                    }
                     telemetry.addData("Verify the setup", "");
                     telemetry.addData("Alliance          == ", alliance);
                     telemetry.addData("Start Delay == ", startDelay);
                     telemetry.addData("Starting Position ==  ", startPosition);
+                    telemetry.addData("Goal on", goalPosition);
                     telemetry.addData("","");
                     telemetry.addData("Press A to Confirm or B to start over","");
                     telemetry.update();
@@ -173,38 +191,71 @@ public class AutoParkDriveClassJG extends LinearOpMode {
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 
         waitForStart();
+
+        // start arm controller thread
+        armController.start();
+
+        // sleep for set delay time
         sleep(startDelay);
 
         // Step 1
         //      drive.driveStraight(backwards to goal
-        drive.driveStraight(forwardSpeed, forwardDistance);
+        drive.driveStraight(forwardSpeed, goalDistance);
         
-        //   drive.driveTurn(-90, 0.5);
-        drive.driveTurn(turnAngle * positionFactor, 0.5);
+        //   drive.driveTurn(turn towards goal);
+        drive.driveTurn(turnAngle * positionFactor, turnError);
 
-        // drive forward to park
-        forwardSpeed = forwardSpeed * -1;
-        forwardDistance = 26;
-        if (startPosition.equals("FIELD")){
-            forwardDistance = forwardDistance + 24;
+        //pause for 1 second
+        sleep(1000);
+
+        //  drive towards goal
+        drive.driveStraight(forwardSpeed, turnDistance);
+
+        // score element in high goal
+        //move arm to scoring positions. initailly always go high, later will use
+        // recognition to set scorePosition
+        if(scorePosition==1){
+            mechControl.scoringPos1();
+        }else if(scorePosition==2){
+            mechControl.scoringPos2();
+        }else if(scorePosition==3){
+            mechControl.scoringPos3();
         }
-        drive.driveStraight(forwardSpeed, forwardDistance);
 
-        telemetry.addData("motor L1 = ", robot.motorL1.getCurrentPosition());
-        telemetry.addData("motor L2 = ", robot.motorL2.getCurrentPosition());
-        telemetry.addData("motor R1 = ", robot.motorR1.getCurrentPosition());
-        telemetry.addData("motor R2 = ", robot.motorR2.getCurrentPosition());
-        telemetry.update();
+        // dump bucket
+        robot.bucketDump.setPosition(bucketAngle);
 
+        //reset arms
+        mechControl.resetArm();
 
-        // Step 2
+        // reverse direction to drive forward to park
+        forwardSpeed = forwardSpeed * -1;
+
+        //back up turn amount
+        drive.driveStraight(forwardSpeed, turnDistance);
+
+        // reposition angle to park
+        turnAngle = 90 - turnAngle;
+        drive.driveTurn(turnAngle * positionFactor, turnError);
+
+        // adjust park distance if needed
+        if (startPosition.equals("FIELD")){
+            parkDistance = parkDistance + parkAdjust;
+        }
+        drive.driveStraight(forwardSpeed, parkDistance);
+
+        // Step 2 - just stop for now
 
         drive.motorsHalt();
 
-     //   telemetry.addData("Path", "Complete");
-     //   telemetry.update();
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
         sleep(1000);
-    }
+
+        //stops mechanism thread
+        mechControl.stop();
+
+    } // end of opmode
 
     /*
      * Enumerate the states of the machine
