@@ -57,6 +57,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
         Thread armController = new Thread(mechControl);
 
         boolean autoReady = false;
+        double startTime;
         String alliance = "";
         String startPosition = "";
         String goalPosition = "";
@@ -163,7 +164,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                     telemetry.addData("Alliance          == ", alliance);
                     telemetry.addData("Start Delay == ", startDelay);
                     telemetry.addData("Starting Position ==  ", startPosition);
-                    telemetry.addData("Goal on", goalPosition);
+                    telemetry.addData("Goal on ==  ", goalPosition);
                     telemetry.addData("","");
                     telemetry.addData("Press A to Confirm or B to start over","");
                     telemetry.update();
@@ -191,61 +192,67 @@ public class AutoParkDriveClassJG extends LinearOpMode {
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 
         waitForStart();
+        startTime = runtime.time() + startDelay;
 
         // start arm controller thread
         armController.start();
 
         // sleep for set delay time
         sleep(startDelay);
+        timeElapsed = runtime.time() - startTime;
 
-        // Step 1
-        //      drive.driveStraight(backwards to goal
-        drive.driveStraight(forwardSpeed, goalDistance);
-        
-        //   drive.driveTurn(turn towards goal);
-        drive.driveTurn(turnAngle * positionFactor, turnError);
+        while (timeElapsed < 30) {
 
-        //pause for 1 second
-        sleep(1000);
+            timeElapsed = runtime.time() - startTime;
 
-        //  drive towards goal
-        drive.driveStraight(forwardSpeed, turnDistance);
+            // Step 1
+            //      drive.driveStraight(backwards to goal
+            drive.driveStraight(forwardSpeed, goalDistance);
 
-        // score element in high goal
-        //move arm to scoring positions. initailly always go high, later will use
-        // recognition to set scorePosition
-        if(scorePosition==1){
-            mechControl.scoringPos1();
-        }else if(scorePosition==2){
-            mechControl.scoringPos2();
-        }else if(scorePosition==3){
-            mechControl.scoringPos3();
+            //   drive.driveTurn(turn towards goal);
+            drive.driveTurn(turnAngle * positionFactor, turnError);
+
+            //pause for 1 second
+            sleep(1000);
+
+            //  drive towards goal
+            drive.driveStraight(forwardSpeed, turnDistance);
+
+            // score element in high goal
+            //move arm to scoring positions. initailly always go high, later will use
+            // recognition to set scorePosition
+            if (scorePosition == 1) {
+                mechControl.scoringPos1();
+            } else if (scorePosition == 2) {
+                mechControl.scoringPos2();
+            } else if (scorePosition == 3) {
+                mechControl.scoringPos3();
+            }
+
+            // dump bucket
+            robot.bucketDump.setPosition(bucketAngle);
+
+            //reset arms
+            mechControl.resetArm();
+
+            // reverse direction to drive forward to park
+            forwardSpeed = forwardSpeed * -1;
+
+            //back up turn amount
+            drive.driveStraight(forwardSpeed, turnDistance);
+
+            // reposition angle to park
+            turnAngle = 90 - turnAngle;
+            drive.driveTurn(turnAngle * positionFactor, turnError);
+
+            // adjust park distance if needed
+            if (startPosition.equals("FIELD")) {
+                parkDistance = parkDistance + parkAdjust;
+            }
+            drive.driveStraight(forwardSpeed, parkDistance);
+
+            // Step 2 - just stop for now
         }
-
-        // dump bucket
-        robot.bucketDump.setPosition(bucketAngle);
-
-        //reset arms
-        mechControl.resetArm();
-
-        // reverse direction to drive forward to park
-        forwardSpeed = forwardSpeed * -1;
-
-        //back up turn amount
-        drive.driveStraight(forwardSpeed, turnDistance);
-
-        // reposition angle to park
-        turnAngle = 90 - turnAngle;
-        drive.driveTurn(turnAngle * positionFactor, turnError);
-
-        // adjust park distance if needed
-        if (startPosition.equals("FIELD")){
-            parkDistance = parkDistance + parkAdjust;
-        }
-        drive.driveStraight(forwardSpeed, parkDistance);
-
-        // Step 2 - just stop for now
-
         drive.motorsHalt();
 
         telemetry.addData("Path", "Complete");
