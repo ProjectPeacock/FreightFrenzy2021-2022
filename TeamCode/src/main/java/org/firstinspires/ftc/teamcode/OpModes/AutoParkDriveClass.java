@@ -29,40 +29,38 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
+import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 
 
-@Autonomous(name="AutoPark", group="compition")
-public class AutoPark extends LinearOpMode {
+@Autonomous(name="AutoParkDriveClass", group="Competition")
+public class AutoParkDriveClass extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareProfile robot   = new HardwareProfile();   // Use a Pushbot's hardware
+    HardwareProfile robot   = new HardwareProfile();
+    private LinearOpMode opMode = this;
     private ElapsedTime     runtime = new ElapsedTime();
 
 
-
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double     FORWARD_SPEED = -0.4;
+    static final double     DRIVE_HEADING    = 0.0;
+    static final double     DRIVE_DISTANCE    = 36.0;
 
     @Override
     public void runOpMode() {
-        long startDelay = 0;
-        boolean autoReady = false;
-        ElapsedTime runTime = new ElapsedTime();
-        double timeElapsed = runtime.time();
 
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        DriveClass drive = new DriveClass(robot, opMode);
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -72,61 +70,35 @@ public class AutoPark extends LinearOpMode {
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 
-        while (!autoReady) {
-                telemetry.addData("Add a Delay", "");
-                telemetry.addData("Press DPAD_UP  ", " To Increase Delay");
-                telemetry.addData("Press DPAD_DOWN ", " To Reduce Delay");
-                telemetry.addData("Current Delay = ", startDelay);
-
-                telemetry.addData("Press A to continue", "");
-                telemetry.update();
-
-                if (gamepad1.dpad_up && (runTime.time() - timeElapsed) > 0.3) {
-                    if (startDelay < 25) {       // limit the max delay to 10 seconds
-                        startDelay = startDelay + 1;
-                    }
-                    timeElapsed = runTime.time();
-                } //end of if(gamepad1.dpad_up)
-
-                if (gamepad1.dpad_down && (runTime.time() - timeElapsed) > 0.3) {
-                    if (startDelay > 0) {       // confirm that the delay is not negative
-                        startDelay = startDelay - 1;
-                    } else startDelay = 0;
-                    timeElapsed = runTime.time();
-                } //end of if(gamepad1.dpad_up)
-
-                if (gamepad1.a) {         // exit the setup
-                    autoReady = true;
-                    startDelay = startDelay * 1000;
-                }   // end of if(gamepad1.x...
-
-
-        }
-                waitForStart();
-        sleep(startDelay);
+        waitForStart();
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1
-        robot.motorR1.setPower(FORWARD_SPEED);
-        robot.motorL1.setPower(FORWARD_SPEED);
-        robot.motorR2.setPower(FORWARD_SPEED);
-        robot.motorL2.setPower(FORWARD_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
+//        drive.driveStraight(FORWARD_SPEED,DRIVE_DISTANCE);
+           // telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+           // telemetry.update();
+
+      //  drive.driveStraight(0.4, 72);
+      //  drive.driveTurn(90, 0.5);
+        drive.driveStraight(-0.4, 26);
+     //   drive.driveTurn(-90, 0.5);
+        drive.driveTurn(-90, 0.5);
+        drive.driveStraight(0.4, 24);
+
+        telemetry.addData("motor L1 = ", robot.motorL1.getCurrentPosition());
+        telemetry.addData("motor L2 = ", robot.motorL2.getCurrentPosition());
+        telemetry.addData("motor R1 = ", robot.motorR1.getCurrentPosition());
+        telemetry.addData("motor R2 = ", robot.motorR2.getCurrentPosition());
+        telemetry.update();
 
 
         // Step 2
-        robot.motorR1.setPower(0);
-        robot.motorL1.setPower(0);
-        robot.motorR2.setPower(0.0);
-        robot.motorL2.setPower(0.0);
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        drive.motorsHalt();
+
+     //   telemetry.addData("Path", "Complete");
+     //   telemetry.update();
         sleep(1000);
     }
 }

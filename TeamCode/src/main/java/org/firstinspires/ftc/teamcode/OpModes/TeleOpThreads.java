@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
-import org.firstinspires.ftc.teamcode.Libs.MechControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads", group = "Competition")
 @Disabled

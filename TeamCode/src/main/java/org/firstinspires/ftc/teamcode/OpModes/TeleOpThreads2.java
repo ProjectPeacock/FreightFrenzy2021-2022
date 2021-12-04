@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
-import org.firstinspires.ftc.teamcode.Libs.MechControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads2", group = "Competition")
 //  @Disabled
@@ -133,10 +133,10 @@ public class TeleOpThreads2 extends LinearOpMode {
 //chainsaw control section (GP1, Bumpers)
 
             if(gamepad1.right_bumper){
-                robot.motorChainsaw.setPower(0.6);
+                robot.motorChainsaw.setPower(0.45);
                 }
             else if(gamepad1.left_bumper){
-                robot.motorChainsaw.setPower(-0.6);
+                robot.motorChainsaw.setPower(-0.45);
             }
             else if(gamepad1.right_trigger>0.5){
                 robot.motorChainsaw.setPower(1);

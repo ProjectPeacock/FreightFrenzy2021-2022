@@ -17,6 +17,9 @@ public class HardwareProfile {
     /*
      * Constants
      */
+
+    public final double DRIVE_TICKS_PER_INCH = 28.0;
+
     public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
 //drive control constants
     public final double DRIVE_MULTIPLIER=0.65;
@@ -61,7 +64,8 @@ public class HardwareProfile {
     public DcMotorEx motorArmAngle2 = null; // Arm upper angle motor
     public DcMotorEx motorArmAngle1 = null; // Arm base angle motor
     public DcMotor motorIntake = null; // Intake motor
-    public DcMotor motorChainsaw = null; // Chainsaw motor
+    public DcMotor motorChainsaw = null; // Cha
+    // insaw motor
 
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
 

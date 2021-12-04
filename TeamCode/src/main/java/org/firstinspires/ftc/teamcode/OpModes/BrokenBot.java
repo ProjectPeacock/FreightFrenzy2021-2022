@@ -76,7 +76,7 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
             while(opModeIsActive()) {
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
                 telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
-
+                telemetry.addData("Drive Motor Encoders:",robot.motorR1.getCurrentPosition());
                 currentTime = runTime.time();
                 if(robot.sensorDistPink.getDistance(DistanceUnit.CM)<60){
                     telemetry.addData("Pink shipping element present","");
