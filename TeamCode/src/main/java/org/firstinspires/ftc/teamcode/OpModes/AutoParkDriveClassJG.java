@@ -29,8 +29,10 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+//
+// import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
@@ -42,6 +44,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 
 @Autonomous(name="AutoParkDriveClassJG", group="Competition")
+@Disabled
 public class AutoParkDriveClassJG extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -63,11 +66,11 @@ public class AutoParkDriveClassJG extends LinearOpMode {
         String goalPosition = "";
         long startDelay = 0;
         double timeElapsed;
-        int positionFactor = 1;
-        int scorePosition=3;
+        double positionFactor = 1;
+        int scorePosition=1;
         double forwardSpeed = -0.4;
         double goalDistance = 26.0;
-        double turnDistance = 2.0;
+        double turnDistance = 4.0;
         double turnAngle = 60;
         double parkDistance = 26.0;
         double parkAdjust = 24.0;
@@ -95,14 +98,16 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                     if(gamepad1.x || gamepad1.y){
                         if (gamepad1.x){
                             alliance = "BLUE";
-                            positionFactor = 1;
-                            robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+                            positionFactor = -1;
+ //                          robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
                         }  else {
                             alliance = "RED";
-                            positionFactor = -1;
-                            robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+                            positionFactor = 1;
+ //                           robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
                         }
                         setupState = State.DELAY_LENGTH;    // give option to add delay
+                        telemetry.addData("Goal on ==  ", positionFactor);
+                        telemetry.update();
                     }   // end of if(gamepad1.x...
                     break;
 
@@ -144,12 +149,11 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                     if(gamepad1.dpad_left || gamepad1.dpad_right){
                         if (gamepad1.dpad_left){
                             startPosition = "WALL";
-                            if(alliance.equals("BLUE")){
-                                robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.SHOT_BLUE);
-                            } else robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.SHOT_RED);
                             sleep(1000);
-                        }  else startPosition = "FIELD";
-                        positionFactor = positionFactor * -1;
+                        }  else {
+                            startPosition = "FIELD";
+                            positionFactor = positionFactor * -1;
+                        }
                         setupState = State.VERIFY_CONFIG;
                     }   // end of if(gamepad1.dpad_left...
                     break;
@@ -164,7 +168,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                     telemetry.addData("Alliance          == ", alliance);
                     telemetry.addData("Start Delay == ", startDelay);
                     telemetry.addData("Starting Position ==  ", startPosition);
-                    telemetry.addData("Goal on ==  ", goalPosition);
+                    telemetry.addData("Goal on ==  ", positionFactor);
                     telemetry.addData("","");
                     telemetry.addData("Press A to Confirm or B to start over","");
                     telemetry.update();
@@ -199,11 +203,8 @@ public class AutoParkDriveClassJG extends LinearOpMode {
 
         // sleep for set delay time
         sleep(startDelay);
-        timeElapsed = runtime.time() - startTime;
 
-        while (timeElapsed < 30) {
-
-            timeElapsed = runtime.time() - startTime;
+        while (opModeIsActive()) {
 
             // Step 1
             //      drive.driveStraight(backwards to goal
@@ -212,28 +213,21 @@ public class AutoParkDriveClassJG extends LinearOpMode {
             //   drive.driveTurn(turn towards goal);
             drive.driveTurn(turnAngle * positionFactor, turnError);
 
-            //pause for 1 second
-            sleep(1000);
-
+            mechControl.scoringPos1();
+        //    idle();
             //  drive towards goal
             drive.driveStraight(forwardSpeed, turnDistance);
 
             // score element in high goal
             //move arm to scoring positions. initailly always go high, later will use
             // recognition to set scorePosition
-            if (scorePosition == 1) {
-                mechControl.scoringPos1();
-            } else if (scorePosition == 2) {
-                mechControl.scoringPos2();
-            } else if (scorePosition == 3) {
-                mechControl.scoringPos3();
-            }
+            sleep(1250);
 
             // dump bucket
             robot.bucketDump.setPosition(bucketAngle);
-
+            sleep(1000);
             //reset arms
-            mechControl.resetArm();
+            mechControl.moveToZero();
 
             // reverse direction to drive forward to park
             forwardSpeed = forwardSpeed * -1;

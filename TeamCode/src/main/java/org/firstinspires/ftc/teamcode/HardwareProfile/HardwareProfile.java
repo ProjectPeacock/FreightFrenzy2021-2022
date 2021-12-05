@@ -167,9 +167,11 @@ public class HardwareProfile {
   //      LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
 
 //initialize sensors
-
+/*
         sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
         sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
+        */
+
         imu = hwMap.get(BNO055IMU.class, "imu");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

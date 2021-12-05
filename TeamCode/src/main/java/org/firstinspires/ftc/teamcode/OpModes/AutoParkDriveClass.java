@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -38,6 +39,7 @@ import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 
 
 @Autonomous(name="AutoParkDriveClass", group="Competition")
+@Disabled
 public class AutoParkDriveClass extends LinearOpMode {
 
     /* Declare OpMode members. */

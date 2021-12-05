@@ -54,7 +54,7 @@ public class AutoPark extends LinearOpMode {
     @Override
     public void runOpMode() {
         long startDelay = 0;
-        boolean autoReady = false;
+       // boolean autoReady = false;
         ElapsedTime runTime = new ElapsedTime();
         double timeElapsed = runtime.time();
 
@@ -72,7 +72,7 @@ public class AutoPark extends LinearOpMode {
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 
-        while (!autoReady) {
+      /*  while (!autoReady) {
                 telemetry.addData("Add a Delay", "");
                 telemetry.addData("Press DPAD_UP  ", " To Increase Delay");
                 telemetry.addData("Press DPAD_DOWN ", " To Reduce Delay");
@@ -82,7 +82,7 @@ public class AutoPark extends LinearOpMode {
                 telemetry.update();
 
                 if (gamepad1.dpad_up && (runTime.time() - timeElapsed) > 0.3) {
-                    if (startDelay < 25) {       // limit the max delay to 10 seconds
+                    if (startDelay < 25) {       // limit the max delay to 25 seconds
                         startDelay = startDelay + 1;
                     }
                     timeElapsed = runTime.time();
@@ -101,9 +101,9 @@ public class AutoPark extends LinearOpMode {
                 }   // end of if(gamepad1.x...
 
 
-        }
+        } */
                 waitForStart();
-        sleep(startDelay);
+      //  sleep(startDelay);
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 

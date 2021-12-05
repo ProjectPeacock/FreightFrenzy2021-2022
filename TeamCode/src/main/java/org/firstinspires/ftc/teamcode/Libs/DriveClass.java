@@ -64,17 +64,17 @@ public class DriveClass {
 
     /**
      * Method: calcDistance
-     * @param rfStart   - Right Front starting encoder value
-     * @param rrStart   - Right Rear starting encoder value
-     * @param lfStart   - Left Front starting encoder value
-     * @param lrStart   - Left Rear starting encoder value
+     * @param r1Start   - Right Front starting encoder value
+     * @param r2Start   - Right Rear starting encoder value
+     * @param l1Start   - Left Front starting encoder value
+     * @param l2Start   - Left Rear starting encoder value
      */
     public double calcDistance(double r1Start, double r2Start, double l1Start, double l2Start){
 
         double distanceTraveled = 0;
         double r1Encoder = robot.motorR1.getCurrentPosition();;
-        double r2Encoder = robot.motorL1.getCurrentPosition();;
-        double l1Encoder = robot.motorR2.getCurrentPosition();;
+        double r2Encoder = robot.motorR2.getCurrentPosition();;
+        double l1Encoder = robot.motorL1.getCurrentPosition();;
         double l2Encoder = robot.motorL2.getCurrentPosition();
 
             distanceTraveled = ((Math.abs(r1Start - r1Encoder) + Math.abs(r2Start - r2Encoder)
