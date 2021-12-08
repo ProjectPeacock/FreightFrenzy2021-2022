@@ -75,7 +75,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
         double parkDistance = 26.0;
         double parkAdjust = 24.0;
         double turnError = 0.5;
-        double bucketAngle=0.75;
+        double bucketAngle = -1.0;
 
         /*
          * Initialize the drive system variables.
@@ -154,8 +154,36 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                             startPosition = "FIELD";
                             positionFactor = positionFactor * -1;
                         }
-                        setupState = State.VERIFY_CONFIG;
+                        setupState = State.SCORING_POSITION;
                     }   // end of if(gamepad1.dpad_left...
+                    break;
+
+                case SCORING_POSITION:
+                    telemetry.addData("Set Scoring Position", "");
+                    telemetry.addData("Press DPAD_UP  ", " To Increase ");
+                    telemetry.addData("Press DPAD_DOWN ", " To Decrease");
+                    telemetry.addData("Current Scoring Position = ", scorePosition);
+
+                    telemetry.addData("Press A to continue", "");
+                    telemetry.update();
+
+                    if(gamepad1.dpad_up && (runtime.time()-timeElapsed) >0.3) {
+                        if(scorePosition < 3){       // limit the max delay to 10 seconds
+                            scorePosition = scorePosition + 1;
+                        }
+                        timeElapsed = runtime.time();
+                    } //end of if(gamepad1.dpad_up)
+
+                    if(gamepad1.dpad_down && (runtime.time()-timeElapsed) >0.3) {
+                        if(scorePosition > 1){       // confirm that the delay is not negative
+                            scorePosition = scorePosition - 1;
+                        } else scorePosition = 1;
+                        timeElapsed = runtime.time();
+                    } //end of if(gamepad1.dpad_up)
+
+                    if(gamepad1.a){         // exit the setup
+                        setupState = State.VERIFY_CONFIG;
+                    }   // end of Scoring_position...
                     break;
 
                 case VERIFY_CONFIG:
@@ -169,6 +197,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                     telemetry.addData("Start Delay == ", startDelay);
                     telemetry.addData("Starting Position ==  ", startPosition);
                     telemetry.addData("Goal on ==  ", positionFactor);
+                    telemetry.addData("Scoring Position ==  ", scorePosition);
                     telemetry.addData("","");
                     telemetry.addData("Press A to Confirm or B to start over","");
                     telemetry.update();
@@ -213,7 +242,14 @@ public class AutoParkDriveClassJG extends LinearOpMode {
             //   drive.driveTurn(turn towards goal);
             drive.driveTurn(turnAngle * positionFactor, turnError);
 
-            mechControl.scoringPos1();
+            //move arm to scoring positions
+            if(scorePosition==1){
+                mechControl.scoringPos1();
+            }else if(scorePosition==2){
+                mechControl.scoringPos2();
+            }else if(scorePosition==3){
+                mechControl.scoringPos3();
+            }
         //    idle();
             //  drive towards goal
             drive.driveStraight(forwardSpeed, turnDistance);
@@ -221,7 +257,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
             // score element in high goal
             //move arm to scoring positions. initailly always go high, later will use
             // recognition to set scorePosition
-            sleep(1250);
+            sleep(1000);
 
             // dump bucket
             robot.bucketDump.setPosition(bucketAngle);
@@ -262,7 +298,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
      * Enumerate the states of the machine
      */
     enum State {
-        ALLIANCE_SELECT, POSITION_SELECT, VERIFY_CONFIG, DELAY_LENGTH,
-        DEPOT_PARK, FIELD_PARK, HALT
+        ALLIANCE_SELECT, POSITION_SELECT, VERIFY_CONFIG, DELAY_LENGTH,SCORING_POSITION,
+        FIELD_PARK, HALT
     }   // end of enum State
 }
