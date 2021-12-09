@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -63,9 +64,9 @@ public class HardwareProfile {
     public DcMotor motorR2 = null;  // Right Rear Drive Motor
     public DcMotorEx motorArmAngle2 = null; // Arm upper angle motor
     public DcMotorEx motorArmAngle1 = null; // Arm base angle motor
+    public DcMotor motorChainsaw = null; // Chainsaw motor
     public DcMotor motorIntake = null; // Intake motor
-    public DcMotor motorChainsaw = null; // Cha
-    // insaw motor
+    public DcMotor turrentEncoder = motorIntake;
 
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
 
@@ -74,7 +75,10 @@ public class HardwareProfile {
     public Servo intakeDeployPink = null; //Left intake deploy servo
     public Servo intakeTilt = null; //Intake ramp position servo
     public Servo bucketDump = null; //Bucket turning servo
-    //public WebcamName webcam;
+    public CRServo turret1 = null;  // first turret servo
+    public CRServo turret2 = null;  // second turret servo
+
+    //public distance sensors;
     public DistanceSensor sensorDistPink=null;
     public DistanceSensor sensorDistBlue=null;
     public RevBlinkinLedDriver LEDPort;
@@ -152,6 +156,8 @@ public class HardwareProfile {
         intakeDeployPink = hwMap.servo.get("intakeDeployPink");
         intakeTilt = hwMap.servo.get("intakeTilt");
         bucketDump = hwMap.servo.get("bucketDump");
+        turret1 = hwMap.crservo.get("turret1");
+        turret2 = hwMap.crservo.get("turret2");
 
 /*
         motorOdometry = hwMap.dcMotor.get("motorOdometry");
@@ -167,10 +173,8 @@ public class HardwareProfile {
   //      LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
 
 //initialize sensors
-/*
         sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
         sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
-        */
 
         imu = hwMap.get(BNO055IMU.class, "imu");
 
