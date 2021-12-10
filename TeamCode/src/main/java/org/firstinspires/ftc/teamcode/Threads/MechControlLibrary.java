@@ -1,3 +1,8 @@
+// change comments
+
+/*
+  12/09/21 added rotateTurret & resetTurret method stubs
+ */
 package org.firstinspires.ftc.teamcode.Threads;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -151,6 +156,18 @@ public class MechControlLibrary implements Runnable{
     }
 //end of chainsaw acceleration for Red Alliance
 
+// rotate turret
+    public void rotateTurret(double turretPower){
+        // ensure power within range
+
+        localRobot.turret1.setPower(turretPower);
+        localRobot.turret2.setPower(turretPower);
+    }   // end of rotateTurret
+
+    // reset turret - returns turret to 'home' position
+    public void resetTurret(){
+
+    }   // end of resetTurret
 
 //method that runs whenever thread is running
     public void activeMechControl(){

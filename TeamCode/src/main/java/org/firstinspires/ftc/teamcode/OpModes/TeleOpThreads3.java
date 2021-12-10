@@ -1,3 +1,8 @@
+//  change comments
+/*
+  12/8/21 moved arm controls to gamepad2
+  12/9/21 added turret control to gamepad2
+ */
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -48,6 +53,7 @@ public class TeleOpThreads3 extends LinearOpMode {
         boolean toggleIntake=false;
         boolean chainsawReady=false;
         double turn, drive, left, right, max;
+        double currentTurretPower = 0.0;
         double turretPower = 0.0;
 
         waitForStart();
@@ -264,9 +270,12 @@ public class TeleOpThreads3 extends LinearOpMode {
                     turretPower = 0;
                 }
             }
+            // check current turret power and only rotate only if changed
+            if (turretPower!= currentTurretPower){
+                mechControl.rotateTurret(turretPower);
+                currentTurretPower = turretPower  ;
+            }
 
-            robot.turret1.setPower(turretPower);
-            robot.turret2.setPower(turretPower);
             /**
              * #################################################################################
              * #################################################################################
