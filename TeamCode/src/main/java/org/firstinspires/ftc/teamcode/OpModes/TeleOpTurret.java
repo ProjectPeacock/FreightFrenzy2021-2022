@@ -10,15 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads3", group = "Competition")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpTurret", group = "Competition")
 //  @Disabled
 
-public class TeleOpThreads3 extends LinearOpMode {
+public class TeleOpTurret extends LinearOpMode {
 
     private final static HardwareProfile robot = new HardwareProfile();
     private LinearOpMode opMode = this;
 
-    public TeleOpThreads3(){
+    public TeleOpTurret(){
 
     }   // end of BrokenBotTS constructor
 
@@ -44,7 +44,7 @@ public class TeleOpThreads3 extends LinearOpMode {
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
         double bucketAngle=0.5;
-        int bumpCount=0;
+        int armPositionCounter =0;
         int chainsawMode=0;
         boolean toggleReadyDown=false;
         boolean toggleReadyUp=false;
@@ -113,7 +113,7 @@ public class TeleOpThreads3 extends LinearOpMode {
 
 //intake control section (GP1, A)
             //allows for intake toggle and not button hold down
-            if(!gamepad1.a){
+            if(!gamepad2.a){
                 toggleIntake=true;
             }
 
@@ -123,7 +123,7 @@ public class TeleOpThreads3 extends LinearOpMode {
                 toggleIntake=false;
                 intakeDown=!intakeDown;
                 isDeployed=false;
-                bumpCount=0;
+                armPositionCounter =0;
             }
             //check if intake needs to be reversed and then deploy or retract
             if(!gamepad2.b) {
@@ -197,41 +197,41 @@ public class TeleOpThreads3 extends LinearOpMode {
             }
             //end of arm toggle checks
 
-            //adds 1 to bumpCount if x isn't held down
+            //adds 1 to armPositionCounter if x isn't held down
             if(gamepad2.x && toggleReadyDown){
                 toggleReadyDown=false;
-                if(bumpCount<3) {
-                    bumpCount += 1;
+                if(armPositionCounter <3) {
+                    armPositionCounter += 1;
                 }
             }
 
-            //removes 1 from bumpCount if dpad up isn't held down
+            //removes 1 from armPositionCounter if dpad up isn't held down
             if(gamepad2.dpad_up && toggleReadyUp){
                 toggleReadyUp=false;
-                if(bumpCount>1) {
-                    bumpCount -= 1;
+                if(armPositionCounter >1) {
+                    armPositionCounter -= 1;
                 }
             }
 
             //counts how many times x has been pressed (what position to go to to score)
-            if(bumpCount>0){
+            if(armPositionCounter >0){
                 isDeployed=true;
                 mechControl.resetIntake();
                 intakeDown=false;
             }
 
             //move arm to scoring positions
-            if(bumpCount==1){
+            if(armPositionCounter ==1){
                 mechControl.scoringPos1();
-            }else if(bumpCount==2){
+            }else if(armPositionCounter ==2){
                 mechControl.scoringPos2();
-            }else if(bumpCount==3){
+            }else if(armPositionCounter ==3){
                 mechControl.scoringPos3();
             }
 
             //reset arm to zero with or without scoring
             if(gamepad2.dpad_down){
-                bumpCount=0;
+                armPositionCounter =0;
                 isDeployed=false;
                 mechControl.moveToZero();
             }else{
@@ -242,7 +242,7 @@ public class TeleOpThreads3 extends LinearOpMode {
             if(gamepad2.y){
                 if(isDeployed){
                     mechControl.resetArm();
-                    bumpCount=0;
+                    armPositionCounter =0;
                     isDeployed=false;
                 }
             }
@@ -253,7 +253,7 @@ public class TeleOpThreads3 extends LinearOpMode {
                 bucketAngle=-1;
             } else{
                 bucketAngle=0.5;
-                if(bumpCount==3){
+                if(armPositionCounter ==3){
                     bucketAngle=0.75;
                 }
             }
