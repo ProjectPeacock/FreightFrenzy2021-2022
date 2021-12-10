@@ -26,7 +26,11 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+// change comments
+/*
+12/07/21 added  back code to drive to goal, changed bucket dump setting,
+         added SCORING_POSITION state to initialization. use dpad to set level
+*/
 package org.firstinspires.ftc.teamcode.OpModes;
 
 //
@@ -44,7 +48,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 
 @Autonomous(name="AutoParkDriveClassJG", group="Competition")
-@Disabled
+//@Disabled
 public class AutoParkDriveClassJG extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -196,6 +200,7 @@ public class AutoParkDriveClassJG extends LinearOpMode {
                     telemetry.addData("Alliance          == ", alliance);
                     telemetry.addData("Start Delay == ", startDelay);
                     telemetry.addData("Starting Position ==  ", startPosition);
+                    telemetry.addData("Goal position ==  ", goalPosition);
                     telemetry.addData("Goal on ==  ", positionFactor);
                     telemetry.addData("Scoring Position ==  ", scorePosition);
                     telemetry.addData("","");

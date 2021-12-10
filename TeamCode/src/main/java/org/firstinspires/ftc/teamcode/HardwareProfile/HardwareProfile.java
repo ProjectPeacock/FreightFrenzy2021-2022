@@ -1,3 +1,9 @@
+// change comments
+/*
+12/7/21 added turret continuous servos: turret1 & turret2
+        add turretEncoder - encoder added to inTakeMotor referneced via
+        turretEncoder object
+*/
 package org.firstinspires.ftc.teamcode.HardwareProfile;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
