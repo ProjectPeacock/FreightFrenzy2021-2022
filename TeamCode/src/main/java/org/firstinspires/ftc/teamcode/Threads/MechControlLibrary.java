@@ -18,6 +18,11 @@ public class MechControlLibrary implements Runnable{
     private double arm2Power=1;
     private int sleepTime;
     private boolean isRunning=true;
+    private double turretPower = 0.02;
+    private int turretTargetPosition = 0;
+    private int turretThreshold = 5;
+    private int turretLimit = 500;
+
 
     //constructor
     public MechControlLibrary(HardwareProfile robotIn, int threadSleepDelay){
@@ -157,16 +162,24 @@ public class MechControlLibrary implements Runnable{
 //end of chainsaw acceleration for Red Alliance
 
 // rotate turret
-    public void rotateTurret(double turretPower){
-        // ensure power within range
-
-        localRobot.turret1.setPower(turretPower);
-        localRobot.turret2.setPower(turretPower);
+    public void rotateTurret(double power){
+        // ensure turret within limit
+        if (Math.abs(localRobot.turrentEncoder.getCurrentPosition())<turretLimit){
+            localRobot.turret1.setPower(power);
+            localRobot.turret2.setPower(power);
+        }
     }   // end of rotateTurret
 
     // reset turret - returns turret to 'home' position
     public void resetTurret(){
-
+        turretTargetPosition = 0;
+        localRobot.turret1.setPower(turretPower);
+        localRobot.turret2.setPower(turretPower);
+        while(Math.abs(turretTargetPosition - localRobot.turrentEncoder.getCurrentPosition())>turretThreshold) {
+        }
+        turretPower = 0;
+        localRobot.turret1.setPower(turretPower);
+        localRobot.turret2.setPower(turretPower);
     }   // end of resetTurret
 
 //method that runs whenever thread is running
