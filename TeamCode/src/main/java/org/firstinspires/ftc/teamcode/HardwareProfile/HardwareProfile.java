@@ -4,6 +4,7 @@
 12/7/21 added turret continuous servos: turret1 & turret2
         add turretEncoder - encoder added to inTakeMotor referneced via
         turretEncoder object
+12/10/21 renamed turret servos
 */
 package org.firstinspires.ftc.teamcode.HardwareProfile;
 
@@ -73,7 +74,7 @@ public class HardwareProfile {
     public DcMotorEx motorArmAngle1 = null; // Arm base angle motor
     public DcMotor motorChainsaw = null; // Chainsaw motor
     public DcMotor motorIntake = null; // Intake motor
-    public DcMotor turrentEncoder = motorIntake;
+    public DcMotor turrentEncoder = null;
 
     public BNO055IMU imu;       // Internal accelerometer / Gyro sensor
 
@@ -82,13 +83,13 @@ public class HardwareProfile {
     public Servo intakeDeployPink = null; //Left intake deploy servo
     public Servo intakeTilt = null; //Intake ramp position servo
     public Servo bucketDump = null; //Bucket turning servo
-    public CRServo turret1 = null;  // first turret servo
-    public CRServo turret2 = null;  // second turret servo
+    public CRServo turretServoBlue = null;  // first turret servo
+    public CRServo turretServoPink = null;  // second turret servo
 
     //public distance sensors;
     public DistanceSensor sensorDistPink=null;
     public DistanceSensor sensorDistBlue=null;
-    public RevBlinkinLedDriver LEDPort;
+  //  public RevBlinkinLedDriver LEDPort;
 
     /* Constructor */
     public HardwareProfile() {
@@ -133,6 +134,9 @@ public class HardwareProfile {
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntake.setPower(0);
 
+        turrentEncoder = hwMap.dcMotor.get("motorIntake");
+        turrentEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         motorChainsaw = hwMap.dcMotor.get("motorChainsaw");
         motorChainsaw.setDirection(DcMotor.Direction.FORWARD);
         motorChainsaw.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -163,8 +167,8 @@ public class HardwareProfile {
         intakeDeployPink = hwMap.servo.get("intakeDeployPink");
         intakeTilt = hwMap.servo.get("intakeTilt");
         bucketDump = hwMap.servo.get("bucketDump");
-        turret1 = hwMap.crservo.get("turret1");
-        turret2 = hwMap.crservo.get("turret2");
+        turretServoBlue = hwMap.crservo.get("turretServoBlue");
+        turretServoPink = hwMap.crservo.get("turretServoPink");
 
 /*
         motorOdometry = hwMap.dcMotor.get("motorOdometry");

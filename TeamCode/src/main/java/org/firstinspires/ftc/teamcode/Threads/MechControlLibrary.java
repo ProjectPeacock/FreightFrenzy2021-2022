@@ -6,12 +6,15 @@
 package org.firstinspires.ftc.teamcode.Threads;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 
 public class MechControlLibrary implements Runnable{
     //takes in HardwareProfile to be able to access motors & servos
     public HardwareProfile localRobot=null;
+    private ElapsedTime runtime = new ElapsedTime();
+
     private int angle1=0;
     private int angle2=0;
     private double arm1Power=1;
@@ -22,7 +25,7 @@ public class MechControlLibrary implements Runnable{
     private int turretTargetPosition = 0;
     private int turretThreshold = 5;
     private int turretLimit = 500;
-
+    private double timeElapsed;
 
     //constructor
     public MechControlLibrary(HardwareProfile robotIn, int threadSleepDelay){
@@ -165,21 +168,24 @@ public class MechControlLibrary implements Runnable{
     public void rotateTurret(double power){
         // ensure turret within limit
         if (Math.abs(localRobot.turrentEncoder.getCurrentPosition())<turretLimit){
-            localRobot.turret1.setPower(power);
-            localRobot.turret2.setPower(power);
+            localRobot.turretServoBlue.setPower(power);
+            localRobot.turretServoPink.setPower(power);
         }
     }   // end of rotateTurret
 
     // reset turret - returns turret to 'home' position
     public void resetTurret(){
         turretTargetPosition = 0;
-        localRobot.turret1.setPower(turretPower);
-        localRobot.turret2.setPower(turretPower);
-        while(Math.abs(turretTargetPosition - localRobot.turrentEncoder.getCurrentPosition())>turretThreshold) {
+        localRobot.turretServoBlue.setPower(turretPower);
+        localRobot.turretServoPink.setPower(turretPower);
+        timeElapsed = runtime.time();
+
+        while((Math.abs(turretTargetPosition - localRobot.turrentEncoder.getCurrentPosition())>turretThreshold) && ((runtime.time()-timeElapsed) <0.5)) {
+            timeElapsed = runtime.time();
         }
         turretPower = 0;
-        localRobot.turret1.setPower(turretPower);
-        localRobot.turret2.setPower(turretPower);
+        localRobot.turretServoBlue.setPower(turretPower);
+        localRobot.turretServoPink.setPower(turretPower);
     }   // end of resetTurret
 
 //method that runs whenever thread is running

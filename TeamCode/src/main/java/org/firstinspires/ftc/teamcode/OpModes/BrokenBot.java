@@ -85,7 +85,10 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
                     telemetry.addData("Blue shipping element present","");
                 }
                 telemetry.addData("Pink distance:",robot.sensorDistPink.getDistance(DistanceUnit.CM));
+
                 telemetry.addData("Blue distance:",robot.sensorDistBlue.getDistance(DistanceUnit.CM));
+
+                telemetry.addData("Turret endcoder",robot.turrentEncoder.getCurrentPosition());
                 telemetry.update();
                 /*
                  * Mecanum Drive Control section
