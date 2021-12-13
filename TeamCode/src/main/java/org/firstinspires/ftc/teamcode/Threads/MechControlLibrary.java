@@ -5,6 +5,8 @@
  */
 package org.firstinspires.ftc.teamcode.Threads;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,8 +26,9 @@ public class MechControlLibrary implements Runnable{
     private double turretPower = 0.02;
     private int turretTargetPosition = 0;
     private int turretThreshold = 5;
-    private int turretLimit = 500;
+    private int turretLimit = 330;
     private double timeElapsed;
+    private int turretServoPower=0;
 
     //constructor
     public MechControlLibrary(HardwareProfile robotIn, int threadSleepDelay){
@@ -35,16 +38,21 @@ public class MechControlLibrary implements Runnable{
 
 //deploy intake method
     public void intakeOn(boolean deployed){
-        localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
         localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
         localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
         localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
         angle2=localRobot.ARM_2_INTAKE;
         localRobot.motorArmAngle2.setTargetPosition(angle2);
-        while(localRobot.motorArmAngle2.getCurrentPosition()>900){
+        while(localRobot.motorArmAngle2.getCurrentPosition()>750){
 
         }
         angle1=localRobot.ARM_1_INTAKE;
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
     }
 //end of deploy intake method
 
@@ -56,7 +64,7 @@ public class MechControlLibrary implements Runnable{
             angle2=0;
         }
         //waits for arm 1 to move up before moving intake to prevent collisions
-        if(localRobot.motorArmAngle1.getCurrentPosition()<900){
+        if(localRobot.motorArmAngle1.getCurrentPosition()<850){
             localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
             localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
             localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
@@ -175,17 +183,29 @@ public class MechControlLibrary implements Runnable{
 
     // reset turret - returns turret to 'home' position
     public void resetTurret(){
-        turretTargetPosition = 0;
-        localRobot.turretServoBlue.setPower(turretPower);
-        localRobot.turretServoPink.setPower(turretPower);
-        timeElapsed = runtime.time();
-
-        while((Math.abs(turretTargetPosition - localRobot.turrentEncoder.getCurrentPosition())>turretThreshold) && ((runtime.time()-timeElapsed) <0.5)) {
-            timeElapsed = runtime.time();
+        while(Math.abs(localRobot.turrentEncoder.getCurrentPosition())>turretTargetPosition) {
+            if(Math.abs(localRobot.turrentEncoder.getCurrentPosition())>50){
+                if (localRobot.turrentEncoder.getCurrentPosition() > turretTargetPosition) {
+                    turretPower = 0.3;
+                } else {
+                    turretPower = -0.3;
+                }
+            }else if(Math.abs(localRobot.turrentEncoder.getCurrentPosition())<=50){
+                if (localRobot.turrentEncoder.getCurrentPosition() > turretTargetPosition) {
+                    turretPower = 0.1;
+                } else {
+                    turretPower = -0.1;
+                }
+            }else if(Math.abs(localRobot.turrentEncoder.getCurrentPosition())<20){
+                if (localRobot.turrentEncoder.getCurrentPosition() > turretTargetPosition) {
+                    turretPower = 0.005;
+                } else {
+                    turretPower = -0.005;
+                }
+            }
+            localRobot.turretServoBlue.setPower(turretPower);
+            localRobot.turretServoPink.setPower(turretPower);
         }
-        turretPower = 0;
-        localRobot.turretServoBlue.setPower(turretPower);
-        localRobot.turretServoPink.setPower(turretPower);
     }   // end of resetTurret
 
 //method that runs whenever thread is running
@@ -208,7 +228,7 @@ public class MechControlLibrary implements Runnable{
         while(isRunning){
             activeMechControl();
             try{
-                Thread.sleep(sleepTime);
+                sleep(sleepTime);
             } catch(InterruptedException e){
                 e.printStackTrace();
             }

@@ -58,8 +58,10 @@ public class HardwareProfile {
     public final int MID_PLATFORM=2350;
     public final int LOW_PLATFORM=2100;
     //arm intake positions
-    public final int ARM_1_INTAKE=1075;
-    public final int ARM_2_INTAKE=45;
+    public final int ARM_1_INTAKE=1115;
+    public final int ARM_2_INTAKE=0;
+
+    public final int TURRET_MAX_ANGLE=300;
 
     /*
      * Hardware devices

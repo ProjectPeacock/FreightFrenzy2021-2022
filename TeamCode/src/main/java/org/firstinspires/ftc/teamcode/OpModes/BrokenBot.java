@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
+import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
-    @TeleOp(name = "Broken Bot TS", group = "Troubleshooting")
+@TeleOp(name = "Broken Bot TS", group = "Troubleshooting")
   //  @Disabled
 
     public class BrokenBot extends LinearOpMode {
@@ -21,6 +22,9 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
         }   // end of BrokenBotTS constructor
 
         public void runOpMode(){
+            MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+            Thread mechController = new Thread(mechControl);
+            /*
             double currentTick, currentTime, currentRPM;
             boolean servoGrabFlag=false, servoKickFlag=false, servoTransferFlag=false, servoIntakeFlag=false, servoRingFlag=false;
             double armPosition = 0.5;
@@ -36,18 +40,8 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
             double buttonPress = 0;
             boolean readyToShoot = false;
             boolean motorIntakeFlag = false;
-
-            /*
-             * ServoRing in the up and ready to receive position:   robot.servoRing.setPosition(0.2);
-             * ServoRing in the down and holding rings position:    robot.servoRing.setPosition(0.5);
-             * servoTransfer up towards shooter position:           robot.servoTransfer.setPosition(0.7);
-             * servoTransfer down to receive rings position:        robot.servoTransfer.setPosition(0.46);
-             * servoKick up towards shooter position:               robot.servoKick.setPosition(0.43);
-             * servoKick down to receive rings position:            robot.servoKick.setPosition(0.68);
-             * servoIntake deployed:                                robot.servoIntake.setPosition(0.65);
-             * servoIntake stored:                                  robot.servoIntake.setPosition(0.28);
-             */
-
+*/
+            int turretAngle=0;
             telemetry.addData("Robot State = ", "NOT READY");
             telemetry.update();
 
@@ -63,21 +57,15 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
             /*
              * Calibrate / initialize the gyro sensor
              */
-            robot.intakeDeployBlue.setPosition(0.5);
-            robot.intakeDeployPink.setPosition(0.5);
-            robot.intakeTilt.setPosition(0.5);
-            robot.bucketDump.setPosition(0.5);
-
             telemetry.addData("Robot state = ", "INITIALIZED");
             telemetry.update();
 
             waitForStart();
-
+            mechController.start();
             while(opModeIsActive()) {
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
                 telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
                 telemetry.addData("Drive Motor Encoders:",robot.motorR1.getCurrentPosition());
-                currentTime = runTime.time();
                 if(robot.sensorDistPink.getDistance(DistanceUnit.CM)<60){
                     telemetry.addData("Pink shipping element present","");
                 }
@@ -88,11 +76,10 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 
                 telemetry.addData("Blue distance:",robot.sensorDistBlue.getDistance(DistanceUnit.CM));
 
-                telemetry.addData("Turret endcoder",robot.turrentEncoder.getCurrentPosition());
+                telemetry.addData("Turret encoder:",robot.turrentEncoder.getCurrentPosition());
                 telemetry.update();
                 /*
                  * Mecanum Drive Control section
-                */
                 double drive = -gamepad1.left_stick_y;
                 double turn  =  gamepad1.right_stick_x;
 
@@ -114,13 +101,14 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
                 robot.motorR1.setPower(right);
                 robot.motorR2.setPower(right);
 
+
                 /**
                  * ##############################################################################
                  * ##############################################################################
                  * ################    GAMEPAD 1 NORMAL CONTROLS   #############################
                  * ##############################################################################
                  * ##############################################################################
-                 */
+
 
 
                 /**
@@ -129,7 +117,7 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
                  * ################    GAMEPAD 2 TESTING CONTROLS   #############################
                  * ##############################################################################
                  * ##############################################################################
-                 */
+
 
                 if (gamepad2.dpad_down) {
                     robot.motorL2.setPower(1);
@@ -170,7 +158,7 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 
                 /*
                  * Toggle the intake forward and reverse based on user pressing gamepad1.y
-                 */
+
                 if (gamepad2.right_trigger > 0.2 && (currentTime - buttonPress) >= 0.3){
                     motorIntakeFlag = true;
                     intakeForward = true;      // returns opposite of flag setting
@@ -191,7 +179,21 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
                 } else if (gamepad2.right_stick_y < -0.2) {
                     armPosition = armPosition - 0.05;
                 }
-
+                */
+                turretAngle=robot.turrentEncoder.getCurrentPosition();
+                if (gamepad2.right_trigger > 0.05&&turretAngle>=-robot.TURRET_MAX_ANGLE) {
+                    robot.turretServoBlue.setPower(gamepad2.right_trigger/2);
+                    robot.turretServoPink.setPower(gamepad2.right_trigger/2);
+                } else if (gamepad2.left_trigger > 0.05&&turretAngle<=robot.TURRET_MAX_ANGLE) {
+                    robot.turretServoBlue.setPower(-gamepad2.left_trigger/2);
+                    robot.turretServoPink.setPower(-gamepad2.left_trigger/2);
+                }else{
+                    robot.turretServoBlue.setPower(0);
+                    robot.turretServoPink.setPower(0);
+                }
+                if(gamepad2.y){
+                    mechControl.resetTurret();
+                }
 
 
                 /**
@@ -202,29 +204,15 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
                  * ##############################################################################
                  */
 
-                /*
-                 * Control the shooting motors based on the user button input
-                 */
-
-
-
                 /**
                  * #################################################################################
                  * #################################################################################
                  * #################      PROVIDE USER FEEDBACK    #################################
                  * #################################################################################
                  * #################################################################################
-                 *
-                telemetry.addData("Motor Shooter1 Encoder = ", robot.motorShooter1.getCurrentPosition());
-                telemetry.addData("Motor Shooter2 Encoder = ", robot.motorShooter2.getCurrentPosition());
-                telemetry.addData("Motor RF Encoder = ", robot.motorRF.getCurrentPosition());
-                telemetry.addData("Motor LF Encoder = ", robot.motorLF.getCurrentPosition());
-                telemetry.addData("Motor RR Encoder = ", robot.motorRR.getCurrentPosition());
-                telemetry.addData("Motor LR Encoder = ", robot.motorLR.getCurrentPosition());
-                telemetry.addData("Calculated Distance = ", drive.calcDistance(0,0,0,0,0));
-                telemetry.addData("Shooter RPM = ", (robot.motorShooter1.getVelocity() / 28 * 60));
-                telemetry.update(); */
+                 */
             }   // end of while opModeIsActive()
+            mechControl.stop();
         }   // end of runOpMode method
 
         boolean toggleFlag(boolean flag){

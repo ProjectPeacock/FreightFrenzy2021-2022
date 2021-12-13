@@ -19,7 +19,7 @@ public class TeleOpThreads2 extends LinearOpMode {
 
     public void runOpMode(){
         MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
-        Thread armController = new Thread(mechControl);
+        Thread mechController = new Thread(mechControl);
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
 
@@ -53,7 +53,7 @@ public class TeleOpThreads2 extends LinearOpMode {
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
-        armController.start();
+        mechController.start();
 
         while(opModeIsActive()) {
             /*
@@ -246,7 +246,11 @@ public class TeleOpThreads2 extends LinearOpMode {
                 bucketAngle=-1;
             } else{
                 bucketAngle=0.5;
-                if(bumpCount==3){
+                if(bumpCount==1){
+                    bucketAngle=0.65;
+                }else if(bumpCount==2){
+                    bucketAngle=0.65;
+                }else if(bumpCount==3){
                     bucketAngle=0.75;
                 }
             }
