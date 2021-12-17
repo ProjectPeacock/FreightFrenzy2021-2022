@@ -230,15 +230,6 @@ public class TeleOpThreads2 extends LinearOpMode {
             }else{
 
             }
-
-            //reset arm to zero AFTER SCORING
-            if(gamepad1.y){
-                if(isDeployed){
-                    mechControl.resetArm();
-                    bumpCount=0;
-                    isDeployed=false;
-                }
-            }
 //end of arm controls
 
 //bucket control section (GP1, Dpad Right)

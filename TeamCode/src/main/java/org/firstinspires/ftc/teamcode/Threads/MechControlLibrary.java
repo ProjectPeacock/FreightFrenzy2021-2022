@@ -55,13 +55,13 @@ public class MechControlLibrary implements Runnable{
 
 //retract intake method
     public void intakeOff(boolean deployed){
-        localRobot.motorIntake.setPower(0);
         if(!deployed){
             angle1=0;
             angle2=0;
         }
         //waits for arm 1 to move up before moving intake to prevent collisions
-        if(localRobot.motorArmAngle1.getCurrentPosition()<850){
+        if(localRobot.motorArmAngle1.getCurrentPosition()<750){
+            localRobot.motorIntake.setPower(0);
             localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
             localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
             localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
@@ -71,8 +71,8 @@ public class MechControlLibrary implements Runnable{
 
 //reset intake without moving arm (for retracting intake while scoring)
     public void resetIntake(){
-        localRobot.motorIntake.setPower(0);
-        if(localRobot.motorArmAngle1.getCurrentPosition()<900){
+        if(localRobot.motorArmAngle1.getCurrentPosition()<750){
+            localRobot.motorIntake.setPower(0);
             localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
             localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
             localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
@@ -84,17 +84,16 @@ public class MechControlLibrary implements Runnable{
     //high platform scoring (default)
     public void scoringPos1(){
         angle1=-350;
-        while(localRobot.motorArmAngle1.getCurrentPosition()>750){
-
+        if(localRobot.motorArmAngle1.getCurrentPosition()<750){
+            angle2=localRobot.HIGH_PLATFORM;
         }
-        angle2=localRobot.HIGH_PLATFORM;
     }
     //mid platform scoring
     public void scoringPos2(){
         angle1=-350;
         angle2=localRobot.MID_PLATFORM;
     }
-    //low platform & shared shiipping hub scoring
+    //low platform & shared shipping hub scoring
     public void scoringPos3(){
         angle1=-1000;
         angle2=localRobot.LOW_PLATFORM;

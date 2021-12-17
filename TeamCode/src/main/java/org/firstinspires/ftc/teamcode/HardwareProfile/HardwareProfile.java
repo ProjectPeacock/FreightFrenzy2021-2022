@@ -38,7 +38,7 @@ public class HardwareProfile {
     //intake servos
     public final double BLUE_ZERO = 0.50; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.50; //IntakeDeployPink zero pos
-    public final double INTAKE_DEPLOY_BLUE = 0.30; //Distance to deploy intake
+    public final double INTAKE_DEPLOY_BLUE = 0.28; //Distance to deploy intake
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.75;
@@ -59,7 +59,7 @@ public class HardwareProfile {
     public final int MID_PLATFORM=2350;
     public final int LOW_PLATFORM=2100;
     //arm intake positions
-    public final int ARM_1_INTAKE=1115;
+    public final int ARM_1_INTAKE=1110;
     public final int ARM_2_INTAKE=0;
 
     public final int TURRET_MAX_ANGLE=300;
