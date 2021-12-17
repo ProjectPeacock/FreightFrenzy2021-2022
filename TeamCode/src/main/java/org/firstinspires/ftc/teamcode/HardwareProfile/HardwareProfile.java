@@ -36,23 +36,24 @@ public class HardwareProfile {
 
 //intake control constants
     //intake servos
-    public final double BLUE_ZERO = 0.55; //IntakeDeployBlue zero pos
-    public final double PINK_ZERO = 0.45; //IntakeDeployPink zero pos
-    public final double INTAKE_DEPLOY_BLUE = 0.33; //Distance to deploy intake
+    public final double BLUE_ZERO = 0.50; //IntakeDeployBlue zero pos
+    public final double PINK_ZERO = 0.50; //IntakeDeployPink zero pos
+    public final double INTAKE_DEPLOY_BLUE = 0.30; //Distance to deploy intake
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.75;
-    public final double INTAKE_STARTING_POS= 0.7;
+    public final double INTAKE_STARTING_POS= 0.5;
     //intake motor
     public final double INTAKE_POW = 1; //intaking power
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
     public final double INTAKE_REVERSE_POW = -0.8; //intake reverse power (for using intake as outtake)
 
 //chainsaw control constants
-    public final double CHAIN_POW = 0.6; //motorChainsaw power
+    public final double CHAIN_POW = 0.75; //motorChainsaw power
+    public final double CHAIN_POWER_BOOST = 0.05;
     public final int CHAIN_INCREMENTS=6; //increments for accelerating chainsaw to full speed
 
-//arm control constants
+//arm control constants75
     //arm scoring positions
     public final int HIGH_PLATFORM=1700;
     public final int MID_PLATFORM=2350;

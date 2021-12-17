@@ -140,16 +140,16 @@ public class TeleOpTurret extends LinearOpMode {
 //chainsaw control section (GP1, Bumpers)
 
             if(gamepad1.right_bumper){
-                robot.motorChainsaw.setPower(0.45);
+                robot.motorChainsaw.setPower(robot.CHAIN_POW);
                 }
             else if(gamepad1.left_bumper){
-                robot.motorChainsaw.setPower(-0.45);
+                robot.motorChainsaw.setPower(robot.CHAIN_POW * -1);
             }
             else if(gamepad1.right_trigger>0.5){
-                robot.motorChainsaw.setPower(1);
+                robot.motorChainsaw.setPower(robot.motorChainsaw.getPower()+robot.CHAIN_POWER_BOOST);
             }
             else if(gamepad1.left_trigger>0.5){
-                robot.motorChainsaw.setPower(-1);
+                robot.motorChainsaw.setPower(robot.motorChainsaw.getPower()-robot.CHAIN_POWER_BOOST);
             }
             else{ robot.motorChainsaw.setPower(0);
             }

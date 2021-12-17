@@ -73,8 +73,8 @@ public class AutoParkDriveClassJG extends LinearOpMode {
         double positionFactor = 1;
         int scorePosition=1;
         double forwardSpeed = -0.4;
-        double goalDistance = 26.0;
-        double turnDistance = 4.0;
+        double goalDistance = 20.0;
+        double turnDistance = 8.0;
         double turnAngle = 60;
         double parkDistance = 26.0;
         double parkAdjust = 24.0;
@@ -268,6 +268,8 @@ public class AutoParkDriveClassJG extends LinearOpMode {
             robot.bucketDump.setPosition(bucketAngle);
             sleep(1000);
             //reset arms
+            robot.bucketDump.setPosition(0);
+
             mechControl.moveToZero();
 
             // reverse direction to drive forward to park
@@ -277,14 +279,14 @@ public class AutoParkDriveClassJG extends LinearOpMode {
             drive.driveStraight(forwardSpeed, turnDistance);
 
             // reposition angle to park
-            turnAngle = 90 - turnAngle;
+            turnAngle = turnAngle * -1;
             drive.driveTurn(turnAngle * positionFactor, turnError);
 
             // adjust park distance if needed
-            if (startPosition.equals("FIELD")) {
-                parkDistance = parkDistance + parkAdjust;
-            }
-            drive.driveStraight(forwardSpeed, parkDistance);
+            //if (startPosition.equals("FIELD")) {
+            //    parkDistance = parkDistance + parkAdjust;
+            //}
+            drive.driveStraight(forwardSpeed, goalDistance);
 
             // Step 2 - just stop for now
         }

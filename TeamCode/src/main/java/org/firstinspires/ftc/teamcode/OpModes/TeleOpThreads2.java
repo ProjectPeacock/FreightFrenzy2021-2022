@@ -246,11 +246,7 @@ public class TeleOpThreads2 extends LinearOpMode {
                 bucketAngle=-1;
             } else{
                 bucketAngle=0.5;
-                if(bumpCount==1){
-                    bucketAngle=0.65;
-                }else if(bumpCount==2){
-                    bucketAngle=0.65;
-                }else if(bumpCount==3){
+                if(bumpCount==3){
                     bucketAngle=0.75;
                 }
             }

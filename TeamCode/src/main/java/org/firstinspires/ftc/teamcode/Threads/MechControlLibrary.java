@@ -43,16 +43,13 @@ public class MechControlLibrary implements Runnable{
         localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
         angle2=localRobot.ARM_2_INTAKE;
         localRobot.motorArmAngle2.setTargetPosition(angle2);
-        while(localRobot.motorArmAngle2.getCurrentPosition()>750){
+        while(localRobot.motorArmAngle2.getCurrentPosition()>1150){
 
         }
         angle1=localRobot.ARM_1_INTAKE;
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(localRobot.motorArmAngle1.getCurrentPosition()>900) {
+            localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
         }
-        localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
     }
 //end of deploy intake method
 
