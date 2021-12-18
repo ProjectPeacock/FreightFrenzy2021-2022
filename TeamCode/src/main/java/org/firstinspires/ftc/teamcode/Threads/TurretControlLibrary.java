@@ -17,19 +17,10 @@ public class TurretControlLibrary implements Runnable{
     //takes in HardwareProfile to be able to access motors & servos
     public HardwareProfile localRobot=null;
     private ElapsedTime runtime = new ElapsedTime();
+    private int turretTargetPosition = 0;
 
-    private int angle1=0;
-    private int angle2=0;
-    private double arm1Power=1;
-    private double arm2Power=1;
     private int sleepTime;
     private boolean isRunning=true;
-    private double turretPower = 0.02;
-    private int turretTargetPosition = 0;
-    private int turretThreshold = 5;
-    private int turretLimit = 330;
-    private double timeElapsed;
-    private int turretServoPower=0;
 
     //constructor
     public TurretControlLibrary(HardwareProfile robotIn, int threadSleepDelay){
@@ -37,29 +28,20 @@ public class TurretControlLibrary implements Runnable{
         this.sleepTime=threadSleepDelay;
     }
 
-// rotate turret
-    public void rotateTurret(double power){
-        // ensure turret within limit
-        if (Math.abs(localRobot.turrentEncoder.getCurrentPosition())<turretLimit){
-            localRobot.turretServoBlue.setPower(power);
-            localRobot.turretServoPink.setPower(power);
-        }
-    }   // end of rotateTurret
-
     // reset turret - returns turret to 'home' position
     public void resetTurret(){
         turretControl(0);
     }   // end of resetTurret
 
-    public void positionTurret(double targetPosition){
-        turretControl(targetPosition);
-    }   // end method positionTurret
+    public void setTargetPosition(int targetPosition){
+        this.turretTargetPosition = targetPosition;
+    }
 
     public int currentTurretPosition(){
         return localRobot.motorIntake.getCurrentPosition();
     }
 
-    private void turretControl(double targetPosition){
+    private void turretControl(int targetPosition){
         double integral = 0;
         double Cp = 0.06;
         double Ci = 0.0003;
@@ -103,12 +85,14 @@ public class TurretControlLibrary implements Runnable{
 
     }   // end of turretControl() method
 
-    public void setTurretRotation(double rotationSpeed){
+    private void setTurretRotation(double rotationSpeed){
         localRobot.turretServoBlue.setPower(rotationSpeed);
         localRobot.turretServoPink.setPower(rotationSpeed);
     }
+
 //method that runs whenever thread is running
     public void activeTurretControl(){
+        turretControl(this.turretTargetPosition);
     }
 //end of default running method
 

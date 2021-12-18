@@ -181,10 +181,10 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                 }
                 */
                 turretAngle=robot.turrentEncoder.getCurrentPosition();
-                if (gamepad2.right_trigger > 0.05&&turretAngle>=-robot.TURRET_MAX_ANGLE) {
+                if (gamepad2.right_trigger > 0.05&&turretAngle>=-robot.TURRET_MAX_POSITION) {
                     robot.turretServoBlue.setPower(gamepad2.right_trigger/2);
                     robot.turretServoPink.setPower(gamepad2.right_trigger/2);
-                } else if (gamepad2.left_trigger > 0.05&&turretAngle<=robot.TURRET_MAX_ANGLE) {
+                } else if (gamepad2.left_trigger > 0.05&&turretAngle<=robot.TURRET_MAX_POSITION) {
                     robot.turretServoBlue.setPower(-gamepad2.left_trigger/2);
                     robot.turretServoPink.setPower(-gamepad2.left_trigger/2);
                 }else{
