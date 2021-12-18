@@ -5,13 +5,14 @@
  */
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpTurret", group = "Competition")
-//  @Disabled
+@Disabled
 
 public class TeleOpTurret extends LinearOpMode {
 

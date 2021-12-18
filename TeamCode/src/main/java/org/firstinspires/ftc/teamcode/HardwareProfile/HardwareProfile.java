@@ -62,7 +62,9 @@ public class HardwareProfile {
     public final int ARM_1_INTAKE=1110;
     public final int ARM_2_INTAKE=0;
 
-    public final int TURRET_MAX_ANGLE=300;
+    public final int TURRET_MAX_POSITION=300;
+    public final int TURRET_RIGHT_POSITION=250;
+    public final int TURRET_LEFT_POSITION=-250;
 
     /*
      * Hardware devices

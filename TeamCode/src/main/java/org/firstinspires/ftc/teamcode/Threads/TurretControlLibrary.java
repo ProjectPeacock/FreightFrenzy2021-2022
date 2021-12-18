@@ -70,6 +70,14 @@ public class TurretControlLibrary implements Runnable{
 
         double error = targetPosition - currentTurretPosition();
 
+        // limit the turn position of the turret to the TURRET_MAX_POSITION to avoid
+        // damaging the robot
+        if(targetPosition > localRobot.TURRET_MAX_POSITION){
+            targetPosition = localRobot.TURRET_MAX_POSITION;
+        } else if(targetPosition < -localRobot.TURRET_MAX_POSITION){
+            targetPosition = -localRobot.TURRET_MAX_POSITION;
+        }
+
         // nested while loops are used to allow for a final check of an overshoot situation
         while (Math.abs(error) >= targetPosition) {
             derivative = lastError - error;
