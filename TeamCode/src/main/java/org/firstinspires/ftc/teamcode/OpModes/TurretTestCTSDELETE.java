@@ -130,7 +130,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         double rotationSpeed;
         double derivative = 0, lastError = 0;
 
-        double error = targetPosition - robot.motorIntake.getCurrentPosition();
+        double error = targetPosition + robot.motorIntake.getCurrentPosition();
 
         // limit the turn position of the turret to the TURRET_MAX_POSITION to avoid
         // damaging the robot
@@ -159,10 +159,10 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             setTurretRotation(rotationSpeed);
             lastError = error;
 
-            error = targetPosition - robot.motorIntake.getCurrentPosition();
+            error = targetPosition + robot.motorIntake.getCurrentPosition();
 
             telemetry.addData("rotationSpeed = ", rotationSpeed);
-            telemetry.addData("Calculated eror = ", error);
+            telemetry.addData("Calculated error = ", error);
             telemetry.addData("Turret Encoder = ", robot.motorIntake.getCurrentPosition());
             telemetry.addData("Target Turret Position = ", targetPosition);
             telemetry.update();
