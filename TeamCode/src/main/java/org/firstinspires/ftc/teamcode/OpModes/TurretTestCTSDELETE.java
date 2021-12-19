@@ -126,7 +126,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         double Cp = 0.006;
         double Ci = 0.0003;
         double Cd = 0.0001;
-        double maxSpeed = 0.5;
+        double maxSpeed = 0.7;
         double rotationSpeed;
         double derivative = 0, lastError = 0;
 

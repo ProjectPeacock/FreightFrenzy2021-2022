@@ -43,14 +43,14 @@ public class TurretControlLibrary implements Runnable{
 
     private void turretControl(int targetPosition){
         double integral = 0;
-        double Cp = 0.06;
+        double Cp = 0.006;
         double Ci = 0.0003;
         double Cd = 0.0001;
-        double maxSpeed = 0.5;
+        double maxSpeed = 0.7;
         double rotationSpeed;
         double derivative = 0, lastError = 0;
 
-        double error = targetPosition - currentTurretPosition();
+        double error = targetPosition - localRobot.motorIntake.getCurrentPosition();
 
         // limit the turn position of the turret to the TURRET_MAX_POSITION to avoid
         // damaging the robot
@@ -61,8 +61,8 @@ public class TurretControlLibrary implements Runnable{
         }
 
         // nested while loops are used to allow for a final check of an overshoot situation
-        while (Math.abs(error) >= targetPosition) {
-//            derivative = lastError - error;
+        while ((Math.abs(error) > 2) && this.isRunning) {
+            derivative = lastError - error;
             rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
 
             // Clip servo speed
@@ -70,16 +70,17 @@ public class TurretControlLibrary implements Runnable{
 
             // make sure the servo speed doesn't drop to a level where it is no longer able
             // to rotate
-            if ((rotationSpeed > -0.05) && (rotationSpeed < 0)) {
-                rotationSpeed = -0.05;
-            } else if ((rotationSpeed < 0.05) && (rotationSpeed > 0)) {
-                rotationSpeed = 0.05;
+            if ((rotationSpeed < 0) && (rotationSpeed > -0.1)) {
+                rotationSpeed = -0.1;
+            } else if ((rotationSpeed > 0) && (rotationSpeed < 0.1)) {
+                rotationSpeed = 0.1;
             }
 
             setTurretRotation(rotationSpeed);
-//            lastError = error;
+            lastError = error;
 
-            error = targetPosition - currentTurretPosition();
+            error = targetPosition - localRobot.motorIntake.getCurrentPosition();
+
         }   // end of while Math.abs(error)
 
         setTurretRotation(0);       // stop the turrets
@@ -87,8 +88,8 @@ public class TurretControlLibrary implements Runnable{
     }   // end of turretControl() method
 
     public void setTurretRotation(double rotationSpeed){
-        localRobot.turretServoBlue.setPower(rotationSpeed);
-        localRobot.turretServoPink.setPower(rotationSpeed);
+        localRobot.turretServoBlue.setPower(-rotationSpeed);
+        localRobot.turretServoPink.setPower(-rotationSpeed);
     }
 
 //method that runs whenever thread is running
