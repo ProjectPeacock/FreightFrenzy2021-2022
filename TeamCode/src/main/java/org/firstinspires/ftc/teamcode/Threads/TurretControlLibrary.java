@@ -86,7 +86,7 @@ public class TurretControlLibrary implements Runnable{
 
     }   // end of turretControl() method
 
-    private void setTurretRotation(double rotationSpeed){
+    public void setTurretRotation(double rotationSpeed){
         localRobot.turretServoBlue.setPower(rotationSpeed);
         localRobot.turretServoPink.setPower(rotationSpeed);
     }

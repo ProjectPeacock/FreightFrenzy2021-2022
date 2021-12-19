@@ -84,6 +84,9 @@ public class TurretTestCTSDELETE extends LinearOpMode {
                     turretPosition = robot.TURRET_LEFT_POSITION;
             }
 
+            if(gamepad2.right_stick_x != 0){
+                turretControl.setTurretRotation(gamepad2.right_stick_x);
+            }
             // apply the changes to the turret
             turretControl.setTargetPosition(turretPosition);
 
