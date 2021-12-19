@@ -80,7 +80,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
                     turretPosition = robot.TURRET_RIGHT_POSITION;
             } else if (gamepad2.left_trigger > 0) {
                 turretPosition = turretControl.currentTurretPosition() - 1;
-                if (turretPosition > robot.TURRET_LEFT_POSITION)
+                if (turretPosition < robot.TURRET_LEFT_POSITION)
                     turretPosition = robot.TURRET_LEFT_POSITION;
             }
 
