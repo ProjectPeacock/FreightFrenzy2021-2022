@@ -99,6 +99,9 @@ public class TurretControlLibrary implements Runnable{
 
     //thread stop method
     public void stop(){
+
+        localRobot.turretServoBlue.setPower(0);
+        localRobot.turretServoPink.setPower(0);
         isRunning=false;
     }
 
