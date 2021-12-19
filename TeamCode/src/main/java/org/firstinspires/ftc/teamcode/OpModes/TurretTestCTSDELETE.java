@@ -123,10 +123,10 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
     private void turretControl(int targetPosition){
         double integral = 0;
-        double Cp = 0.06;
+        double Cp = 0.0006;
         double Ci = 0.0003;
         double Cd = 0.0001;
-        double maxSpeed = 1;
+        double maxSpeed = 0.5;
         double rotationSpeed;
         double derivative = 0, lastError = 0;
 
