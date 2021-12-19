@@ -141,7 +141,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         }
 
         // nested while loops are used to allow for a final check of an overshoot situation
-        while ((Math.abs(error) > 0) && opModeIsActive()) {
+        while ((Math.abs(error) > 5) && opModeIsActive()) {
             derivative = lastError - error;
             rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
 
