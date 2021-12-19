@@ -45,9 +45,9 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         int turretPosition = 0;
 
         waitForStart();
-        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-        robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
+//        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+//        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+//        robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
 //        turretController.start();
 
         while(opModeIsActive()) {
@@ -141,7 +141,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         }
 
         // nested while loops are used to allow for a final check of an overshoot situation
-        while ((Math.abs(error) > 5) && opModeIsActive()) {
+        while ((Math.abs(error) > 2) && opModeIsActive()) {
             derivative = lastError - error;
             rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
 
