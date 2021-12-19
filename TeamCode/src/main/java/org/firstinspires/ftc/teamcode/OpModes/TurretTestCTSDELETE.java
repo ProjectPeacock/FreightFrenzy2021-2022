@@ -153,7 +153,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             if ((rotationSpeed < 0) && (rotationSpeed > -0.1)) {
                 rotationSpeed = -0.1;
             } else if ((rotationSpeed > 0) && (rotationSpeed < 0.1)) {
-                rotationSpeed = 0.05;
+                rotationSpeed = 0.1;
             }
 
             setTurretRotation(rotationSpeed);
