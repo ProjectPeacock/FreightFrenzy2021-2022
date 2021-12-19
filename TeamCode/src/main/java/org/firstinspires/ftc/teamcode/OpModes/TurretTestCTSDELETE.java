@@ -47,7 +47,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
-        turretController.start();
+//        turretController.start();
 
         while(opModeIsActive()) {
             /*
@@ -75,11 +75,11 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
             // manually control the rotation of the turret
             if (gamepad2.right_trigger > 0) {
-                turretPosition = turretControl.currentTurretPosition() + 1;
+//                turretPosition = turretControl.currentTurretPosition() + 1;
                 if (turretPosition > robot.TURRET_RIGHT_POSITION)
                     turretPosition = robot.TURRET_RIGHT_POSITION;
             } else if (gamepad2.left_trigger > 0) {
-                turretPosition = turretControl.currentTurretPosition() - 1;
+//                turretPosition = turretControl.currentTurretPosition() - 1;
                 if (turretPosition < robot.TURRET_LEFT_POSITION)
                     turretPosition = robot.TURRET_LEFT_POSITION;
             }
@@ -87,9 +87,11 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             if(gamepad2.right_stick_x != 0){
 //                turretControl.setTurretRotation(gamepad2.right_stick_x);
                 robot.turretServoBlue.setPower(gamepad2.right_stick_x);
-                robot.turretServoPink.setPower(gamepad2.right_stick_x);            }
+                robot.turretServoPink.setPower(gamepad2.right_stick_x);
+            }
+
             // apply the changes to the turret
-            turretControl.setTargetPosition(turretPosition);
+ //           turretControl.setTargetPosition(turretPosition);
 
             /**
              * #################################################################################
@@ -99,14 +101,14 @@ public class TurretTestCTSDELETE extends LinearOpMode {
              * #################################################################################
              */
 
-            telemetry.addData("Current Turret Encoder = ", turretControl.currentTurretPosition());
+//            telemetry.addData("Current Turret Encoder = ", turretControl.currentTurretPosition());
             telemetry.addData("Target Turret Encoder = ", turretPosition);
             telemetry.update();
 
         }   // end of while opModeIsActive()
 
         //stops mechanism thread
-        turretControl.stop();
+//        turretControl.stop();
 
     }   // end of runOpMode method
 
