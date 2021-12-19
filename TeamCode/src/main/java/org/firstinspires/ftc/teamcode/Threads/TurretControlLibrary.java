@@ -102,13 +102,13 @@ public class TurretControlLibrary implements Runnable{
 
         localRobot.turretServoBlue.setPower(0);
         localRobot.turretServoPink.setPower(0);
-        isRunning=false;
+        this.isRunning=false;
     }
 
 //thread run method
     @Override
     public void run() {
-        while(isRunning){
+        while(this.isRunning){
             activeTurretControl();
             try{
                 sleep(sleepTime);

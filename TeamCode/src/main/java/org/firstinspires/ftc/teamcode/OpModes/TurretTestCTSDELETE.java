@@ -86,8 +86,8 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
             if(gamepad2.right_stick_x != 0){
 //                turretControl.setTurretRotation(gamepad2.right_stick_x);
-                robot.turretServoBlue.setPower(gamepad2.right_stick_x);
-                robot.turretServoPink.setPower(gamepad2.right_stick_x);
+                robot.turretServoBlue.setPower(gamepad2.right_stick_x/10);
+                robot.turretServoPink.setPower(gamepad2.right_stick_x/10);
             } else {
                 robot.turretServoBlue.setPower(0);
                 robot.turretServoPink.setPower(0);
