@@ -151,9 +151,9 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             // make sure the servo speed doesn't drop to a level where it is no longer able
             // to rotate
             if ((rotationSpeed < 0) && (rotationSpeed > -0.1)) {
-                rotationSpeed = -0.1;
+                rotationSpeed = -0.07;
             } else if ((rotationSpeed > 0) && (rotationSpeed < 0.1)) {
-                rotationSpeed = 0.1;
+                rotationSpeed = 0.07;
             }
 
             setTurretRotation(rotationSpeed);
