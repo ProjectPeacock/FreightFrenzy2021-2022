@@ -105,6 +105,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
              */
 
 //            telemetry.addData("Current Turret Encoder = ", turretControl.currentTurretPosition());
+            telemetry.addData("Turret Encoder = ", robot.motorIntake.getCurrentPosition());
             telemetry.addData("Target Turret Encoder = ", turretPosition);
             telemetry.update();
 
