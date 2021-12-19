@@ -6,6 +6,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
@@ -94,7 +95,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             }
 
             // apply the changes to the turret
- //           turretControl.setTargetPosition(turretPosition);
+           turretControl(turretPosition);
 
             /**
              * #################################################################################
@@ -115,6 +116,56 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 //        turretControl.stop();
 
     }   // end of runOpMode method
+
+    private void turretControl(int targetPosition){
+        double integral = 0;
+        double Cp = 0.06;
+        double Ci = 0.0003;
+        double Cd = 0.0001;
+        double maxSpeed = 0.5;
+        double rotationSpeed;
+        double derivative = 0, lastError = 0;
+
+        double error = targetPosition - robot.motorIntake.getCurrentPosition();
+
+        // limit the turn position of the turret to the TURRET_MAX_POSITION to avoid
+        // damaging the robot
+        if(targetPosition > robot.TURRET_MAX_POSITION){
+            targetPosition = robot.TURRET_MAX_POSITION;
+        } else if(targetPosition < -robot.TURRET_MAX_POSITION){
+            targetPosition = -robot.TURRET_MAX_POSITION;
+        }
+
+        // nested while loops are used to allow for a final check of an overshoot situation
+        while (Math.abs(error) >= targetPosition) {
+            derivative = lastError - error;
+            rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
+
+            // Clip servo speed
+            rotationSpeed = Range.clip(rotationSpeed, -maxSpeed, maxSpeed);
+
+            // make sure the servo speed doesn't drop to a level where it is no longer able
+            // to rotate
+            if ((rotationSpeed > -0.05) && (rotationSpeed < 0)) {
+                rotationSpeed = -0.05;
+            } else if ((rotationSpeed < 0.05) && (rotationSpeed > 0)) {
+                rotationSpeed = 0.05;
+            }
+
+            setTurretRotation(rotationSpeed);
+            lastError = error;
+
+            error = targetPosition - robot.motorIntake.getCurrentPosition();
+        }   // end of while Math.abs(error)
+
+        setTurretRotation(0);       // stop the turrets
+
+    }   // end of turretControl() method
+
+    public void setTurretRotation(double rotationSpeed){
+        robot.turretServoBlue.setPower(rotationSpeed);
+        robot.turretServoPink.setPower(rotationSpeed);
+    }
 
 }   // end of TeleOp.java class
 

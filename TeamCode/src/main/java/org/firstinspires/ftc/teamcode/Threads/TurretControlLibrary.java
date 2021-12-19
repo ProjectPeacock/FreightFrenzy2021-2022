@@ -93,7 +93,9 @@ public class TurretControlLibrary implements Runnable{
 
 //method that runs whenever thread is running
     public void activeTurretControl(){
+
         turretControl(this.turretTargetPosition);
+
     }
 //end of default running method
 
@@ -102,7 +104,7 @@ public class TurretControlLibrary implements Runnable{
 
         localRobot.turretServoBlue.setPower(0);
         localRobot.turretServoPink.setPower(0);
-        this.isRunning=false;
+        this.isRunning = false;
     }
 
 //thread run method
