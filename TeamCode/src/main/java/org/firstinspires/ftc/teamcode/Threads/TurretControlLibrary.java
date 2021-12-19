@@ -76,6 +76,7 @@ public class TurretControlLibrary implements Runnable{
                 rotationSpeed = 0.05;
             }
 
+            setTurretRotation(rotationSpeed);
             lastError = error;
 
             error = targetPosition - currentTurretPosition();
