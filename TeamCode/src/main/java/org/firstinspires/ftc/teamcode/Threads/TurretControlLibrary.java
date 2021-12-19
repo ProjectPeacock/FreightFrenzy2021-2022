@@ -62,7 +62,7 @@ public class TurretControlLibrary implements Runnable{
 
         // nested while loops are used to allow for a final check of an overshoot situation
         while (Math.abs(error) >= targetPosition) {
-            derivative = lastError - error;
+//            derivative = lastError - error;
             rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
 
             // Clip servo speed
@@ -77,7 +77,7 @@ public class TurretControlLibrary implements Runnable{
             }
 
             setTurretRotation(rotationSpeed);
-            lastError = error;
+//            lastError = error;
 
             error = targetPosition - currentTurretPosition();
         }   // end of while Math.abs(error)
