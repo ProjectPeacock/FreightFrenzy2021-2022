@@ -122,7 +122,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         double Cp = 0.06;
         double Ci = 0.0003;
         double Cd = 0.0001;
-        double maxSpeed = 0.5;
+        double maxSpeed = 1;
         double rotationSpeed;
         double derivative = 0, lastError = 0;
 
@@ -137,7 +137,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         }
 
         // nested while loops are used to allow for a final check of an overshoot situation
-        while (Math.abs(error) >= targetPosition) {
+        while ((Math.abs(error) >= targetPosition) && opModeIsActive()) {
             derivative = lastError - error;
             rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
 
@@ -146,9 +146,9 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
             // make sure the servo speed doesn't drop to a level where it is no longer able
             // to rotate
-            if ((rotationSpeed > -0.05) && (rotationSpeed < 0)) {
-                rotationSpeed = -0.05;
-            } else if ((rotationSpeed < 0.05) && (rotationSpeed > 0)) {
+            if ((rotationSpeed < 0) && (rotationSpeed > -0.1)) {
+                rotationSpeed = -0.1;
+            } else if ((rotationSpeed > 0) && (rotationSpeed < 0.1)) {
                 rotationSpeed = 0.05;
             }
 
@@ -156,6 +156,12 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             lastError = error;
 
             error = targetPosition - robot.motorIntake.getCurrentPosition();
+
+            telemetry.addData("rotationSpeed = ", rotationSpeed);
+            telemetry.addData("Calculated eror = ", error);
+            telemetry.addData("Turret Encoder = ", robot.motorIntake.getCurrentPosition());
+            telemetry.addData("Target Turret Position = ", targetPosition);
+            telemetry.update();
         }   // end of while Math.abs(error)
 
         setTurretRotation(0);       // stop the turrets
