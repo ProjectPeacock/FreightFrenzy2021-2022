@@ -95,7 +95,9 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             }
 
             // apply the changes to the turret
-           turretControl(turretPosition);
+            if (gamepad2.right_bumper){
+                turretControl(turretPosition);
+            }
 
             /**
              * #################################################################################
