@@ -173,8 +173,8 @@ public class TurretTestCTSDELETE extends LinearOpMode {
     }   // end of turretControl() method
 
     public void setTurretRotation(double rotationSpeed){
-        robot.turretServoBlue.setPower(rotationSpeed);
-        robot.turretServoPink.setPower(rotationSpeed);
+        robot.turretServoBlue.setPower(-rotationSpeed);
+        robot.turretServoPink.setPower(-rotationSpeed);
     }
 
 }   // end of TeleOp.java class
