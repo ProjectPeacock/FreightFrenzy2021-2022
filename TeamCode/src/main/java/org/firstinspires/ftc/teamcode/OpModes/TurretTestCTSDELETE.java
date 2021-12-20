@@ -113,7 +113,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             telemetry.addData("Turret Encoder = ", robot.motorIntake.getCurrentPosition());
             telemetry.addData("Target Turret Encoder = ", turretPosition);
             telemetry.update();
-
+            robot.bucketDump.setPosition(0.5);
         }   // end of while opModeIsActive()
 
         //stops mechanism thread
@@ -123,10 +123,11 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
     private void turretControl(int targetPosition){
         double integral = 0;
-        double Cp = 0.003;
-        double Ci = 0.0003;
-        double Cd = 0.001;
-        double maxSpeed = 0.7;
+        double Cp = 0.0012;
+        double Ci = 0.002;
+        double Cd = 0.007;
+        double maxSpeed = 1;
+        double minSpeed =0.065;
         double rotationSpeed;
         double derivative = 0, lastError = 0;
 
@@ -150,10 +151,10 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
             // make sure the servo speed doesn't drop to a level where it is no longer able
             // to rotate
-            if ((rotationSpeed < 0) && (rotationSpeed > -0.1)) {
-                rotationSpeed = -0.07;
-            } else if ((rotationSpeed > 0) && (rotationSpeed < 0.1)) {
-                rotationSpeed = 0.07;
+            if ((rotationSpeed < 0) && (rotationSpeed > -minSpeed)) {
+                rotationSpeed = -minSpeed;
+            } else if ((rotationSpeed > 0) && (rotationSpeed < minSpeed)) {
+                rotationSpeed = minSpeed;
             }
 
             setTurretRotation(rotationSpeed);
@@ -169,7 +170,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         }   // end of while Math.abs(error)
 
         setTurretRotation(0);       // stop the turrets
-
+        robot.bucketDump.setPosition(0.5);
     }   // end of turretControl() method
 
     public void setTurretRotation(double rotationSpeed){
