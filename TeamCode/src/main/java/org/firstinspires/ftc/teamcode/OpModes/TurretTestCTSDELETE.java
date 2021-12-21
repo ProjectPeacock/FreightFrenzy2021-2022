@@ -48,7 +48,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 //        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
 //        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 //        robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
-//        turretController.start();
+        turretController.start();
 
         while(opModeIsActive()) {
             /*
@@ -98,7 +98,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
             // apply the changes to the turret
             if (gamepad2.right_bumper){
-                turretControl(turretPosition);
+                turretControl.setTargetPosition(turretPosition);
             }
 
             /**
@@ -117,11 +117,11 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         }   // end of while opModeIsActive()
 
         //stops mechanism thread
-//        turretControl.stop();
+        turretControl.stop();
 
     }   // end of runOpMode method
 
-    private void turretControl(int targetPosition){
+    private void turretControlTest(int targetPosition){
         double integral = 0;
         double Cp = 0.0012;
         double Ci = 0.002;
