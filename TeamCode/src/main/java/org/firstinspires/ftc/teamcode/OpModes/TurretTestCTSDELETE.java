@@ -48,7 +48,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 //        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
 //        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 //        robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
-//        turretController.start();
+        turretController.start();
 
         while(opModeIsActive()) {
             /*
@@ -98,7 +98,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
             // apply the changes to the turret
             if (gamepad2.right_bumper){
-                turretControl(turretPosition);
+                turretControl.setTargetPosition(turretPosition);
             }
 
             /**
@@ -113,20 +113,21 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             telemetry.addData("Turret Encoder = ", robot.motorIntake.getCurrentPosition());
             telemetry.addData("Target Turret Encoder = ", turretPosition);
             telemetry.update();
-
+            robot.bucketDump.setPosition(0.5);
         }   // end of while opModeIsActive()
 
         //stops mechanism thread
-//        turretControl.stop();
+        turretControl.stop();
 
     }   // end of runOpMode method
 
-    private void turretControl(int targetPosition){
+    private void turretControlTest(int targetPosition){
         double integral = 0;
-        double Cp = 0.003;
-        double Ci = 0.0003;
-        double Cd = 0.001;
-        double maxSpeed = 0.7;
+        double Cp = 0.0012;
+        double Ci = 0.002;
+        double Cd = 0.007;
+        double maxSpeed = 1;
+        double minSpeed =0.065;
         double rotationSpeed;
         double derivative = 0, lastError = 0;
 
@@ -150,10 +151,10 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
             // make sure the servo speed doesn't drop to a level where it is no longer able
             // to rotate
-            if ((rotationSpeed < 0) && (rotationSpeed > -0.1)) {
-                rotationSpeed = -0.07;
-            } else if ((rotationSpeed > 0) && (rotationSpeed < 0.1)) {
-                rotationSpeed = 0.07;
+            if ((rotationSpeed < 0) && (rotationSpeed > -minSpeed)) {
+                rotationSpeed = -minSpeed;
+            } else if ((rotationSpeed > 0) && (rotationSpeed < minSpeed)) {
+                rotationSpeed = minSpeed;
             }
 
             setTurretRotation(rotationSpeed);
@@ -169,7 +170,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         }   // end of while Math.abs(error)
 
         setTurretRotation(0);       // stop the turrets
-
+        robot.bucketDump.setPosition(0.5);
     }   // end of turretControl() method
 
     public void setTurretRotation(double rotationSpeed){
