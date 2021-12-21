@@ -65,6 +65,7 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
      //   Thread armController = new Thread(mechControl);
 
         boolean autoReady = false;
+        boolean running = true;
         double startTime;
         String alliance = "";
         String startPosition = "";
@@ -73,12 +74,16 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
         double timeElapsed;
         double positionFactor = 1;
         int scorePosition=1;
-        double forwardSpeed = -0.4;
-        double goalDistance = 20.0;
-        double turnDistance = 8.0;
+        double forwardSpeed = -0.3;
+
+        double goalDistance = 36.0;
+        double turnDistance = 6.0;
+        double goalAdjust = 0;
+
         double turnAngle = 60;
-        double parkDistance = 26.0;
+        double parkDistance = 12.0;
         double parkAdjust = 24.0;
+
         double turnError = 0.5;
         double bucketAngle = -1.0;
 
@@ -87,6 +92,10 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+        robot.bucketDump.setPosition(.5);
 
         DriveClass drive = new DriveClass(robot, opMode);
         // arm control
@@ -97,6 +106,7 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
 
             switch (setupState) {
                 case ALLIANCE_SELECT:
+                    telemetry.addData("Drive Motor Encoders:",robot.motorR1.getCurrentPosition());
                     telemetry.addData("Which Alliance are you on?", "");
                     telemetry.addData("Press X  == ", " BLUE Alliance");
                     telemetry.addData("Press Y  == ", " RED Alliance");
@@ -229,8 +239,6 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
 
         waitForStart();
         startTime = runtime.time() + startDelay;
@@ -241,31 +249,38 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
         // sleep for set delay time
         sleep(startDelay);
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && (running)) {
 
             // Step 1
             //      drive.driveStraight(backwards to goal
             drive.driveStraight(forwardSpeed, goalDistance);
+            sleep(1000);
 
             //   drive.driveTurn(turn towards goal);
-            drive.driveTurn(turnAngle * positionFactor, turnError);
+           // drive.driveTurn(turnAngle * positionFactor, turnError);
 
             //move arm to scoring positions
             if(scorePosition==1){
                 armControl.scoringPos1();
+                goalAdjust = 2;
             }else if(scorePosition==2){
                 armControl.scoringPos2();
+                goalAdjust = 1;
             }else if(scorePosition==3){
                 armControl.scoringPos3();
+                goalAdjust = 0;
+
             }
         //    idle();
+            sleep(1000);
             //  drive towards goal
             drive.driveStraight(forwardSpeed, turnDistance);
+            sleep(1000);
 
             // score element in high goal
             //move arm to scoring positions. initailly always go high, later will use
             // recognition to set scorePosition
-            sleep(1000);
+
 
             // dump bucket
             robot.bucketDump.setPosition(bucketAngle);
@@ -280,10 +295,11 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
 
             //back up turn amount
             drive.driveStraight(forwardSpeed, turnDistance);
+            sleep(1000);
 
             // reposition angle to park
-            turnAngle = turnAngle * -1;
-            drive.driveTurn(turnAngle * positionFactor, turnError);
+          //  turnAngle = turnAngle * -1;
+          //  drive.driveTurn(turnAngle * positionFactor, turnError);
 
             // adjust park distance if needed
             //if (startPosition.equals("FIELD")) {
@@ -292,8 +308,9 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
             drive.driveStraight(forwardSpeed, goalDistance);
 
             // Step 2 - just stop for now
+            drive.motorsHalt();
+            running = false;
         }
-        drive.motorsHalt();
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

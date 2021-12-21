@@ -27,7 +27,7 @@ public class HardwareProfile {
      * Constants
      */
 
-    public final double DRIVE_TICKS_PER_INCH = 28.0;
+    public final double DRIVE_TICKS_PER_INCH = 29.0;
 
     public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
 //drive control constants

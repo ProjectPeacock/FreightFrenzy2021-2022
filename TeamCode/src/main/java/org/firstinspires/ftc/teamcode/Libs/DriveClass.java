@@ -32,6 +32,9 @@ public class DriveClass {
         double l2Start = 0;
         double r1Start = 0;
         double r2Start = 0;
+        double coastMinimum = 5;
+        double coastDistance = .8;
+        double coastPower = .75;
 
         l1Start = robot.motorL1.getCurrentPosition();
         l2Start = robot.motorL2.getCurrentPosition();
@@ -51,11 +54,29 @@ public class DriveClass {
             /*
              * Apply power to the drive wheels
              */
+
+            if(distance*coastDistance < coastMinimum) {
+                if(distance-coastMinimum<=calcDistance(r1Start, r2Start, l1Start, l2Start)){
+                    r1Power *=0.65;
+                    r2Power *=0.65;
+                    l1Power *=0.65;
+                    l2Power *=0.65;
+                }
+            }else {
+                if (distance * coastDistance <= calcDistance(r1Start, r2Start, l1Start, l2Start)) {
+                    r1Power *= coastPower;
+                    r2Power *= coastPower;
+                    l1Power *= coastPower;
+                    l2Power *= coastPower;
+                }
+
+            }
             setDrivePower(r1Power, r2Power, l1Power, r2Power);
             opMode.telemetry.addData("LF Start = ", l1Start);
             opMode.telemetry.addData("Distance = ", distance);
             opMode.telemetry.addData("Calculated Distance = ", calcDistance(r1Start, r2Start, l1Start, l2Start));
             opMode.telemetry.update();
+
 
             if(calcDistance(r1Start, r2Start, l1Start, l2Start) >= distance) active = false;
             opMode.idle();
