@@ -1,18 +1,13 @@
-//  change comments
-/*
-  12/8/21 moved arm controls to gamepad2
-  12/9/21 added turret control to gamepad2
- */
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpTurret", group = "Competition")
-@Disabled
+//  @Disabled
 
 public class TeleOpTurret extends LinearOpMode {
 
@@ -24,8 +19,12 @@ public class TeleOpTurret extends LinearOpMode {
     }   // end of BrokenBotTS constructor
 
     public void runOpMode(){
+        //mechanism control thread
         MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
-        Thread armController = new Thread(mechControl);
+        Thread mechController = new Thread(mechControl);
+        //turret control thread
+        TurretControlLibrary turretControl = new TurretControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread turretController = new Thread(turretControl);
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
 
@@ -45,7 +44,7 @@ public class TeleOpTurret extends LinearOpMode {
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
         double bucketAngle=0.5;
-        int armPositionCounter =0;
+        int bumpCount=0;
         int chainsawMode=0;
         boolean toggleReadyDown=false;
         boolean toggleReadyUp=false;
@@ -54,29 +53,25 @@ public class TeleOpTurret extends LinearOpMode {
         boolean toggleIntake=false;
         boolean chainsawReady=false;
         double turn, drive, left, right, max;
-        double currentTurretPower = 0.0;
-        double turretPower = 0.0;
+        int turretPosition=0;
+        int turretThreshold=2;
 
         waitForStart();
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
-        armController.start();
+        mechController.start();
+        turretController.start();
 
         while(opModeIsActive()) {
             /*
             DRIVE CONTROLS:
+            GP1/
             Left Stick - forward/backward
             Right Stick - turn
-            A - intake
-            B - reverse intake
-            X - toggle scoring position down
-            Y - intake position
-            Dpad up - toggle scoring position up
-            Dpad down - reset arm to zero
-            Dpad right - dump bucket
-            Left bumper - chainsaw direction 1
-            Right bumper - chainsaw direction 2
+            A - intake / retract intake
+            L/R bumpers - chainsaw
+            L/R triggers - fast chainsaw
             */
 
 //drive control section (GP1, Joysticks)
@@ -114,81 +109,50 @@ public class TeleOpTurret extends LinearOpMode {
 
 //intake control section (GP1, A)
             //allows for intake toggle and not button hold down
-            if(!gamepad2.a){
+            if(!gamepad1.a&&!gamepad2.a){
                 toggleIntake=true;
             }
 
             //if intake isn't deployed, deploy it & vice versa
 
-            if(gamepad2.a&&toggleIntake){
+            if(gamepad1.a&&toggleIntake||gamepad2.a&&toggleIntake){
                 toggleIntake=false;
                 intakeDown=!intakeDown;
                 isDeployed=false;
-                armPositionCounter =0;
+                bumpCount=0;
             }
             //check if intake needs to be reversed and then deploy or retract
-            if(!gamepad2.b) {
-                if (intakeDown) {
-                    mechControl.intakeOn(isDeployed);
+            if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
+                if (!gamepad1.b&&!gamepad2.b) {
+                    if (intakeDown) {
+                        mechControl.intakeOn(isDeployed);
+                    } else {
+                        mechControl.intakeOff(isDeployed);
+                    }
                 } else {
-                    mechControl.intakeOff(isDeployed);
+                    robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
                 }
-            }else{
-                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
             }
 //end of intake controls
 
-//chainsaw control section (GP1, Bumpers)
-
+//chainsaw control section (GP1, Bumpers, Triggers)
             if(gamepad1.right_bumper){
-                robot.motorChainsaw.setPower(robot.CHAIN_POW);
-                }
+                robot.motorChainsaw.setPower(0.45);
+            }
             else if(gamepad1.left_bumper){
-                robot.motorChainsaw.setPower(robot.CHAIN_POW * -1);
+                robot.motorChainsaw.setPower(-0.45);
             }
             else if(gamepad1.right_trigger>0.5){
-                robot.motorChainsaw.setPower(robot.motorChainsaw.getPower()+robot.CHAIN_POWER_BOOST);
+                robot.motorChainsaw.setPower(1);
             }
             else if(gamepad1.left_trigger>0.5){
-                robot.motorChainsaw.setPower(robot.motorChainsaw.getPower()-robot.CHAIN_POWER_BOOST);
+                robot.motorChainsaw.setPower(-1);
             }
             else{ robot.motorChainsaw.setPower(0);
             }
-
-
-           /* /*CHAINSAW MODES:
-            0: off
-            1: Blue side
-            2: Red side
-            *
-            //red side (left bumper) chainsaw toggle
-            if(gamepad1.right_bumper&&chainsawReady){
-                if(chainsawMode==0){
-                    chainsawMode=1;
-                }else if(chainsawMode==1){
-                    chainsawMode=0;
-                }
-            }
-            //blue side (right bumper) chainsaw toggle
-            if(gamepad1.left_bumper&&chainsawReady){
-                if(chainsawMode==0){
-                    chainsawMode=2;
-                }else if(chainsawMode==2){
-                    chainsawMode=0;
-                }
-            }
-            //start or stop chainsaw based on mode
-            //
-            if(chainsawMode==1){
-                mechControl.chainsawRampRed();
-            }else if(chainsawMode==2){
-                mechControl.chainsawRampBlue();
-            }else{
-                robot.motorChainsaw.setPower(0);
-            } */
 //end of chainsaw controls
 
-//arm control section (GP1, X, Y, Dpad Down)
+//arm control section (GP2, X, Dpad Down)
             //allows for toggling between arm positions and not only going to lowest one because of button being held
             if(!gamepad2.x){
                 toggleReadyDown=true;
@@ -198,104 +162,77 @@ public class TeleOpTurret extends LinearOpMode {
             }
             //end of arm toggle checks
 
-            //adds 1 to armPositionCounter if x isn't held down
+            //adds 1 to bumpCount if x isn't held down
             if(gamepad2.x && toggleReadyDown){
                 toggleReadyDown=false;
-                if(armPositionCounter <3) {
-                    armPositionCounter += 1;
+                if(bumpCount<3) {
+                    bumpCount += 1;
                 }
             }
 
-            //removes 1 from armPositionCounter if dpad up isn't held down
+            //removes 1 from bumpCount if dpad up isn't held down
             if(gamepad2.dpad_up && toggleReadyUp){
                 toggleReadyUp=false;
-                if(armPositionCounter >1) {
-                    armPositionCounter -= 1;
+                if(bumpCount>1) {
+                    bumpCount -= 1;
                 }
             }
 
             //counts how many times x has been pressed (what position to go to to score)
-            if(armPositionCounter >0){
+            if(bumpCount>0){
                 isDeployed=true;
                 mechControl.resetIntake();
                 intakeDown=false;
             }
 
             //move arm to scoring positions
-            if(armPositionCounter ==1){
+            if(bumpCount==1){
                 mechControl.scoringPos1();
-            }else if(armPositionCounter ==2){
+            }else if(bumpCount==2){
                 mechControl.scoringPos2();
-            }else if(armPositionCounter ==3){
+            }else if(bumpCount==3){
                 mechControl.scoringPos3();
             }
 
             //reset arm to zero with or without scoring
             if(gamepad2.dpad_down){
-                armPositionCounter =0;
+                bumpCount=0;
                 isDeployed=false;
                 mechControl.moveToZero();
             }else{
 
             }
-
-            //reset arm to zero AFTER SCORING
-            if(gamepad2.y){
-                if(isDeployed){
-                    mechControl.resetArm();
-                    armPositionCounter =0;
-                    isDeployed=false;
-                }
-            }
 //end of arm controls
 
-//bucket control section (GP1, Dpad Right)
+//turret control section (GP2, left stick)
+            if(!intakeDown){
+                turretPosition=(int)(gamepad2.left_trigger*robot.TURRET_MAX_POSITION)-(int)(gamepad2.right_trigger*robot.TURRET_MAX_POSITION);
+            }else{
+                turretPosition=0;
+            }
+            //apply angle to turret PID
+            turretControl.setTargetPosition(turretPosition);
+//end of turret control section
+
+//bucket control section (GP2, Dpad Right)
             if(gamepad2.dpad_right){
                 bucketAngle=-1;
             } else{
                 bucketAngle=0.5;
-                if(armPositionCounter ==3){
+                if(bumpCount==3){
                     bucketAngle=0.75;
                 }
             }
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
 
-// turret controls
-            if (gamepad2.right_trigger > 0)
-                turretPower = gamepad2.right_trigger;
-            else {
-                if (gamepad2.left_trigger > 0) {
-                    turretPower = gamepad2.left_trigger * -1;
-                } else {
-                    turretPower = 0;
-                }
-            }
-            // check current turret power and only rotate only if changed
-            if (turretPower!= currentTurretPower){
-                mechControl.rotateTurret(turretPower);
-                currentTurretPower = turretPower  ;
-            }
-
-            /**
-             * #################################################################################
-             * #################################################################################
-             * #################      PROVIDE USER FEEDBACK    #################################
-             * #################################################################################
-             * #################################################################################
-             *
-            telemetry.addData("Motor Shooter1 Encoder = ", robot.motorShooter1.getCurrentPosition());
-            telemetry.addData("Motor Shooter2 Encoder = ", robot.motorShooter2.getCurrentPosition());
-            telemetry.addData("Motor RF Encoder = ", robot.motorRF.getCurrentPosition());
-            telemetry.addData("Motor LF Encoder = ", robot.motorLF.getCurrentPosition());
-            telemetry.addData("Motor RR Encoder = ", robot.motorRR.getCurrentPosition());
-            telemetry.addData("Motor LR Encoder = ", robot.motorLR.getCurrentPosition());
-            telemetry.addData("Calculated Distance = ", drive.calcDistance(0,0,0,0,0));
-            telemetry.addData("Shooter RPM = ", (robot.motorShooter1.getVelocity() / 28 * 60));
-            telemetry.update(); */
+            telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
+            telemetry.addData("Turret Target Angle: ",turretPosition);
+            telemetry.update();
         }   // end of while opModeIsActive()
         //stops mechanism thread
         mechControl.stop();
+        turretControl.stop();
     }   // end of runOpMode method
 
 }   // end of TeleOp.java class
