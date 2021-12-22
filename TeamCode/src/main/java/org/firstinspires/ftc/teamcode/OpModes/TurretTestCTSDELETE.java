@@ -65,7 +65,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_up || gamepad2.dpad_up) {
                 turretPosition=0;
             }
-
+            /*
             // move the turret to the right side of the robot using preset values
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 turretPosition = robot.TURRET_RIGHT_POSITION;
@@ -93,7 +93,9 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             }
 
             lastTurretPosition=turretPosition;
-
+            */
+            turretPosition=(int)(gamepad2.right_stick_x*robot.TURRET_MAX_POSITION);
+            turretControl.setTargetPosition(turretPosition);
 
 
 
