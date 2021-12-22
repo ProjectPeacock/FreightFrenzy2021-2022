@@ -42,7 +42,9 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         boolean intakeDown=false;
         boolean toggleIntake=false;
         double currentTurretPower = 0.0;
+        double powerMultiplier=0.1;
         int turretPosition = 0;
+        int lastTurretPosition=0;
 
         waitForStart();
 //        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
@@ -60,46 +62,40 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             */
 
             // reset the position of the turret to 0 position
-            if(gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_up || gamepad2.dpad_up){
-                turretPosition = 0;
+            if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_up || gamepad2.dpad_up) {
+                turretPosition=0;
             }
 
             // move the turret to the right side of the robot using preset values
-            if(gamepad1.dpad_right || gamepad2.dpad_right){
+            if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 turretPosition = robot.TURRET_RIGHT_POSITION;
             }
 
             // move the turret to the left side of the robot using preset values
-            if(gamepad1.dpad_left || gamepad2.dpad_left){
+            if (gamepad1.dpad_left || gamepad2.dpad_left) {
                 turretPosition = robot.TURRET_LEFT_POSITION;
             }
 
-            // manually control the rotation of the turret
-            if (gamepad2.right_trigger > 0) {
-//                turretPosition = robot.motorIntake.getCurrentPosition() + 1;
-                turretPosition = turretPosition++;
-                if (turretPosition > robot.TURRET_RIGHT_POSITION)
-                    turretPosition = robot.TURRET_RIGHT_POSITION;
-            } else if (gamepad2.left_trigger > 0) {
-                turretPosition = turretPosition--;
-//    turretPosition = robot.motorIntake.getCurrentPosition() - 1;
-                if (turretPosition < robot.TURRET_LEFT_POSITION)
-                    turretPosition = robot.TURRET_LEFT_POSITION;
+            if(gamepad2.right_stick_x>0){
+                turretPosition+=(int)gamepad2.right_stick_x*5;
+            }else if(gamepad2.right_stick_x<0){
+                turretPosition+=(int)gamepad2.right_stick_x*5;
             }
 
-            if(gamepad2.right_stick_x != 0){
-//                turretControl.setTurretRotation(gamepad2.right_stick_x);
-                robot.turretServoBlue.setPower(gamepad2.right_stick_x/10);
-                robot.turretServoPink.setPower(gamepad2.right_stick_x/10);
-            } else {
-                robot.turretServoBlue.setPower(0);
-                robot.turretServoPink.setPower(0);
+            if(turretPosition>robot.TURRET_MAX_POSITION) {
+                turretPosition = robot.TURRET_MAX_POSITION;
+            }else if(turretPosition<-robot.TURRET_MAX_POSITION) {
+                turretPosition = -robot.TURRET_MAX_POSITION;
             }
 
-            // apply the changes to the turret
-            if (gamepad2.right_bumper){
+            if(turretPosition!=lastTurretPosition) {
                 turretControl.setTargetPosition(turretPosition);
             }
+
+            lastTurretPosition=turretPosition;
+
+
+
 
             /**
              * #################################################################################
@@ -121,6 +117,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
     }   // end of runOpMode method
 
+    /*
     private void turretControlTest(int targetPosition){
         double integral = 0;
         double Cp = 0.0012;
@@ -170,14 +167,13 @@ public class TurretTestCTSDELETE extends LinearOpMode {
         }   // end of while Math.abs(error)
 
         setTurretRotation(0);       // stop the turrets
-        robot.bucketDump.setPosition(0.5);
     }   // end of turretControl() method
 
     public void setTurretRotation(double rotationSpeed){
         robot.turretServoBlue.setPower(-rotationSpeed);
         robot.turretServoPink.setPower(-rotationSpeed);
     }
-
+*/
 }   // end of TeleOp.java class
 
 
