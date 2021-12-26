@@ -206,12 +206,13 @@ public class TeleOpTurret extends LinearOpMode {
 
 //turret control section (GP2, left stick)
             if(!intakeDown){
-                turretPosition=(int)(gamepad2.left_trigger*robot.TURRET_MAX_POSITION)-(int)(gamepad2.right_trigger*robot.TURRET_MAX_POSITION);
+                turretPosition=(int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
             }else{
                 turretPosition=0;
             }
             //apply angle to turret PID
             turretControl.setTargetPosition(turretPosition);
+
 //end of turret control section
 
 //bucket control section (GP2, Dpad Right)
@@ -228,6 +229,10 @@ public class TeleOpTurret extends LinearOpMode {
 
             telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Turret Target Angle: ",turretPosition);
+            telemetry.addData("Turret power blue: ",robot.turretServoBlue.getPower());
+            telemetry.addData("Turret power pink: ",robot.turretServoPink.getPower());
+            telemetry.addData("Turret direction blue: ",robot.turretServoBlue.getDirection());
+            telemetry.addData("Turret direction pink: ",robot.turretServoPink.getDirection());
             telemetry.update();
         }   // end of while opModeIsActive()
         //stops mechanism thread

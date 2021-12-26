@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -94,6 +95,7 @@ public class HardwareProfile {
     //public distance sensors;
     public DistanceSensor sensorDistPink=null;
     public DistanceSensor sensorDistBlue=null;
+    public DigitalChannel turretMagSensor = null;
   //  public RevBlinkinLedDriver LEDPort;
 
     /* Constructor */
@@ -176,6 +178,7 @@ public class HardwareProfile {
         turretServoBlue = hwMap.crservo.get("turretServoBlue");
         turretServoPink = hwMap.crservo.get("turretServoPink");
 
+
 /*
         motorOdometry = hwMap.dcMotor.get("motorOdometry");
         motorOdometry.setDirection(DcMotor.Direction.FORWARD);
@@ -192,6 +195,8 @@ public class HardwareProfile {
 //initialize sensors
         sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
         sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
+        turretMagSensor = hwMap.get(DigitalChannel.class, "turretMagSensor");
+        turretMagSensor.setMode(DigitalChannel.Mode.INPUT);
 
         imu = hwMap.get(BNO055IMU.class, "imu");
 

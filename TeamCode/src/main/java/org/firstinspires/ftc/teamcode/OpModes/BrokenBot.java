@@ -77,7 +77,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                 telemetry.addData("Blue distance:",robot.sensorDistBlue.getDistance(DistanceUnit.CM));
 
                 telemetry.addData("Turret encoder:",robot.turrentEncoder.getCurrentPosition());
-                telemetry.update();
+
                 /*
                  * Mecanum Drive Control section
                 double drive = -gamepad1.left_stick_y;
@@ -180,6 +180,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                     armPosition = armPosition - 0.05;
                 }
                 */
+                /*
                 turretAngle=robot.turrentEncoder.getCurrentPosition();
                 if (gamepad2.right_trigger > 0.05&&turretAngle>=-robot.TURRET_MAX_POSITION) {
                     robot.turretServoBlue.setPower(gamepad2.right_trigger/2);
@@ -194,8 +195,14 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                 if(gamepad2.y){
                     mechControl.resetTurret();
                 }
+*/
 
-
+                if(robot.turretMagSensor.getState()==true){
+                    telemetry.addData("Turret mag limit","not detected");
+                }else{
+                    telemetry.addData("Turret mag limit","detected");
+                }
+                telemetry.update();
                 /**
                  * ##############################################################################
                  * ##############################################################################

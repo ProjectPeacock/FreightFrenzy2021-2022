@@ -45,7 +45,7 @@ public class TurretControlLibrary implements Runnable{
         double integral = 0;
         double Cp = 0.0012;
         double Ci = 0.002;
-        double Cd = 0.007;
+        double Cd = 0.008;
         double maxSpeed = 1;
         double minSpeed =0.08;
         double rotationSpeed;
@@ -71,9 +71,9 @@ public class TurretControlLibrary implements Runnable{
 
             // make sure the servo speed doesn't drop to a level where it is no longer able
             // to rotate
-            if ((rotationSpeed < 0) && (rotationSpeed > -0.1)) {
+            if ((rotationSpeed < 0) && (rotationSpeed > -minSpeed)) {
                 rotationSpeed = -minSpeed;
-            } else if ((rotationSpeed > 0) && (rotationSpeed < 0.1)) {
+            } else if ((rotationSpeed > 0) && (rotationSpeed < minSpeed)) {
                 rotationSpeed = minSpeed;
             }
 
