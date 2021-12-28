@@ -144,10 +144,10 @@ public class DriveClass {
                 // Clip motor speed
                 rotationSpeed = Range.clip(rotationSpeed, -maxSpeed, maxSpeed);
 
-                if ((rotationSpeed > -0.25) && (rotationSpeed < 0)) {
-                    rotationSpeed = -0.21;
-                } else if ((rotationSpeed < 0.25) && (rotationSpeed > 0)) {
-                    rotationSpeed = 0.21;
+                if ((rotationSpeed > -0.35) && (rotationSpeed < 0)) {
+                    rotationSpeed = -0.35;
+                } else if ((rotationSpeed < 0.35) && (rotationSpeed > 0)) {
+                    rotationSpeed = 0.35;
                 }
 
                 r1Power = rotationSpeed;

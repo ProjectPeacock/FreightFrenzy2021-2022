@@ -74,13 +74,14 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
         double timeElapsed;
         double positionFactor = 1;
         int scorePosition=1;
-        double forwardSpeed = -0.3;
+        double forwardSpeed = -0.35;
 
-        double goalDistance = 36.0;
-        double turnDistance = 6.0;
+        double goalDistance = 24.0;
+        double turnDistance = 10.0;
         double goalAdjust = 0;
+        double carouselDistance= 19.5;
 
-        double turnAngle = 60;
+        double turnAngle = 65;
         double parkDistance = 12.0;
         double parkAdjust = 24.0;
 
@@ -254,10 +255,10 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
             // Step 1
             //      drive.driveStraight(backwards to goal
             drive.driveStraight(forwardSpeed, goalDistance);
-            sleep(1000);
+            sleep(250);
 
             //   drive.driveTurn(turn towards goal);
-           // drive.driveTurn(turnAngle * positionFactor, turnError);
+            drive.driveTurn(turnAngle * positionFactor, turnError);
 
             //move arm to scoring positions
             if(scorePosition==1){
@@ -272,10 +273,11 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
 
             }
         //    idle();
-            sleep(1000);
+            sleep(250);
+
             //  drive towards goal
             drive.driveStraight(forwardSpeed, turnDistance);
-            sleep(1000);
+            sleep(500);
 
             // score element in high goal
             //move arm to scoring positions. initailly always go high, later will use
@@ -284,26 +286,25 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
 
             // dump bucket
             robot.bucketDump.setPosition(bucketAngle);
-            sleep(1000);
+            sleep(500);
             //reset arms
-            robot.bucketDump.setPosition(0);
-
+            robot.bucketDump.setPosition(0.5);
             armControl.moveToZero();
 
             // reverse direction to drive forward to park
             forwardSpeed = forwardSpeed * -1;
 
             //back up turn amount
-            drive.driveStraight(forwardSpeed, turnDistance);
-            sleep(1000);
+            drive.driveStraight(forwardSpeed, carouselDistance);
+            sleep(500);
 
             // reposition angle to park
-          //  turnAngle = turnAngle * -1;
+            turnAngle = turnAngle * -1;
           //  drive.driveTurn(turnAngle * positionFactor, turnError);
 
             // adjust park distance if needed
             //if (startPosition.equals("FIELD")) {
-            //    parkDistance = parkDistance + parkAdjust;
+            parkDistance = parkDistance + parkAdjust;
             //}
             drive.driveStraight(forwardSpeed, goalDistance);
 

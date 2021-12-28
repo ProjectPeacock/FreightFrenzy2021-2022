@@ -120,6 +120,7 @@ public class ArmControlCLass {
     public void moveToZero(){
         angle1=0;
         angle2=0;
+        setArmPosition();
     }
 //end of soft arm reset method
 //arm 2 position manual increment methods
