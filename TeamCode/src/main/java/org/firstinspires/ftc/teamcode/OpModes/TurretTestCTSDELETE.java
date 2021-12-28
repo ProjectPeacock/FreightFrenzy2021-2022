@@ -98,7 +98,6 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             turretControl.setTargetPosition(turretPosition);
 
 
-
             /**
              * #################################################################################
              * #################################################################################
