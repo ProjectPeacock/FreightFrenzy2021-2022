@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpThreads2", group = "Competition")
 //  @Disabled
@@ -20,6 +21,8 @@ public class TeleOpThreads2 extends LinearOpMode {
     public void runOpMode(){
         MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
         Thread mechController = new Thread(mechControl);
+        TurretControlLibrary turretControl = new TurretControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread turretController = new Thread(turretControl);
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
 
@@ -54,6 +57,7 @@ public class TeleOpThreads2 extends LinearOpMode {
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
         mechController.start();
+        turretController.start();
 
         while(opModeIsActive()) {
             /*
@@ -146,38 +150,6 @@ public class TeleOpThreads2 extends LinearOpMode {
             }
             else{ robot.motorChainsaw.setPower(0);
             }
-
-
-           /* /*CHAINSAW MODES:
-            0: off
-            1: Blue side
-            2: Red side
-            *
-            //red side (left bumper) chainsaw toggle
-            if(gamepad1.right_bumper&&chainsawReady){
-                if(chainsawMode==0){
-                    chainsawMode=1;
-                }else if(chainsawMode==1){
-                    chainsawMode=0;
-                }
-            }
-            //blue side (right bumper) chainsaw toggle
-            if(gamepad1.left_bumper&&chainsawReady){
-                if(chainsawMode==0){
-                    chainsawMode=2;
-                }else if(chainsawMode==2){
-                    chainsawMode=0;
-                }
-            }
-            //start or stop chainsaw based on mode
-            //
-            if(chainsawMode==1){
-                mechControl.chainsawRampRed();
-            }else if(chainsawMode==2){
-                mechControl.chainsawRampBlue();
-            }else{
-                robot.motorChainsaw.setPower(0);
-            } */
 //end of chainsaw controls
 
 //arm control section (GP1, X, Y, Dpad Down)
@@ -243,7 +215,7 @@ public class TeleOpThreads2 extends LinearOpMode {
             }
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
-
+            turretControl.setTargetPosition(0);
 
             /**
              * #################################################################################
@@ -264,6 +236,7 @@ public class TeleOpThreads2 extends LinearOpMode {
         }   // end of while opModeIsActive()
         //stops mechanism thread
         mechControl.stop();
+        turretControl.stop();
     }   // end of runOpMode method
 
 }   // end of TeleOp.java class

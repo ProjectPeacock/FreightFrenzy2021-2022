@@ -48,9 +48,9 @@ import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 
-@Autonomous(name="AutoParkDriveClassJG2", group="Competition")
+@Autonomous(name="FullAuto", group="Competition")
 //@Disabled
-public class AutoParkDriveClassJG2 extends LinearOpMode {
+public class FullAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareProfile robot   = new HardwareProfile();
@@ -61,13 +61,13 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
     @Override
     public void runOpMode() {
         // arm control thread
-      //  MechControlLibrary armControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
-     //   Thread armController = new Thread(mechControl);
+        //  MechControlLibrary armControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        //   Thread armController = new Thread(mechControl);
 
         boolean autoReady = false;
         boolean running = true;
         double startTime;
-        String alliance = "";
+        String oldalliance = "";
         String startPosition = "";
         String goalPosition = "";
         long startDelay = 0;
@@ -76,7 +76,7 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
         int scorePosition=1;
         double forwardSpeed = -0.32;
 
-        double forwardDistance = 24.0;
+        double forwardDistance = 26.0;
         double hubDistance = 10.0;
         double hubDistanceBlue = 14.0;
         double goalAdjust = 0;
@@ -88,6 +88,13 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
 
         double turnError = 0.5;
         double bucketAngle = -1.0;
+
+        //red if false, blue if true
+        boolean alliance = false;
+
+        //carousel if false, warehouse if true
+        boolean position = false;
+
 
         /*
          * Initialize the drive system variables.
@@ -117,13 +124,9 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
 
                     if(gamepad1.x || gamepad1.y){
                         if (gamepad1.x){
-                            alliance = "BLUE";
-                            positionFactor = -1;
- //                          robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+                            alliance = true;
                         }  else {
-                            alliance = "RED";
-                            positionFactor = 1;
- //                           robot.LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+                            alliance = false;
                         }
                         setupState = State.DELAY_LENGTH;    // give option to add delay
                         telemetry.addData("Goal on ==  ", positionFactor);
@@ -168,11 +171,10 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
 
                     if(gamepad1.dpad_left || gamepad1.dpad_right){
                         if (gamepad1.dpad_left){
-                            startPosition = "CAROUSEL";
+                            position=false;
                             sleep(1000);
                         }  else {
-                            startPosition = "WAREHOUSE";
-                            positionFactor = positionFactor * -1;
+                            position=true;
                         }
                         setupState = State.SCORING_POSITION;
                     }   // end of if(gamepad1.dpad_left...
@@ -236,7 +238,25 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
             }   // end of switch(setupState)
         }   // end of while(autoReady)
 
-        
+        //red carousel
+        if(alliance==false&&position==false){
+            positionFactor=1;
+        //blue carousel
+        }else if(alliance==true&&position==false){
+            hubDistance+=4;
+            positionFactor=-1;
+        //red warehouse
+        }else if(alliance==false&&position==true){
+            forwardDistance=28;
+            hubDistance-=6;
+            positionFactor=-1;
+            parkDistance=40;
+        //blue warehouse
+        }else{
+            forwardDistance=28;
+            hubDistance-=6;
+            positionFactor=1;
+        }
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
@@ -247,7 +267,7 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
         startTime = runtime.time() + startDelay;
 
         // start arm controller thread
-    //    armController.start();
+        //    armController.start();
 
         // sleep for set delay time
         sleep(startDelay);
@@ -274,7 +294,7 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
                 goalAdjust = 0;
 
             }
-        //    idle();
+            //    idle();
             sleep(250);
 
             //  drive towards goal
@@ -297,18 +317,20 @@ public class AutoParkDriveClassJG2 extends LinearOpMode {
             forwardSpeed = forwardSpeed * -1;
 
             //back up turn amount
-            drive.driveStraight(forwardSpeed, carouselDistance);
+            if(alliance==false&&position==true){
+                forwardSpeed=1;
+            }
+            drive.driveStraight(forwardSpeed, parkDistance);
             sleep(500);
 
             // reposition angle to park
             turnAngle = turnAngle * -1;
-          //  drive.driveTurn(turnAngle * positionFactor, turnError);
+            //  drive.driveTurn(turnAngle * positionFactor, turnError);
 
             // adjust park distance if needed
             //if (startPosition.equals("FIELD")) {
-            parkDistance = parkDistance + parkAdjust;
+
             //}
-            drive.driveStraight(forwardSpeed, forwardDistance);
 
             // Step 2 - just stop for now
             drive.motorsHalt();
