@@ -109,13 +109,13 @@ public class TeleOpTurret extends LinearOpMode {
 
 //intake control section (GP1, A)
             //allows for intake toggle and not button hold down
-            if(!gamepad1.a&&!gamepad2.a){
+            if(!gamepad2.a){
                 toggleIntake=true;
             }
 
             //if intake isn't deployed, deploy it & vice versa
 
-            if(gamepad1.a&&toggleIntake||gamepad2.a&&toggleIntake){
+            if(gamepad2.a&&toggleIntake){
                 toggleIntake=false;
                 intakeDown=!intakeDown;
                 isDeployed=false;
@@ -123,7 +123,7 @@ public class TeleOpTurret extends LinearOpMode {
             }
             //check if intake needs to be reversed and then deploy or retract
             if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
-                if (!gamepad1.b&&!gamepad2.b) {
+                if (!gamepad2.b) {
                     if (intakeDown) {
                         mechControl.intakeOn(isDeployed);
                     } else {
