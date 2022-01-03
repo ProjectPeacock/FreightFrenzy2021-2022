@@ -78,13 +78,10 @@ public class FullAuto extends LinearOpMode {
 
         double forwardDistance = 26.0;
         double hubDistance = 10.0;
-        double hubDistanceBlue = 14.0;
         double goalAdjust = 0;
-        double carouselDistance= 19.5;
 
         double turnAngle = 65;
-        double parkDistance = 12.0;
-        double parkAdjust = 24.0;
+        double parkDistance = 35;
 
         double turnError = 0.5;
         double bucketAngle = -1.0;
@@ -239,14 +236,14 @@ public class FullAuto extends LinearOpMode {
         }   // end of while(autoReady)
 
         //red carousel
-        if(alliance==false&&position==false){
+        if(!alliance&&!position){
             positionFactor=1;
         //blue carousel
-        }else if(alliance==true&&position==false){
+        }else if(alliance&&!position){
             hubDistance+=4;
             positionFactor=-1;
         //red warehouse
-        }else if(alliance==false&&position==true){
+        }else if(!alliance&&position){
             forwardDistance=28;
             hubDistance-=6;
             positionFactor=-1;
@@ -256,6 +253,7 @@ public class FullAuto extends LinearOpMode {
             forwardDistance=28;
             hubDistance-=6;
             positionFactor=1;
+            parkDistance=40;
         }
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -327,9 +325,22 @@ public class FullAuto extends LinearOpMode {
             turnAngle = turnAngle * -1;
             //  drive.driveTurn(turnAngle * positionFactor, turnError);
 
-            // adjust park distance if needed
-            //if (startPosition.equals("FIELD")) {
-
+            //go to carousel, red
+            if(!alliance&&!position){
+                drive.driveTurn(0,turnError);
+                sleep(350);
+                drive.driveStraight(forwardSpeed,8.25);
+                robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+                drive.setDrivePower(0.1,0.1,0.1,0.1);
+                sleep(2500);
+                drive.driveTurn(0,turnError);
+                robot.motorChainsaw.setPower(0);
+                drive.driveStraight(-forwardSpeed,9);
+                sleep(250);
+                drive.driveTurn(-90,turnError);
+                sleep(8250);
+                drive.driveStraight(1,100);
+            }
             //}
 
             // Step 2 - just stop for now
