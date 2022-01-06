@@ -33,7 +33,7 @@ public class HardwareProfile {
     public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
 //drive control constants
     public final double DRIVE_MULTIPLIER=0.65;
-    public final double TURN_MULTIPLIER=0.65;
+    public final double TURN_MULTIPLIER=0.75;
 
 //intake control constants
     //intake servos
@@ -56,7 +56,7 @@ public class HardwareProfile {
 
 //arm control constants
     //arm scoring positions
-    public final int HIGH_PLATFORM=1700;
+    public final int HIGH_PLATFORM=1750;
     public final int MID_PLATFORM=2350;
     public final int LOW_PLATFORM=2100;
     //arm intake positions

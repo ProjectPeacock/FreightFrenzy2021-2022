@@ -65,8 +65,8 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             while(opModeIsActive()) {
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
                 telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
-                telemetry.addData("Drive Motor Encoders:",robot.motorR1.getCurrentPosition());
-                if(robot.sensorDistPink.getDistance(DistanceUnit.CM)<60){
+            /*
+                telemetry.addData("Drive Motor Encoders:",robot.motorR1.getCurrentPosition());if(robot.sensorDistPink.getDistance(DistanceUnit.CM)<60){
                     telemetry.addData("Pink shipping element present","");
                 }
                 if(robot.sensorDistBlue.getDistance(DistanceUnit.CM)<60){
@@ -77,7 +77,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                 telemetry.addData("Blue distance:",robot.sensorDistBlue.getDistance(DistanceUnit.CM));
 
                 telemetry.addData("Turret encoder:",robot.turrentEncoder.getCurrentPosition());
-
+*/
                 /*
                  * Mecanum Drive Control section
                 double drive = -gamepad1.left_stick_y;
@@ -196,7 +196,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                     mechControl.resetTurret();
                 }
 */
-
+/*
                 if(robot.turretMagSensor.getState()==true){
                     telemetry.addData("Turret mag limit","not detected");
                 }else{
@@ -210,6 +210,9 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                  * ##############################################################################
                  * ##############################################################################
                  */
+                telemetry.addData("Left Joystick Y: ",gamepad1.left_stick_y);
+                telemetry.addData("Right Joystick Y: ",gamepad1.right_stick_y);
+                telemetry.update();
 
                 /**
                  * #################################################################################

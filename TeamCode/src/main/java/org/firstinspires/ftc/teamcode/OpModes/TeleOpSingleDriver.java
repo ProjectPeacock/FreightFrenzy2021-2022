@@ -88,7 +88,7 @@ public class TeleOpSingleDriver extends LinearOpMode {
                 left/=Math.abs(left);
             }
             if(Math.abs(right)>1){
-                left/=Math.abs(right);
+                right/=Math.abs(right);
             }
             //100% power forward
             if(-gamepad1.left_stick_y>0.95&&-gamepad1.right_stick_y>0.95){
@@ -96,27 +96,20 @@ public class TeleOpSingleDriver extends LinearOpMode {
                 right=1;
             }
             //100% power in reverse
-            if(-gamepad1.left_stick_x<-0.95&&-gamepad1.right_stick_x<-0.95){
+            if(-gamepad1.left_stick_y<-0.95&&-gamepad1.right_stick_y<-0.95){
                 left=-1;
                 right=-1;
             }
-            /*
-            //100% turning power
-            if(-gamepad1.left_stick_x<-0.95&&-gamepad1.right_stick_x<-0.95){
-                left=1;
-                right=-1;
-            }
-            if(-gamepad1.right_stick_x>0.95&&-gamepad1.right_stick_x>0.95){
-                left=-1;
-                right=1;
-            }
-            */
-            
+
             // Output the safe vales to the motor drives.
             robot.motorL1.setPower(left);
             robot.motorL2.setPower(left);
             robot.motorR1.setPower(right);
             robot.motorR2.setPower(right);
+
+            telemetry.addData("Left Power: ",left);
+            telemetry.addData("Right Power: ",right);
+            telemetry.update();
 //end of drive controls
 
 //intake control section (GP1, A)
