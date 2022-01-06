@@ -54,7 +54,7 @@ public class HardwareProfile {
     public final double CHAIN_POWER_BOOST = 0.05;
     public final int CHAIN_INCREMENTS=6; //increments for accelerating chainsaw to full speed
 
-//arm control constants75
+//arm control constants
     //arm scoring positions
     public final int HIGH_PLATFORM=1700;
     public final int MID_PLATFORM=2350;
@@ -63,10 +63,10 @@ public class HardwareProfile {
     public final int ARM_1_INTAKE=1110;
     public final int ARM_2_INTAKE=0;
 
+//turret constants
     public final int TURRET_MAX_POSITION=275;
-    public final int TURRET_RIGHT_POSITION=250;
-    public final int TURRET_LEFT_POSITION=-250;
-
+    public final int TURRET_INCREMENTS=3;
+    public final int TURRET_STEP=((275/TURRET_INCREMENTS)/10)*10;
     /*
      * Hardware devices
      */

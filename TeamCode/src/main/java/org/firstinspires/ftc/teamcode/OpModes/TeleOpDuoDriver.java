@@ -51,7 +51,8 @@ public class TeleOpDuoDriver extends LinearOpMode {
         boolean isDeployed=false;
         boolean intakeDown=false;
         boolean toggleIntake=false;
-        boolean chainsawReady=false;
+        boolean turretToggle=false;
+        int turretPreset=0;
         double turn, drive, left, right, max;
         int turretPosition=0;
         int turretThreshold=2;
@@ -206,11 +207,36 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
 //turret control section (GP2, left stick)
             if(!intakeDown){
-                turretPosition=(int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
-            }else{
-                turretPosition=0;
+                /*
+                if(gamepad2.right_trigger>0.2&&robot.turrentEncoder.getCurrentPosition()>-robot.TURRET_MAX_POSITION){
+                    turretPosition-=5;
+                }else if(gamepad2.left_trigger>0.2&&robot.turrentEncoder.getCurrentPosition()<robot.TURRET_MAX_POSITION){
+                    turretPosition+=5;
+                }else if(gamepad2.left_bumper){
+                    turretPosition=0;
+                }
+                */
+                if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
+                    turretToggle=true;
+                }
+                if(turretToggle&&gamepad2.left_bumper&&turretPreset<robot.TURRET_INCREMENTS){
+                    turretToggle=false;
+                    turretPreset++;
+                }else if(turretToggle&&gamepad2.right_bumper&&turretPreset>-robot.TURRET_INCREMENTS){
+                    turretToggle=false;
+                    turretPreset--;
+                }
+                if(gamepad2.right_stick_button){
+                    turretPreset=0;
+                }
             }
+            turretPosition=turretPreset*robot.TURRET_STEP;
             //apply angle to turret PID
+            if(turretPosition>robot.TURRET_MAX_POSITION){
+                turretPosition=robot.TURRET_MAX_POSITION;
+            }else if(turretPosition<-robot.TURRET_MAX_POSITION){
+                turretPosition=-robot.TURRET_MAX_POSITION;
+            }
             turretControl.setTargetPosition(turretPosition);
 
 //end of turret control section
@@ -229,6 +255,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
             telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Turret Target Angle: ",turretPosition);
+            telemetry.addData("Turret Preset: ",turretPreset);
             telemetry.addData("Turret power blue: ",robot.turretServoBlue.getPower());
             telemetry.addData("Turret power pink: ",robot.turretServoPink.getPower());
             telemetry.addData("Turret direction blue: ",robot.turretServoBlue.getDirection());

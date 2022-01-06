@@ -60,9 +60,6 @@ public class FullAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // arm control thread
-        //  MechControlLibrary armControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
-        //   Thread armController = new Thread(mechControl);
 
         boolean autoReady = false;
         boolean running = true;
@@ -169,7 +166,7 @@ public class FullAuto extends LinearOpMode {
                     if(gamepad1.dpad_left || gamepad1.dpad_right){
                         if (gamepad1.dpad_left){
                             position=false;
-                            sleep(1000);
+                            //sleep(1000);
                         }  else {
                             position=true;
                         }
@@ -338,10 +335,26 @@ public class FullAuto extends LinearOpMode {
                 drive.driveStraight(-forwardSpeed,9);
                 sleep(250);
                 drive.driveTurn(-90,turnError);
-                sleep(8250);
+                sleep(7750-startDelay);
                 drive.driveStraight(1,100);
             }
-            //}
+
+            //go to carousel, blue
+            if(alliance&&!position){
+                drive.driveTurn(0,turnError);
+                sleep(350);
+                drive.driveStraight(forwardSpeed,8.25);
+                robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+                drive.setDrivePower(0.1,0.1,0.1,0.1);
+                sleep(2500);
+                drive.driveTurn(0,turnError);
+                robot.motorChainsaw.setPower(0);
+                drive.driveStraight(-forwardSpeed,9);
+                sleep(250);
+                drive.driveTurn(90,turnError);
+                sleep(7750-startDelay);
+                drive.driveStraight(1,100);
+            }
 
             // Step 2 - just stop for now
             drive.motorsHalt();
@@ -351,9 +364,6 @@ public class FullAuto extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);
-
-        //stops mechanism thread
-        //mechControl.stop();
 
     } // end of opmode
 
