@@ -123,17 +123,18 @@ public class TeleOpDuoDriver extends LinearOpMode {
                 bumpCount=0;
             }
             //check if intake needs to be reversed and then deploy or retract
-            if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
-                if (!gamepad2.b) {
-                    if (intakeDown) {
+            if (!gamepad2.b) {
+                if (intakeDown) {
+                    if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
                         mechControl.intakeOn(isDeployed);
-                    } else {
-                        mechControl.intakeOff(isDeployed);
                     }
                 } else {
-                    robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
+                    mechControl.intakeOff(isDeployed);
                 }
+            } else {
+                robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
             }
+
 //end of intake controls
 
 //chainsaw control section (GP1, Bumpers, Triggers)
@@ -207,16 +208,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
 //turret control section (GP2, left stick)
             if(!intakeDown){
-                /*
-                if(gamepad2.right_trigger>0.2&&robot.turrentEncoder.getCurrentPosition()>-robot.TURRET_MAX_POSITION){
-                    turretPosition-=5;
-                }else if(gamepad2.left_trigger>0.2&&robot.turrentEncoder.getCurrentPosition()<robot.TURRET_MAX_POSITION){
-                    turretPosition+=5;
-                }else if(gamepad2.left_bumper){
-                    turretPosition=0;
-                }
-                */
-                if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
+                                if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
                     turretToggle=true;
                 }
                 if(turretToggle&&gamepad2.left_bumper&&turretPreset<robot.TURRET_INCREMENTS){
