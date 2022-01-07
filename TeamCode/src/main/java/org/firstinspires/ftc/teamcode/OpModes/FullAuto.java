@@ -271,11 +271,15 @@ public class FullAuto extends LinearOpMode {
         while (opModeIsActive() && (running)) {
 
             // Step 1
-            //      drive.driveStraight(backwards to goal
-            drive.driveStraight(forwardSpeed, forwardDistance);
+            //drive forward and push TSE out of the way
+            drive.driveStraight(forwardSpeed, forwardDistance+10);
+            sleep(500);
+
+            //back up to turn to the shipping hub
+            drive.driveStraight(-forwardSpeed,10);
             sleep(250);
 
-            //   drive.driveTurn(turn towards goal);
+            //turn towards the hub
             drive.driveTurn(turnAngle * positionFactor, turnError);
 
             //move arm to scoring positions
@@ -290,21 +294,16 @@ public class FullAuto extends LinearOpMode {
                 goalAdjust = 0;
 
             }
-            //    idle();
             sleep(250);
 
-            //  drive towards goal
+            //drive towards the shipping hub to score
             drive.driveStraight(forwardSpeed, hubDistance);
             sleep(500);
 
-            // score element in high goal
-            //move arm to scoring positions. initailly always go high, later will use
-            // recognition to set scorePosition
-
-
-            // dump bucket
+            //dump bucket
             robot.bucketDump.setPosition(bucketAngle);
             sleep(500);
+
             //reset arms
             robot.bucketDump.setPosition(0.5);
             armControl.moveToZero();
@@ -312,42 +311,63 @@ public class FullAuto extends LinearOpMode {
             // reverse direction to drive forward to park
             forwardSpeed = forwardSpeed * -1;
 
-            //back up turn amount
+            //set forward speed to full power if in either warehouse position
             if(!alliance&&position){
+                //red
                 forwardSpeed=1;
             }else if(alliance&&position){
+                //blue
                 forwardSpeed=1;
             }
+
+            //drive to park if on warehouse side, drive to wall if on carousel side
             drive.driveStraight(forwardSpeed, parkDistance);
             sleep(500);
 
-            // reposition angle to park
-            turnAngle = turnAngle * -1;
-            //  drive.driveTurn(turnAngle * positionFactor, turnError);
-
             //go to carousel, red
             if(!alliance&&!position){
+                //turn to face carousel
                 drive.driveTurn(0,turnError);
                 sleep(350);
+
+                //drive forward until distance sensor is tripped
                 while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
                     drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                     robot.motorChainsaw.setPower(-robot.CHAIN_POW*0.75);
                 }
+
+                //drive forward at very low power to keep in contact with carousel
                 drive.setDrivePower(0.1,0.1,0.1,0.1);
+
+                //sleep to wait for duck to move
                 sleep(2500);
+
+                //reposition to face carousel again
                 drive.driveTurn(0,turnError);
+
+                //turn off chainsaw
                 robot.motorChainsaw.setPower(0);
-                drive.driveStraight(-forwardSpeed,9);
+
+                //back up away from carousel
+                drive.driveStraight(-forwardSpeed,8);
                 sleep(250);
+
+                //turn to face warehouse
                 drive.driveTurn(-90,turnError);
-                sleep(7750-startDelay);
+
+                //wait for alliance partner to move
+                sleep(7000-startDelay);
+
+                //park in warehouse
                 drive.driveStraight(1,100);
             }
 
-            //go to carousel, blue
+            //go to carousel, blue (movements same as red, in reverse
             if(alliance&&!position){
+
                 drive.driveTurn(0,turnError);
                 sleep(350);
+
                 while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
                     drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                     robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -355,16 +375,21 @@ public class FullAuto extends LinearOpMode {
 
                 drive.setDrivePower(0.1,0.1,0.1,0.1);
                 sleep(2500);
+
                 drive.driveTurn(0,turnError);
                 robot.motorChainsaw.setPower(0);
-                drive.driveStraight(-forwardSpeed,9);
+
+                drive.driveStraight(-forwardSpeed,8);
                 sleep(250);
+
                 drive.driveTurn(90,turnError);
-                sleep(7750-startDelay);
+
+                sleep(7000-startDelay);
+
                 drive.driveStraight(1,100);
             }
 
-            // Step 2 - just stop for now
+            //stop motors
             drive.motorsHalt();
             running = false;
         }

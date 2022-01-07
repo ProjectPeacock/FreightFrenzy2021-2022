@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
@@ -210,8 +212,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                  * ##############################################################################
                  * ##############################################################################
                  */
-                telemetry.addData("Left Joystick Y: ",gamepad1.left_stick_y);
-                telemetry.addData("Right Joystick Y: ",gamepad1.right_stick_y);
+                telemetry.addData("IMU Angle: ",robot.imu.getAngularOrientation().firstAngle);
                 telemetry.update();
 
                 /**

@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -52,7 +53,7 @@ import java.util.List;
  * is explained below.
  */
 @TeleOp(name = "TensorFlow Object Detection Webcam", group = "Competition")
-@Disabled
+//@Disabled
 public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
   /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
    * the following 4 detectable objects
@@ -120,7 +121,7 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.5, 16.0/9.0);
+            tfod.setZoom(1.25, 9.0/16.0);
         }
 
         /** Wait for the game to begin */
