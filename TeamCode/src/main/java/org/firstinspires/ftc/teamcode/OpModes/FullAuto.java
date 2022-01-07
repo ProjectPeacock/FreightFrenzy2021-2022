@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 import com.vuforia.State;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
@@ -237,7 +238,7 @@ public class FullAuto extends LinearOpMode {
             positionFactor=1;
         //blue carousel
         }else if(alliance&&!position){
-            hubDistance+=4;
+            hubDistance+=5;
             positionFactor=-1;
         //red warehouse
         }else if(!alliance&&position){
@@ -312,7 +313,9 @@ public class FullAuto extends LinearOpMode {
             forwardSpeed = forwardSpeed * -1;
 
             //back up turn amount
-            if(alliance==false&&position==true){
+            if(!alliance&&position){
+                forwardSpeed=1;
+            }else if(alliance&&position){
                 forwardSpeed=1;
             }
             drive.driveStraight(forwardSpeed, parkDistance);
@@ -326,8 +329,10 @@ public class FullAuto extends LinearOpMode {
             if(!alliance&&!position){
                 drive.driveTurn(0,turnError);
                 sleep(350);
-                drive.driveStraight(forwardSpeed,8.25);
-                robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+                while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
+                    drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
+                    robot.motorChainsaw.setPower(-robot.CHAIN_POW*0.75);
+                }
                 drive.setDrivePower(0.1,0.1,0.1,0.1);
                 sleep(2500);
                 drive.driveTurn(0,turnError);
@@ -343,8 +348,11 @@ public class FullAuto extends LinearOpMode {
             if(alliance&&!position){
                 drive.driveTurn(0,turnError);
                 sleep(350);
-                drive.driveStraight(forwardSpeed,8.25);
-                robot.motorChainsaw.setPower(-robot.CHAIN_POW);
+                while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
+                    drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
+                    robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
+                }
+
                 drive.setDrivePower(0.1,0.1,0.1,0.1);
                 sleep(2500);
                 drive.driveTurn(0,turnError);

@@ -22,6 +22,8 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
 public class HardwareProfile {
 
     /*
@@ -42,7 +44,7 @@ public class HardwareProfile {
     public final double INTAKE_DEPLOY_BLUE = 0.285; //Distance to deploy intake
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
-    public final double INTAKE_TILT_INPUT= 0.655;
+    public final double INTAKE_TILT_INPUT= 0.575;
     public final double INTAKE_STARTING_POS= 0.5;
     //intake motor
     public final double INTAKE_POW = 1; //intaking power
@@ -96,7 +98,11 @@ public class HardwareProfile {
     public DistanceSensor sensorDistPink=null;
     public DistanceSensor sensorDistBlue=null;
     public DigitalChannel turretMagSensor = null;
+
+    public DistanceSensor frontDistanceSensor=null;
   //  public RevBlinkinLedDriver LEDPort;
+
+    //public WebcamName webcam = null;
 
     /* Constructor */
     public HardwareProfile() {
@@ -195,6 +201,7 @@ public class HardwareProfile {
 //initialize sensors
         sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
         sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
+        frontDistanceSensor=hwMap.get(DistanceSensor.class,"frontDistanceSensor");
         turretMagSensor = hwMap.get(DigitalChannel.class, "turretMagSensor");
         turretMagSensor.setMode(DigitalChannel.Mode.INPUT);
 
@@ -210,7 +217,7 @@ public class HardwareProfile {
         imu.initialize(parameters);
 
         /* Webcam device will go here */
-//        webcam = hwMap.get(WebcamName.class, "Webcam 1");
+       // webcam = hwMap.get(WebcamName.class, "Webcam 1");
     }   // end of init() method
 
 }
