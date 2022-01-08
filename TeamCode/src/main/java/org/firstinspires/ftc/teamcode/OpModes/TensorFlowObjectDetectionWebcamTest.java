@@ -136,10 +136,10 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 
-                  //  if (updatedRecognitions != null) {
+                    if (updatedRecognitions != null) {
                             telemetry.addData("# Object Detected", updatedRecognitions.size());
                       // step through the list of recognitions and display boundary info.
-                    if (updatedRecognitions.size()>0){
+                  // if (updatedRecognitions.size()>0){
                       int i = 0;
                       for (Recognition recognition : updatedRecognitions) {
                         telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
