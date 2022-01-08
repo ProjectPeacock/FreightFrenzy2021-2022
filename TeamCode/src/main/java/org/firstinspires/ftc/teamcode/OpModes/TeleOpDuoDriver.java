@@ -253,7 +253,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
 //bucket control section (GP2, Dpad Right)
             if(gamepad2.dpad_right){
-                bucketAngle=-1;
+                bucketAngle=-0.75;
             } else{
                 bucketAngle=0.5;
                 if(bumpCount==3){
