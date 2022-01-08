@@ -200,6 +200,7 @@ public class FullAuto extends LinearOpMode {
 
                     if(gamepad1.a){         // exit the setup
                         setupState = State.VERIFY_CONFIG;
+                        sleep(1000);
                     }   // end of Scoring_position...
                     break;
 
@@ -236,6 +237,7 @@ public class FullAuto extends LinearOpMode {
         //red carousel
         if(!alliance&&!position){
             positionFactor=1;
+
         //blue carousel
         }else if(alliance&&!position){
             hubDistance+=5;
@@ -245,13 +247,13 @@ public class FullAuto extends LinearOpMode {
             forwardDistance=28;
             hubDistance-=6;
             positionFactor=-1;
-            parkDistance=40;
+            parkDistance=50;
         //blue warehouse
         }else{
             forwardDistance=28;
             hubDistance-=6;
             positionFactor=1;
-            parkDistance=40;
+            parkDistance=50;
         }
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //

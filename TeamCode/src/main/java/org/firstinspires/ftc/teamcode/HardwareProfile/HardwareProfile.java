@@ -102,7 +102,7 @@ public class HardwareProfile {
     public DistanceSensor frontDistanceSensor=null;
   //  public RevBlinkinLedDriver LEDPort;
 
-    //public WebcamName webcam = null;
+   // public WebcamName webcam = null;
 
     /* Constructor */
     public HardwareProfile() {

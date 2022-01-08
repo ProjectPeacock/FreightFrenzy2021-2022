@@ -18,11 +18,13 @@ public class DriveClass {
     private double r2Power;
     private double l1Power;
     private double l2Power;
+    public double startZAngle=0;
 
     //constructor
     public DriveClass(HardwareProfile myRobot, LinearOpMode myOpMode) {
         robot = myRobot;
         opMode = myOpMode;
+        //getStartAngle();
     }
 
     public void driveStraight(double power, double distance) {
@@ -129,11 +131,11 @@ public class DriveClass {
         double derivative = 0, deltaError, lastError = 0;
 
         // check to see how far the robot is rotating to decide which gyro sensor value to use
-        if (targetAngle > 90 || targetAngle < -90) {
-            error = gyro360(targetAngle) - targetAngle;
-        } else {
+//        if (targetAngle > 90 || targetAngle < -90) {
+//            error = gyro360(targetAngle) - targetAngle;
+//        } else {
             error = getZAngle() - targetAngle;
-        }
+//        }
 
         // nested while loops are used to allow for a final check of an overshoot situation
         while ((Math.abs(error) >= errorFactor) && opMode.opModeIsActive()) {
@@ -173,11 +175,11 @@ public class DriveClass {
                 opMode.telemetry.update();
 
                 // check to see how far the robot is rotating to decide which gyro sensor value to use
-                if (targetAngle > 90 || targetAngle < -90) {
-                    error = gyro360(targetAngle) - targetAngle;
-                } else {
+//                if (targetAngle > 90 || targetAngle < -90) {
+//                    error = gyro360(targetAngle) - targetAngle;
+//                } else {
                     error = getZAngle() - targetAngle;
-                }
+//                }
 
             }   // end of while Math.abs(error)
             motorsHalt();
@@ -185,11 +187,11 @@ public class DriveClass {
             // Perform a final calc on the error to confirm that the robot didn't overshoot the
             // target position after the last measurement was taken.
 //            opMode.sleep(5);
-            if (targetAngle > 90 || targetAngle < -90) {
-                error = gyro360(targetAngle) - targetAngle;
-            } else {
+//            if (targetAngle > 90 || targetAngle < -90) {
+//                error = gyro360(targetAngle) - targetAngle;
+//            } else {
                 error = getZAngle() - targetAngle;
-            }
+//            }
         }
 
         // shut off the drive motors
@@ -234,6 +236,10 @@ public class DriveClass {
      *  -   This method returns the gyro position of the robot.
      * @return zAngle
      */
+
+    public void getStartAngle(){
+        startZAngle=robot.imu.getAngularOrientation().firstAngle;
+    }
     public double getZAngle(){
         return (-robot.imu.getAngularOrientation().firstAngle);
     }   // close getZAngle method

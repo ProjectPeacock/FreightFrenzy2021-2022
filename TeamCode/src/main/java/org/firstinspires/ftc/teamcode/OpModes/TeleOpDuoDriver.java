@@ -52,6 +52,8 @@ public class TeleOpDuoDriver extends LinearOpMode {
         boolean intakeDown=false;
         boolean toggleIntake=false;
         boolean turretToggle=false;
+
+        boolean TSEtoggle=false;
         int turretPreset=0;
         double turn, drive, left, right, max;
         int turretPosition=0;
@@ -110,20 +112,20 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
 //intake control section (GP1, A)
             //allows for intake toggle and not button hold down
-            if(!gamepad2.a&&!gamepad1.a){
+            if(!gamepad1.a){
                 toggleIntake=true;
             }
 
             //if intake isn't deployed, deploy it & vice versa
 
-            if(gamepad2.a&&toggleIntake||gamepad1.a&&toggleIntake){
+            if(gamepad1.a&&toggleIntake){
                 toggleIntake=false;
                 intakeDown=!intakeDown;
                 isDeployed=false;
                 bumpCount=0;
             }
             //check if intake needs to be reversed and then deploy or retract
-            if (!gamepad2.b&&!gamepad1.b) {
+            if (!gamepad1.b) {
                 if (intakeDown) {
                     if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
                         mechControl.intakeOn(isDeployed);
@@ -197,7 +199,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
             }
 
             //reset arm to zero with or without scoring
-            if(gamepad2.dpad_down){
+            if(gamepad2.dpad_left){
                 bumpCount=0;
                 isDeployed=false;
                 mechControl.moveToZero();
@@ -231,6 +233,22 @@ public class TeleOpDuoDriver extends LinearOpMode {
             }
             turretControl.setTargetPosition(turretPosition);
 
+            if(!gamepad2.a&&!gamepad2.b&&!gamepad2.y){
+                TSEtoggle=true;
+            }
+            if(!intakeDown&&!isDeployed){
+                if(gamepad2.a&&TSEtoggle){
+                    TSEtoggle=false;
+                    mechControl.TSEDown();
+                }else if(gamepad2.b&&TSEtoggle){
+                    TSEtoggle=false;
+                    mechControl.TSEresting();
+                }else if(gamepad2.y&&TSEtoggle){
+                    TSEtoggle=false;
+                    mechControl.TSEtop();
+                }
+
+            }
 //end of turret control section
 
 //bucket control section (GP2, Dpad Right)

@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
+import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 @TeleOp(name = "Broken Bot TS", group = "Troubleshooting")
@@ -21,11 +22,13 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
         public BrokenBot(){
 
+
         }   // end of BrokenBotTS constructor
 
         public void runOpMode(){
-            MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
-            Thread mechController = new Thread(mechControl);
+            //MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+            //Thread mechController = new Thread(mechControl);
+
 /*
             double currentTick, currentTime, currentRPM;
             boolean servoGrabFlag=false, servoKickFlag=false, servoTransferFlag=false, servoIntakeFlag=false, servoRingFlag=false;
@@ -52,6 +55,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
              */
             robot.init(hardwareMap);
 
+
             /*
              * Initialize the drive class
              */
@@ -63,7 +67,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             telemetry.update();
 
             waitForStart();
-            mechController.start();
+            //mechController.start();
             while(opModeIsActive()) {
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
                 telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
@@ -213,6 +217,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                  * ##############################################################################
                  */
                 telemetry.addData("IMU Angle: ",robot.imu.getAngularOrientation().firstAngle);
+
                 telemetry.update();
 
                 /**
@@ -223,7 +228,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                  * #################################################################################
                  */
             }   // end of while opModeIsActive()
-            mechControl.stop();
+            //mechControl.stop();
         }   // end of runOpMode method
 
         boolean toggleFlag(boolean flag){

@@ -102,6 +102,19 @@ public class MechControlLibrary implements Runnable{
     }
 //end of scoring positions methods
 
+//TSE positions
+    public void TSEDown(){
+        angle1=-988;
+        angle2=0;
+    }
+    public  void TSEresting(){
+        angle1=-133;
+        angle2=-252;
+    }
+    public void TSEtop(){
+        angle1=-389;
+        angle2=-1165;
+    }
 //hard arm reset method (DO NOT USE IF POSSIBLE)
     public void resetArm(){
         angle1=0;
