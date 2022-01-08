@@ -80,6 +80,9 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
 //drive control section (GP1, Joysticks)
             drive = -gamepad1.left_stick_y*robot.DRIVE_MULTIPLIER;
+            if(drive<0){
+                drive*=robot.REVERSE_MULTIPLIER;
+            }
             turn  =  gamepad1.right_stick_x*robot.TURN_MULTIPLIER;
 
             // Combine drive and turn for blended motion.
@@ -269,7 +272,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
             }else{
                 if(intakeDown){
                     bucketAngle=0.45;
-                }else if(bumpCount==1&&!TSEMode) {
+                }else if(bumpCount==1&&!TSEMode&&robot.motorArmAngle1.getCurrentPosition()<750) {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;

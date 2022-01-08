@@ -34,7 +34,8 @@ public class HardwareProfile {
 
     public final int ARM_THREAD_SLEEP=100; //arm thread sleepTime
 //drive control constants
-    public final double DRIVE_MULTIPLIER=0.65;
+    public final double DRIVE_MULTIPLIER=0.5;
+    public final double REVERSE_MULTIPLIER=0.75;
     public final double TURN_MULTIPLIER=0.75;
 
 //intake control constants
