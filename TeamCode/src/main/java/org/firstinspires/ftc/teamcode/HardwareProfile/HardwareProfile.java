@@ -140,13 +140,11 @@ public class HardwareProfile {
 
         motorIntake = hwMap.dcMotor.get("motorIntake");
         motorIntake.setDirection(DcMotor.Direction.REVERSE);
-        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntake.setPower(0);
 
         turrentEncoder = hwMap.dcMotor.get("motorIntake");
-        turrentEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         motorChainsaw = hwMap.dcMotor.get("motorChainsaw");
         motorChainsaw.setDirection(DcMotor.Direction.FORWARD);

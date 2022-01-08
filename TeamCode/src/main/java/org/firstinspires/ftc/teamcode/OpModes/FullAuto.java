@@ -38,6 +38,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 import com.vuforia.State;
@@ -97,6 +98,8 @@ public class FullAuto extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
+        robot.turrentEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);

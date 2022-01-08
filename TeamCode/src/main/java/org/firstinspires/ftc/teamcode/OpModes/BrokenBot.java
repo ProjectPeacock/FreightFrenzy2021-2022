@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -70,7 +71,11 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             //mechController.start();
             while(opModeIsActive()) {
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
-                telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
+
+                telemetry.addData("Turret Angle:",robot.turrentEncoder.getCurrentPosition());
+                if(gamepad1.a){
+                    robot.turrentEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                }
             /*
                 telemetry.addData("Drive Motor Encoders:",robot.motorR1.getCurrentPosition());if(robot.sensorDistPink.getDistance(DistanceUnit.CM)<60){
                     telemetry.addData("Pink shipping element present","");

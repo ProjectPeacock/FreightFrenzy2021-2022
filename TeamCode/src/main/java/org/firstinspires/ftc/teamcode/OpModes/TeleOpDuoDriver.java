@@ -133,6 +133,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
                 if (intakeDown) {
                     if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
                         mechControl.intakeOn(isDeployed);
+                        telemetry.addData("Arm ","Down");
                     }
                 } else {
                     mechControl.intakeOff(isDeployed);

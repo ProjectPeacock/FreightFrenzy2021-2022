@@ -129,8 +129,7 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
+        while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -152,8 +151,10 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
                       telemetry.update();
                     }
                 }
-            }
-        }
+                if (tfod != null) {
+                    tfod.shutdown();
+                }
+       }
     }
 
     /**

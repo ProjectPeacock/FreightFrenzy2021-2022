@@ -30,7 +30,7 @@ import java.io.File;
 import java.util.List;
 
 @Autonomous(name = "Peacock Auto - Blue", group = "Peacock")
-@Disabled
+//@Disabled
 
 public class PeacockAuto extends LinearOpMode {
 
@@ -116,6 +116,7 @@ public class PeacockAuto extends LinearOpMode {
 
                         telemetry.addData("Size = ", updatedRecognitions.size());
                         telemetry.addData("Label = ", recognition.getLabel());
+                        telemetry.update();
                     }
                 }   // if(tfod != null)
 
@@ -153,6 +154,8 @@ public class PeacockAuto extends LinearOpMode {
                     "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
             tfodParameters.minResultConfidence = 0.8f;
+            tfodParameters.isModelTensorFlow2 = true;
+            tfodParameters.inputSize = 320;
             tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
             tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
         }

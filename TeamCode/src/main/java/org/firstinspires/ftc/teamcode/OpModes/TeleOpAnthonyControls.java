@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Anthony Special Edition TeleOp", group = "Competition")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Anthony's Super Duper Extra Super Special Limited Edition TeleOp", group = "Competition")
 //  @Disabled
 
 public class TeleOpAnthonyControls extends LinearOpMode {
@@ -289,13 +289,15 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 bucketAngle=0.3;
             }else{
                 if(intakeDown){
-                    bucketAngle=0.45;
+                    bucketAngle=0.55;
                 }else if(bumpCount==1&&!TSEMode&&robot.motorArmAngle1.getCurrentPosition()<750) {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;
                 }else if(bumpCount==3&&!TSEMode){
                     bucketAngle=0.75;
+                }else if(bumpCount==3&&TSEMode){
+                    bucketAngle=0.7;
                 }else{
                     bucketAngle=0.5;
                 }
@@ -304,10 +306,12 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
 
+            telemetry.addData("TSE MODE: ",TSEMode);
+            telemetry.addData("","");
+            telemetry.addData("Last Servo Pos",robot.bucketDump.getPosition());
             telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Turret Target Angle: ",turretPosition);
             telemetry.addData("Turret Preset: ",turretPreset);
-            telemetry.addData("TSE MODE: ",TSEMode);
             telemetry.addData("Left Power: ",left);
             telemetry.addData("Right Power: ",right);
             telemetry.addData("Chainsaw Power: ",chainsawPower);
