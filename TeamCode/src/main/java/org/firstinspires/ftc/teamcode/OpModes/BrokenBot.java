@@ -216,7 +216,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                  * ##############################################################################
                  * ##############################################################################
                  */
-                telemetry.addData("IMU Angle: ",robot.imu.getAngularOrientation().firstAngle);
+                telemetry.addData("IMU Angle: ",robot.imu.getAngularOrientation());
 
                 telemetry.update();
 

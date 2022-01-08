@@ -45,7 +45,7 @@ public class HardwareProfile {
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.575;
-    public final double INTAKE_STARTING_POS= 0.5;
+    public final double INTAKE_STARTING_POS= 0.3;
     //intake motor
     public final double INTAKE_POW = 1; //intaking power
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
@@ -57,10 +57,6 @@ public class HardwareProfile {
     public final int CHAIN_INCREMENTS=6; //increments for accelerating chainsaw to full speed
 
 //arm control constants
-    //arm scoring positions
-    public final int HIGH_PLATFORM=1750;
-    public final int MID_PLATFORM=2350;
-    public final int LOW_PLATFORM=2100;
     //arm intake positions
     public final int ARM_1_INTAKE=1110;
     public final int ARM_2_INTAKE=0;

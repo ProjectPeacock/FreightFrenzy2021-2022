@@ -53,6 +53,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
         boolean toggleIntake=false;
         boolean turretToggle=false;
 
+        boolean TSEMode=false;
         boolean TSEtoggle=false;
         int turretPreset=0;
         double turn, drive, left, right, max;
@@ -181,6 +182,13 @@ public class TeleOpDuoDriver extends LinearOpMode {
                     bumpCount -= 1;
                 }
             }
+            if(!gamepad2.y){
+                TSEtoggle=true;
+            }
+            if(gamepad2.y&&TSEtoggle&&!isDeployed){
+                TSEtoggle=false;
+                TSEMode=!TSEMode;
+            }
 
             //counts how many times x has been pressed (what position to go to to score)
             if(bumpCount>0){
@@ -189,28 +197,36 @@ public class TeleOpDuoDriver extends LinearOpMode {
                 intakeDown=false;
             }
 
-            //move arm to scoring positions
-            if(bumpCount==1){
-                mechControl.scoringPos1();
-            }else if(bumpCount==2){
-                mechControl.scoringPos2();
-            }else if(bumpCount==3){
-                mechControl.scoringPos3();
-            }
-
-            //reset arm to zero with or without scoring
-            if(gamepad2.dpad_left){
-                bumpCount=0;
-                isDeployed=false;
-                mechControl.moveToZero();
+            if(TSEMode) {
+                //mode to pick up TSE
+                if (bumpCount == 1) {
+                    mechControl.TSEDown();
+                } else if (bumpCount == 2) {
+                    mechControl.TSEresting();
+                } else if (bumpCount == 3) {
+                    mechControl.TSEtop();
+                }
             }else{
-
+                //move arm to score
+                if (bumpCount == 1) {
+                    mechControl.scoringPos1();
+                } else if (bumpCount == 2) {
+                    mechControl.scoringPos2();
+                } else if (bumpCount == 3) {
+                    mechControl.scoringPos3();
+                }
+            }
+            //reset arm to zero with or without scoring
+            if (gamepad2.dpad_left) {
+                bumpCount = 0;
+                isDeployed = false;
+                mechControl.moveToZero();
             }
 //end of arm controls
 
 //turret control section (GP2, left stick)
             if(!intakeDown){
-                                if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
+                if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
                     turretToggle=true;
                 }
                 if(turretToggle&&gamepad2.left_bumper&&turretPreset<robot.TURRET_INCREMENTS){
@@ -236,29 +252,33 @@ public class TeleOpDuoDriver extends LinearOpMode {
             if(!gamepad2.a&&!gamepad2.b&&!gamepad2.y){
                 TSEtoggle=true;
             }
-            if(!intakeDown&&!isDeployed){
-                if(gamepad2.a&&TSEtoggle){
-                    TSEtoggle=false;
-                    mechControl.TSEDown();
-                }else if(gamepad2.b&&TSEtoggle){
-                    TSEtoggle=false;
-                    mechControl.TSEresting();
-                }else if(gamepad2.y&&TSEtoggle){
-                    TSEtoggle=false;
-                    mechControl.TSEtop();
-                }
 
-            }
 //end of turret control section
 
 //bucket control section (GP2, Dpad Right)
-            if(gamepad2.dpad_right){
-                bucketAngle=-0.75;
-            } else{
-                bucketAngle=0.5;
-                if(bumpCount==3){
-                    bucketAngle=0.75;
+            if(gamepad2.dpad_right&&!TSEMode){
+                if(bumpCount==1){
+                    bucketAngle=0.15;
+                }else if(bumpCount==2){
+                    bucketAngle=0.05;
+                }else {
+                    bucketAngle = 0.25;
                 }
+            }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode){
+                bucketAngle=0.3;
+            }else{
+                if(intakeDown){
+                    bucketAngle=0.45;
+                }else if(bumpCount==1&&!TSEMode) {
+                    bucketAngle = 0.6;
+                }else if(bumpCount==2&&!TSEMode){
+                    bucketAngle=0.55;
+                }else if(bumpCount==3&&!TSEMode){
+                    bucketAngle=0.75;
+                }else{
+                    bucketAngle=0.5;
+                }
+
             }
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
@@ -266,10 +286,10 @@ public class TeleOpDuoDriver extends LinearOpMode {
             telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Turret Target Angle: ",turretPosition);
             telemetry.addData("Turret Preset: ",turretPreset);
-            telemetry.addData("Turret power blue: ",robot.turretServoBlue.getPower());
-            telemetry.addData("Turret power pink: ",robot.turretServoPink.getPower());
-            telemetry.addData("Turret direction blue: ",robot.turretServoBlue.getDirection());
-            telemetry.addData("Turret direction pink: ",robot.turretServoPink.getDirection());
+            telemetry.addData("TSE MODE: ",TSEMode);
+            telemetry.addData("Left Power: ",left);
+            telemetry.addData("Right Power: ",right);
+            telemetry.addData("Happy Driving ",")");
             telemetry.update();
         }   // end of while opModeIsActive()
         //stops mechanism thread

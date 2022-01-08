@@ -23,12 +23,7 @@ public class MechControlLibrary implements Runnable{
     private double arm2Power=1;
     private int sleepTime;
     private boolean isRunning=true;
-    private double turretPower = 0.02;
-    private int turretTargetPosition = 0;
-    private int turretThreshold = 5;
-    private int turretLimit = 330;
-    private double timeElapsed;
-    private int turretServoPower=0;
+
 
     //constructor
     public MechControlLibrary(HardwareProfile robotIn, int threadSleepDelay){
@@ -42,7 +37,6 @@ public class MechControlLibrary implements Runnable{
         localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
         localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
         angle2=localRobot.ARM_2_INTAKE;
-        localRobot.bucketDump.setPosition(0.45);
         localRobot.motorArmAngle2.setTargetPosition(angle2);
         while(localRobot.motorArmAngle2.getCurrentPosition()>1150){
 
@@ -85,20 +79,20 @@ public class MechControlLibrary implements Runnable{
 //move to scoring positions methods
     //high platform scoring (default)
     public void scoringPos1(){
-        angle1=-350;
+        angle1=-549;
         if(localRobot.motorArmAngle1.getCurrentPosition()<750){
-            angle2=localRobot.HIGH_PLATFORM;
+            angle2=1755;
         }
     }
     //mid platform scoring
     public void scoringPos2(){
-        angle1=-350;
-        angle2=localRobot.MID_PLATFORM;
+        angle1=-230;
+        angle2=2411;
     }
     //low platform & shared shipping hub scoring
     public void scoringPos3(){
-        angle1=-1000;
-        angle2=localRobot.LOW_PLATFORM;
+        angle1=-1070;
+        angle2=2245;
     }
 //end of scoring positions methods
 
@@ -182,42 +176,6 @@ public class MechControlLibrary implements Runnable{
         }
     }
 //end of chainsaw acceleration for Red Alliance
-
-// rotate turret
-    public void rotateTurret(double power){
-        // ensure turret within limit
-        if (Math.abs(localRobot.turrentEncoder.getCurrentPosition())<turretLimit){
-            localRobot.turretServoBlue.setPower(power);
-            localRobot.turretServoPink.setPower(power);
-        }
-    }   // end of rotateTurret
-
-    // reset turret - returns turret to 'home' position
-    public void resetTurret(){
-        while(Math.abs(localRobot.turrentEncoder.getCurrentPosition())>turretTargetPosition) {
-            if(Math.abs(localRobot.turrentEncoder.getCurrentPosition())>50){
-                if (localRobot.turrentEncoder.getCurrentPosition() > turretTargetPosition) {
-                    turretPower = 0.3;
-                } else {
-                    turretPower = -0.3;
-                }
-            }else if(Math.abs(localRobot.turrentEncoder.getCurrentPosition())<=50){
-                if (localRobot.turrentEncoder.getCurrentPosition() > turretTargetPosition) {
-                    turretPower = 0.1;
-                } else {
-                    turretPower = -0.1;
-                }
-            }else if(Math.abs(localRobot.turrentEncoder.getCurrentPosition())<20){
-                if (localRobot.turrentEncoder.getCurrentPosition() > turretTargetPosition) {
-                    turretPower = 0.005;
-                } else {
-                    turretPower = -0.005;
-                }
-            }
-            localRobot.turretServoBlue.setPower(turretPower);
-            localRobot.turretServoPink.setPower(turretPower);
-        }
-    }   // end of resetTurret
 
 //method that runs whenever thread is running
     public void activeMechControl(){

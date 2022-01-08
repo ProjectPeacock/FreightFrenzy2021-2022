@@ -267,8 +267,10 @@ public class FullAuto extends LinearOpMode {
         // start arm controller thread
         //    armController.start();
 
-        // sleep for set delay time
+        // sleep for set delay time. turn chainsaw on to show robot isn't dead
+        robot.motorChainsaw.setPower(0.2);
         sleep(startDelay);
+        robot.motorChainsaw.setPower(0);
 
         while (opModeIsActive() && (running)) {
 
@@ -357,7 +359,8 @@ public class FullAuto extends LinearOpMode {
                 //turn to face warehouse
                 drive.driveTurn(-90,turnError);
 
-                //wait for alliance partner to move
+                //wait for alliance partner to move. turn chainsaw on to show that robot isn't dead
+                robot.motorChainsaw.setPower(0.2);
                 sleep(7000-startDelay);
 
                 //park in warehouse
@@ -386,6 +389,7 @@ public class FullAuto extends LinearOpMode {
 
                 drive.driveTurn(90,turnError);
 
+                robot.motorChainsaw.setPower(0.2);
                 sleep(7000-startDelay);
 
                 drive.driveStraight(1,100);
