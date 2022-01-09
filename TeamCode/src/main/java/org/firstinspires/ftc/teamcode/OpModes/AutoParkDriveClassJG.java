@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 
 @Autonomous(name="AutoParkDriveClassJG", group="Competition")
-//@Disabled
+@Disabled
 public class AutoParkDriveClassJG extends LinearOpMode {
 
     /* Declare OpMode members. */

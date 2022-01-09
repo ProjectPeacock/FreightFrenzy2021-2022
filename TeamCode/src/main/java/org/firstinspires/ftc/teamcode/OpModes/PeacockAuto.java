@@ -30,7 +30,7 @@ import java.io.File;
 import java.util.List;
 
 @Autonomous(name = "Peacock Auto - Blue", group = "Peacock")
-//@Disabled
+@Disabled
 
 public class PeacockAuto extends LinearOpMode {
 
