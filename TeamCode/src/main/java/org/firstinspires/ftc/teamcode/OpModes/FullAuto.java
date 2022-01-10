@@ -92,7 +92,7 @@ public class FullAuto extends LinearOpMode {
         boolean position = false;
 
         // warehouse park
-        boolean warehouesPark = true;
+        boolean warehousePark = true;
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -209,16 +209,16 @@ public class FullAuto extends LinearOpMode {
                     break;
                 case SELECT_PARK:
                     telemetry.addData("Warehouse park?", "");
-                    telemetry.addData("Press DPAD Left  == ", " warehouse park");
-                    telemetry.addData("Press DPAD Right == ", " NO warehouse park");
+                    telemetry.addData("Press DPAD Left  == ", " Park in Warehouse");
+                    telemetry.addData("Press DPAD Right == ", " Park in Storage");
                     telemetry.update();
 
                     if(gamepad1.dpad_left || gamepad1.dpad_right){
                         if (gamepad1.dpad_left){
-                            warehouesPark = true;
+                            warehousePark = true;
                             //sleep(1000);
                         }  else {
-                            warehouesPark = false;
+                            warehousePark = false;
                         }
                         setupState = State.VERIFY_CONFIG;
                         sleep(350);
@@ -238,7 +238,7 @@ public class FullAuto extends LinearOpMode {
                     telemetry.addData("Goal position ==  ", goalPosition);
                     telemetry.addData("Goal on ==  ", positionFactor);
                     telemetry.addData("Scoring Position ==  ", scorePosition);
-                    telemetry.addData("Warehouse Park ==  ", warehouesPark);
+                    telemetry.addData("Warehouse Park ==  ", warehousePark);
                     telemetry.addData("","");
                     telemetry.addData("Press A to Confirm or B to start over","");
                     telemetry.update();
@@ -373,7 +373,7 @@ public class FullAuto extends LinearOpMode {
 
                 //turn off chainsaw
                 robot.motorChainsaw.setPower(0);
-                if(!warehouesPark) {
+                if(!warehousePark) {
                     drive.driveStraight(-forwardSpeed, 4);
                     drive.driveTurn(-15,turnError);
                     drive.driveStraight(-forwardSpeed,12);
@@ -410,7 +410,7 @@ public class FullAuto extends LinearOpMode {
 
                 drive.driveTurn(0,turnError);
                 robot.motorChainsaw.setPower(0);
-                if(!warehouesPark) {
+                if(!warehousePark) {
                     drive.driveStraight(-forwardSpeed, 4);
                     drive.driveTurn(15,turnError);
                     drive.driveStraight(-forwardSpeed,12);
