@@ -71,7 +71,6 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             //mechController.start();
             while(opModeIsActive()) {
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
-
                 telemetry.addData("Turret Angle:",robot.turrentEncoder.getCurrentPosition());
                 if(gamepad1.a){
                     robot.turrentEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

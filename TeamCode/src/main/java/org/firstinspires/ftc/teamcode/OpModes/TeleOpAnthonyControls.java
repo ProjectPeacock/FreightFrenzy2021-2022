@@ -135,7 +135,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             //check if intake needs to be reversed and then deploy or retract
             if (!gamepad1.left_bumper) {
                 if (intakeDown) {
-                    if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
+                    if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=5) {
                         mechControl.intakeOn(isDeployed);
                     }
                 } else {
@@ -268,8 +268,9 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             }else if(turretPosition<-robot.TURRET_MAX_POSITION){
                 turretPosition=-robot.TURRET_MAX_POSITION;
             }
-            turretControl.setTargetPosition(turretPosition);
-
+            if(!intakeDown) {
+                turretControl.setTargetPosition(turretPosition);
+            }
             if(!gamepad2.a&&!gamepad2.b&&!gamepad2.y){
                 TSEtoggle=true;
             }
@@ -286,10 +287,10 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                     bucketAngle = 0.25;
                 }
             }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode){
-                bucketAngle=0.3;
+                bucketAngle=0;
             }else{
                 if(intakeDown){
-                    bucketAngle=0.55;
+                    bucketAngle=0.4;
                 }else if(bumpCount==1&&!TSEMode&&robot.motorArmAngle1.getCurrentPosition()<750) {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
@@ -299,7 +300,9 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 }else if(bumpCount==3&&TSEMode){
                     bucketAngle=0.7;
                 }else{
-                    bucketAngle=0.5;
+                    if(robot.motorArmAngle1.getCurrentPosition()<500) {
+                        bucketAngle = 0.5;
+                    }
                 }
 
             }
