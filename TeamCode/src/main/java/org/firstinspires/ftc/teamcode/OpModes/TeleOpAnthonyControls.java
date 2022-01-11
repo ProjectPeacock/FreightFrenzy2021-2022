@@ -242,6 +242,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 bumpCount = 0;
                 isDeployed = false;
                 mechControl.moveToZero();
+                turretPreset=0;
             }
 //end of arm controls
 
