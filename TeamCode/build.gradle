@@ -15,6 +15,27 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
+dependencies {
+    implementation project(':FtcRobotController')
+    annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
+}
+
+//t265 tracking
+repositories {
+    // This line will already be here; you do not need to add it
+    maven { url = "https://dl.bintray.com/first-tech-challenge/ftcsdk/" }
+    // Add this line
+//    maven { url = "https://maven.0x778.tk" }
+    maven { url = "https://google.bintray.com/tensorflow" }        // added by CTS 01/17/2022
+}
+
+allprojects{
+    repositories{
+        mavenLocal()
+        jcenter()
+    }
+}
+
 android {
     androidResources {
         noCompress 'tflite'
@@ -24,4 +45,5 @@ android {
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
+    implementation 'org.openftc:easyopencv:1.5.1'
 }

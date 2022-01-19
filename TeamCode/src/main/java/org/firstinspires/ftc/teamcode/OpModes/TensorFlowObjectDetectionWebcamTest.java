@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.sun.tools.javac.code.Attribute;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -52,8 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "TensorFlow Object Detection Webcam", group = "Competition")
-//@Disabled
+@TeleOp(name = "TensorFlow Test", group = "Dev")
+@Disabled
 public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
   /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
    * the following 4 detectable objects
@@ -66,12 +67,27 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
    *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
    *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
    */
+
+    /**
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {
-      "Ball",
-      "Cube",
-      "Duck",
-      "Marker"
+            "Ball",
+            "Cube",
+            "Duck",
+            "Marker"
+    };
+     **/
+
+
+//    private static final String TFOD_MODEL_ASSET = "PP_Freight_Frenzy.tflite";
+    private static final String TFOD_MODEL_ASSET = "PP_FF_TFModels.tflite";
+    private static final String[] LABELS = {
+            "Ball",
+            "Blue_Marker",
+            "Cube",
+            "Duck",
+            "Red_Marker",
+            "TSE"
     };
 
     /*
@@ -105,14 +121,31 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
+
+        telemetry.addData("Preparing to initialize ", "Vuforia");
+        telemetry.update();
+
         initVuforia();
+
+        telemetry.addData("Vuforia initialize ", "= TRUE");
+        telemetry.addData("Preparing to initialize ", "TensorFlow");
+        telemetry.update();
+
         initTfod();
+
+        telemetry.addData("TensorFlow initialize ", "= TRUE");
+        telemetry.update();
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
         if (tfod != null) {
+
+            telemetry.addData("TFOD ", "= NULL");
+            telemetry.addData("Activating ", "TensorFlow");
+            telemetry.update();
+
             tfod.activate();
 
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
@@ -125,6 +158,7 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
         }
 
         /** Wait for the game to begin */
+        telemetry.addData(">", "TensorFlow Activated");
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
@@ -181,10 +215,11 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minResultConfidence = 0.8f;
-       tfodParameters.isModelTensorFlow2 = true;
-       tfodParameters.inputSize = 320;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+
+        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 }
