@@ -53,6 +53,9 @@ public class TeleOpSingleDriver extends LinearOpMode {
         boolean TSEMode=false;
         boolean TSEtoggle=false;
 
+        double chainsawPower=1;
+        boolean chainsawToggle=false;
+
         double turn, drive, left, right, max;
 
         waitForStart();
@@ -131,7 +134,9 @@ public class TeleOpSingleDriver extends LinearOpMode {
             //check if intake needs to be reversed and then deploy or retract
             if(!gamepad1.b) {
                 if (intakeDown) {
-                    mechControl.intakeOn(isDeployed);
+                    if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=5) {
+                        mechControl.intakeOn(isDeployed);
+                    }
                 } else {
                     mechControl.intakeOff(isDeployed);
                 }
@@ -141,20 +146,32 @@ public class TeleOpSingleDriver extends LinearOpMode {
 //end of intake controls
 
 //chainsaw control section (GP1, Bumpers)
-
-            if(gamepad1.right_bumper){
-                robot.motorChainsaw.setPower(0.45);
-                }
-            else if(gamepad1.left_bumper){
-                robot.motorChainsaw.setPower(-0.45);
+            if(!gamepad1.dpad_up&&!gamepad1.dpad_down){
+                chainsawToggle=true;
             }
-            else if(gamepad1.right_trigger>0.5){
-                robot.motorChainsaw.setPower(1);
+
+            //adjust chainsaw power
+            if(gamepad1.dpad_up&&chainsawToggle&&chainsawPower<1){
+                chainsawToggle=false;
+                chainsawPower+=0.2;
+            }else if(gamepad1.dpad_down&&chainsawToggle&&chainsawPower>0.4){
+                chainsawToggle=false;
+                chainsawPower-=0.2;
+            }
+
+            //reset chainsaw power to 1
+            if(gamepad1.right_bumper){
+                chainsawPower=1;
+            }
+
+            //apply chainsaw power
+            if(gamepad1.right_trigger>0.5){
+                robot.motorChainsaw.setPower(chainsawPower);
             }
             else if(gamepad1.left_trigger>0.5){
-                robot.motorChainsaw.setPower(-1);
-            }
-            else{ robot.motorChainsaw.setPower(0);
+                robot.motorChainsaw.setPower(-chainsawPower);
+            }else{
+                robot.motorChainsaw.setPower(0);
             }
 //end of chainsaw controls
 
@@ -223,8 +240,6 @@ public class TeleOpSingleDriver extends LinearOpMode {
                 bumpCount=0;
                 isDeployed=false;
                 mechControl.moveToZero();
-            }else{
-
             }
 //end of arm controls
 
@@ -238,29 +253,35 @@ public class TeleOpSingleDriver extends LinearOpMode {
                     bucketAngle = 0.25;
                 }
             }else if(gamepad1.dpad_right&&bumpCount==3&&TSEMode){
-                bucketAngle=0.3;
+                bucketAngle=0;
             }else{
                 if(intakeDown){
-                    bucketAngle=0.45;
+                    bucketAngle=0.4;
                 }else if(bumpCount==1&&!TSEMode&&robot.motorArmAngle1.getCurrentPosition()<750) {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;
                 }else if(bumpCount==3&&!TSEMode){
                     bucketAngle=0.75;
+                }else if(bumpCount==3&&TSEMode){
+                    bucketAngle=0.7;
                 }else{
-                    bucketAngle=0.5;
+                    if(robot.motorArmAngle1.getCurrentPosition()<500) {
+                        bucketAngle = 0.5;
+                    }
                 }
-
             }
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
             turretControl.setTargetPosition(0);
 
-            telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("TSE MODE: ",TSEMode);
+            telemetry.addData("","");
+            telemetry.addData("Last Intake Servo Pos",robot.bucketDump.getPosition());
+            telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Left Power: ",left);
             telemetry.addData("Right Power: ",right);
+            telemetry.addData("Chainsaw Power: ",chainsawPower);
             telemetry.addData("Happy Driving ",")");
             telemetry.update();
         }   // end of while opModeIsActive()

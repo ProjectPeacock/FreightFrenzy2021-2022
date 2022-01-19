@@ -46,7 +46,7 @@ public class HardwareProfile {
     public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.575;
-    public final double INTAKE_STARTING_POS= 0.3;
+    public final double INTAKE_STARTING_POS= 0.45;
     //intake motor
     public final double INTAKE_POW = 1; //intaking power
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
@@ -59,7 +59,7 @@ public class HardwareProfile {
 
 //arm control constants
     //arm intake positions
-    public final int ARM_1_INTAKE=1110;
+    public final int ARM_1_INTAKE=1200;
     public final int ARM_2_INTAKE=0;
 
 //turret constants
@@ -140,13 +140,11 @@ public class HardwareProfile {
 
         motorIntake = hwMap.dcMotor.get("motorIntake");
         motorIntake.setDirection(DcMotor.Direction.REVERSE);
-        motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorIntake.setPower(0);
 
         turrentEncoder = hwMap.dcMotor.get("motorIntake");
-        turrentEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         motorChainsaw = hwMap.dcMotor.get("motorChainsaw");
         motorChainsaw.setDirection(DcMotor.Direction.FORWARD);

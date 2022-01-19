@@ -79,6 +79,8 @@ public class MechControlLibrary implements Runnable{
 //move to scoring positions methods
     //high platform scoring (default)
     public void scoringPos1(){
+        arm1Power=1;
+        arm2Power=1;
         angle1=-549;
         if(localRobot.motorArmAngle1.getCurrentPosition()<750){
             angle2=1755;
@@ -86,11 +88,15 @@ public class MechControlLibrary implements Runnable{
     }
     //mid platform scoring
     public void scoringPos2(){
+        arm1Power=1;
+        arm2Power=1;
         angle1=-230;
         angle2=2411;
     }
     //low platform & shared shipping hub scoring
     public void scoringPos3(){
+        arm1Power=0.75;
+        arm2Power=0.75;
         angle1=-1070;
         angle2=2245;
     }
@@ -98,7 +104,9 @@ public class MechControlLibrary implements Runnable{
 
 //TSE positions
     public void TSEDown(){
-        angle1=-988;
+        arm1Power=0.5;
+        arm2Power=0.5;
+        angle1=-970;
         angle2=0;
     }
     public  void TSEresting(){
@@ -106,8 +114,8 @@ public class MechControlLibrary implements Runnable{
         angle2=-252;
     }
     public void TSEtop(){
-        angle1=-389;
-        angle2=-1165;
+        angle1=-84;
+        angle2=-1204;
     }
 //hard arm reset method (DO NOT USE IF POSSIBLE)
     public void resetArm(){

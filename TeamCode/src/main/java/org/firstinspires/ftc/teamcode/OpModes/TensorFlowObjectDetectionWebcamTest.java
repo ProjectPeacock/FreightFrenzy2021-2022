@@ -130,6 +130,7 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+<<<<<<< HEAD
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -141,6 +142,19 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
                     // if (updatedRecognitions.size()>0){
                     int i = 0;
                     for (Recognition recognition : updatedRecognitions) {
+=======
+                if (tfod != null) {
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
+                    if (updatedRecognitions != null) {
+                            telemetry.addData("# Object Detected", updatedRecognitions.size());
+                      // step through the list of recognitions and display boundary info.
+                  // if (updatedRecognitions.size()>0){
+                      int i = 0;
+                      for (Recognition recognition : updatedRecognitions) {
+>>>>>>> 0b971f37411031a2b46d8b0737048c67aa1a4bbe
                         telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                         telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                                 recognition.getLeft(), recognition.getTop());
@@ -150,11 +164,18 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
                     }
                     telemetry.update();
                 }
+<<<<<<< HEAD
             }
             if (tfod != null) {
                 tfod.shutdown();
             }
         }
+=======
+                if (tfod != null) {
+                    tfod.shutdown();
+                }
+       }
+>>>>>>> 0b971f37411031a2b46d8b0737048c67aa1a4bbe
     }
 
     /**

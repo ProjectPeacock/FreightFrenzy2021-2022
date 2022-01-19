@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Anthony Special Edition TeleOp", group = "Competition")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Anthony's Super Duper Extra Super Special Limited Edition TeleOp", group = "Competition")
 //  @Disabled
 
 public class TeleOpAnthonyControls extends LinearOpMode {
@@ -118,7 +118,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             robot.motorR2.setPower(right);
 //end of drive controls
 
-//intake control section (GP1, A)
+//intake control section (GP1, Right Bumper)
             //allows for intake toggle and not button hold down
             if(!gamepad1.right_bumper){
                 toggleIntake=true;
@@ -135,7 +135,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             //check if intake needs to be reversed and then deploy or retract
             if (!gamepad1.left_bumper) {
                 if (intakeDown) {
-                    if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=turretThreshold) {
+                    if(Math.abs(robot.turrentEncoder.getCurrentPosition())<=5) {
                         mechControl.intakeOn(isDeployed);
                     }
                 } else {
@@ -147,7 +147,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
 
 //end of intake controls
 
-//chainsaw control section (GP1, Bumpers, Triggers)
+//chainsaw control section (GP1, dpad up/down, Triggers)
             if(!gamepad1.dpad_up&&!gamepad1.dpad_down){
                 chainsawToggle=true;
             }
@@ -242,6 +242,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 bumpCount = 0;
                 isDeployed = false;
                 mechControl.moveToZero();
+                turretPreset=0;
             }
 //end of arm controls
 
@@ -269,11 +270,6 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 turretPosition=-robot.TURRET_MAX_POSITION;
             }
             turretControl.setTargetPosition(turretPosition);
-
-            if(!gamepad2.a&&!gamepad2.b&&!gamepad2.y){
-                TSEtoggle=true;
-            }
-
 //end of turret control section
 
 //bucket control section (GP2, Dpad Right)
@@ -286,28 +282,33 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                     bucketAngle = 0.25;
                 }
             }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode){
-                bucketAngle=0.3;
+                bucketAngle=0;
             }else{
                 if(intakeDown){
-                    bucketAngle=0.45;
+                    bucketAngle=0.4;
                 }else if(bumpCount==1&&!TSEMode&&robot.motorArmAngle1.getCurrentPosition()<750) {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;
                 }else if(bumpCount==3&&!TSEMode){
                     bucketAngle=0.75;
+                }else if(bumpCount==3&&TSEMode){
+                    bucketAngle=0.7;
                 }else{
-                    bucketAngle=0.5;
+                    if(robot.motorArmAngle1.getCurrentPosition()<500) {
+                        bucketAngle = 0.5;
+                    }
                 }
-
             }
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
 
+            telemetry.addData("TSE MODE: ",TSEMode);
+            telemetry.addData("","");
+            telemetry.addData("Last Intake Servo Pos",robot.bucketDump.getPosition());
             telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Turret Target Angle: ",turretPosition);
             telemetry.addData("Turret Preset: ",turretPreset);
-            telemetry.addData("TSE MODE: ",TSEMode);
             telemetry.addData("Left Power: ",left);
             telemetry.addData("Right Power: ",right);
             telemetry.addData("Chainsaw Power: ",chainsawPower);
@@ -320,5 +321,3 @@ public class TeleOpAnthonyControls extends LinearOpMode {
     }   // end of runOpMode method
 
 }   // end of TeleOp.java class
-
-
