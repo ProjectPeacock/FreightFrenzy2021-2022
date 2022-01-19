@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.sun.tools.javac.code.Attribute;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -53,41 +52,26 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "TensorFlow Test", group = "Dev")
+@TeleOp(name = "TensorFlow Object Detection Webcam", group = "Competition")
 @Disabled
 public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
-  /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
-   * the following 4 detectable objects
-   *  0: Ball,
-   *  1: Cube,
-   *  2: Duck,
-   *  3: Marker (duck location tape marker)
-   *
-   *  Two additional model assets are available which only contain a subset of the objects:
-   *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
-   *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
-   */
-
-    /**
+    /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
+     * the following 4 detectable objects
+     *  0: Ball,
+     *  1: Cube,
+     *  2: Duck,
+     *  3: Marker (duck location tape marker)
+     *
+     *  Two additional model assets are available which only contain a subset of the objects:
+     *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
+     *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
+     */
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {
             "Ball",
             "Cube",
             "Duck",
             "Marker"
-    };
-     **/
-
-
-//    private static final String TFOD_MODEL_ASSET = "PP_Freight_Frenzy.tflite";
-    private static final String TFOD_MODEL_ASSET = "PP_FF_TFModels.tflite";
-    private static final String[] LABELS = {
-            "Ball",
-            "Blue_Marker",
-            "Cube",
-            "Duck",
-            "Red_Marker",
-            "TSE"
     };
 
     /*
@@ -121,31 +105,14 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
-
-        telemetry.addData("Preparing to initialize ", "Vuforia");
-        telemetry.update();
-
         initVuforia();
-
-        telemetry.addData("Vuforia initialize ", "= TRUE");
-        telemetry.addData("Preparing to initialize ", "TensorFlow");
-        telemetry.update();
-
         initTfod();
-
-        telemetry.addData("TensorFlow initialize ", "= TRUE");
-        telemetry.update();
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
         if (tfod != null) {
-
-            telemetry.addData("TFOD ", "= NULL");
-            telemetry.addData("Activating ", "TensorFlow");
-            telemetry.update();
-
             tfod.activate();
 
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
@@ -158,34 +125,34 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
         }
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "TensorFlow Activated");
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        while (opModeIsActive()) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 
-                    if (updatedRecognitions != null) {
-                            telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                  // if (updatedRecognitions.size()>0){
-                      int i = 0;
-                      for (Recognition recognition : updatedRecognitions) {
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    // step through the list of recognitions and display boundary info.
+                    // if (updatedRecognitions.size()>0){
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions) {
                         telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                         telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
                         i++;
-                      }
-                      telemetry.update();
                     }
+                    telemetry.update();
                 }
+            }
+            if (tfod != null) {
+                tfod.shutdown();
             }
         }
     }
@@ -213,9 +180,8 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-
         tfodParameters.minResultConfidence = 0.8f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
