@@ -63,8 +63,8 @@ public class HardwareProfile {
     public final int ARM_2_INTAKE=0;
 
 //turret constants
-    public final int TURRET_MAX_POSITION=275;
-    public final int TURRET_INCREMENTS=3;
+    public final int TURRET_MAX_POSITION = 275;
+    public final int TURRET_INCREMENTS = 3;
     public final int TURRET_STEP=((275/TURRET_INCREMENTS)/10)*10;
     /*
      * Hardware devices

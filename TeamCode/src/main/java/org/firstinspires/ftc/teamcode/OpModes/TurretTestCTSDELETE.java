@@ -10,21 +10,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
-import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Turret testing & debugging", group = "Dev")
-@Disabled
+//@Disabled
 public class TurretTestCTSDELETE extends LinearOpMode {
 
     private final static HardwareProfile robot = new HardwareProfile();
     private LinearOpMode opMode = this;
 
-    public TurretTestCTSDELETE(){
-
-    }   // end of BrokenBotTS constructor
-
     public void runOpMode(){
-        TurretControlLibrary turretControl = new TurretControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        //mechanism control thread
+        MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread mechController = new Thread(mechControl);
+        //turret control thread
+        TurretControlThread turretControl = new TurretControlThread(robot, 0);
         Thread turretController = new Thread(turretControl);
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -36,146 +37,216 @@ public class TurretTestCTSDELETE extends LinearOpMode {
 
         telemetry.addData("Robot state = ", "INITIALIZED");
         telemetry.update();
-        int armPositionCounter =0;
+        double bucketAngle=0.5;
+        int bumpCount=0;
         boolean toggleReadyDown=false;
         boolean toggleReadyUp=false;
         boolean isDeployed=false;
         boolean intakeDown=false;
         boolean toggleIntake=false;
-        double currentTurretPower = 0.0;
-        double powerMultiplier=0.1;
-        int turretPosition = 0;
-        int lastTurretPosition=0;
+        boolean turretToggle=false;
+
+        boolean TSEMode=false;
+        boolean TSEtoggle=false;
+
+        double chainsawPower=1;
+        boolean chainsawToggle=false;
+
+        int turretPreset=0;
+        double turn, drive, left, right, max;
+        int turretPosition=0;
+        int turretThreshold=2;
 
         waitForStart();
-//        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-//        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-//        robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
+        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+        robot.intakeTilt.setPosition(robot.INTAKE_STARTING_POS);
+        mechController.start();
         turretController.start();
 
         while(opModeIsActive()) {
-            /*
-            DRIVE CONTROLS:
-            Dpad up - reset turret
-            Dpad down - reset turret
-            Dpad right - turret to right side of the robot
-            Dpad Left - turret to the left side of the robot
-            */
 
-            // reset the position of the turret to 0 position
-            if (gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_up || gamepad2.dpad_up) {
-                turretPosition=0;
-            }
-            /*
-            // move the turret to the right side of the robot using preset values
-            if (gamepad1.dpad_right || gamepad2.dpad_right) {
-                turretPosition = robot.TURRET_RIGHT_POSITION;
-            }
+            //intake control section (GP1, A)
+            //allows for intake toggle and not button hold down
+            //if intake isn't deployed, deploy it & vice versa
+            //check if intake needs to be reversed and then deploy or retract
 
-            // move the turret to the left side of the robot using preset values
-            if (gamepad1.dpad_left || gamepad2.dpad_left) {
-                turretPosition = robot.TURRET_LEFT_POSITION;
-            }
+//end of intake controls
 
-            if(gamepad2.right_stick_x>0){
-                turretPosition+=(int)gamepad2.right_stick_x*5;
-            }else if(gamepad2.right_stick_x<0){
-                turretPosition+=(int)gamepad2.right_stick_x*5;
+//arm control section (GP2, X, Dpad Down)
+            //allows for toggling between arm positions and not only going to lowest one because of button being held
+            if(!gamepad2.x){
+                toggleReadyDown=true;
+            }
+            if(!gamepad2.dpad_up){
+                toggleReadyUp=true;
+            }
+            //end of arm toggle checks
+
+            //adds 1 to bumpCount if x isn't held down
+            if(gamepad2.x && toggleReadyDown){
+                toggleReadyDown=false;
+                if(bumpCount<3) {
+                    bumpCount += 1;
+                }
             }
 
-            if(turretPosition>robot.TURRET_MAX_POSITION) {
-                turretPosition = robot.TURRET_MAX_POSITION;
-            }else if(turretPosition<-robot.TURRET_MAX_POSITION) {
-                turretPosition = -robot.TURRET_MAX_POSITION;
+            //removes 1 from bumpCount if dpad up isn't held down
+            if(gamepad2.dpad_up && toggleReadyUp){
+                toggleReadyUp=false;
+                if(bumpCount>1) {
+                    bumpCount -= 1;
+                }
+            }
+            if(!gamepad2.y){
+                TSEtoggle=true;
+            }
+            if(gamepad2.y&&TSEtoggle&&!isDeployed){
+                TSEtoggle=false;
+                TSEMode=!TSEMode;
             }
 
-            if(turretPosition!=lastTurretPosition) {
-                turretControl.setTargetPosition(turretPosition);
+            //counts how many times x has been pressed (what position to go to to score)
+            if(bumpCount>0){
+                isDeployed=true;
+                mechControl.resetIntake();
+                intakeDown=false;
             }
 
-            lastTurretPosition=turretPosition;
-            */
-            turretPosition=(int)(gamepad2.right_stick_x*robot.TURRET_MAX_POSITION);
+            if(TSEMode) {
+                //mode to pick up TSE
+                if (bumpCount == 1) {
+                    mechControl.TSEDown();
+                } else if (bumpCount == 2) {
+                    mechControl.TSEresting();
+                } else if (bumpCount == 3) {
+                    mechControl.TSEtop();
+                }
+            }else{
+                //move arm to score
+                if (bumpCount == 1) {
+                    mechControl.scoringPos1();
+                } else if (bumpCount == 2) {
+                    mechControl.scoringPos2();
+                } else if (bumpCount == 3) {
+                    mechControl.scoringPos3();
+                }
+            }
+            //reset arm to zero with or without scoring
+            if (gamepad2.dpad_left) {
+                bumpCount = 0;
+                isDeployed = false;
+                mechControl.moveToZero();
+                turretPreset=0;
+            }
+//end of arm controls
+
+            if (gamepad1.right_bumper) {
+                turretControl.setTurretRotation(-0.2);
+            } else if (gamepad1.left_bumper) {
+                turretControl.setTurretRotation(0.2);
+            } else {
+//                turretControl.setTurretRotation(0);
+            }
+
+            //turret control section (GP2, left stick)
+            if(!intakeDown){
+                if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
+                    turretToggle=true;
+                }
+                if(turretToggle&&gamepad2.left_bumper&&turretPreset<robot.TURRET_INCREMENTS){
+                    turretToggle=false;
+                    turretPreset++;
+                }else if(turretToggle&&gamepad2.right_bumper&&turretPreset>-robot.TURRET_INCREMENTS){
+                    turretToggle=false;
+                    turretPreset--;
+                }
+                if(gamepad2.right_stick_button){
+                    turretPreset=0;
+                }
+            }
+            turretPosition = turretPreset * robot.TURRET_STEP;
+            //apply angle to turret PID
+            turretPosition = Range.clip(turretPosition, -robot.TURRET_MAX_POSITION, robot.TURRET_MAX_POSITION);
+
             turretControl.setTargetPosition(turretPosition);
+//end of turret control section
 
 
-            /**
-             * #################################################################################
-             * #################################################################################
-             * #################      PROVIDE USER FEEDBACK    #################################
-             * #################################################################################
-             * #################################################################################
-             */
 
-//            telemetry.addData("Current Turret Encoder = ", turretControl.currentTurretPosition());
-            telemetry.addData("Turret Encoder = ", robot.motorIntake.getCurrentPosition());
-            telemetry.addData("Target Turret Encoder = ", turretPosition);
+
+/**            if(!intakeDown){
+                if(gamepad2.left_bumper){
+                    turretPreset++;
+                }else if(gamepad2.right_bumper){
+                    turretPreset--;
+                }
+
+                if(gamepad2.right_stick_button){
+                    turretPreset=0;
+                }
+            }
+
+            turretPreset = Range.clip(turretPreset, -robot.TURRET_MAX_POSITION, robot.TURRET_MAX_POSITION);
+            turretPosition = turretPreset;
+//            turretPosition=turretPreset*robot.TURRET_STEP;
+
+            //apply angle to turret PID
+
+            turretControl.setTargetPosition(turretPosition);
+ **/
+//end of turret control section
+
+//bucket control section (GP2, Dpad Right)
+            if(gamepad2.dpad_right&&!TSEMode){
+                if(bumpCount==1){
+                    bucketAngle=0.15;
+                }else if(bumpCount==2){
+                    bucketAngle=0.05;
+                }else {
+                    bucketAngle = 0.25;
+                }
+            }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode){
+                bucketAngle=0;
+            }else{
+                if(intakeDown){
+                    bucketAngle=0.4;
+                }else if(bumpCount==1&&!TSEMode&&robot.motorArmAngle1.getCurrentPosition()<750) {
+                    bucketAngle = 0.6;
+                }else if(bumpCount==2&&!TSEMode){
+                    bucketAngle=0.55;
+                }else if(bumpCount==3&&!TSEMode){
+                    bucketAngle=0.75;
+                }else if(bumpCount==3&&TSEMode){
+                    bucketAngle=0.7;
+                }else{
+                    if(robot.motorArmAngle1.getCurrentPosition()<500) {
+                        bucketAngle = 0.5;
+                    }
+                }
+            }
+            robot.bucketDump.setPosition(bucketAngle);
+//end of bucket controls
+
+            telemetry.addData("Current Error = ", turretControl.error);
+            telemetry.addData("Turret Last Error = ", turretControl.lastError);
+            telemetry.addData("Rotation Speed = ", turretControl.rotationSpeed);
+            telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
+            telemetry.addData("Turret Target Angle: ",turretPosition);
+            telemetry.addData("TSE MODE: ",TSEMode);
+            telemetry.addData("","");
+            telemetry.addData("Last Intake Servo Pos",robot.bucketDump.getPosition());
+            telemetry.addData("Turret Preset: ",turretPreset);
+            telemetry.addData("Chainsaw Power: ",chainsawPower);
+            telemetry.addData("Happy Driving ",")");
             telemetry.update();
-            robot.bucketDump.setPosition(0.5);
         }   // end of while opModeIsActive()
-
         //stops mechanism thread
-        turretControl.stop();
-
+        mechControl.stop();                 // shut down the arm control thread
+        turretControl.stop();               // shut down the turret control thread
+        requestOpModeStop();                // shut down the opmode
     }   // end of runOpMode method
 
-    /*
-    private void turretControlTest(int targetPosition){
-        double integral = 0;
-        double Cp = 0.0012;
-        double Ci = 0.002;
-        double Cd = 0.007;
-        double maxSpeed = 1;
-        double minSpeed =0.065;
-        double rotationSpeed;
-        double derivative = 0, lastError = 0;
-
-        double error = targetPosition - robot.motorIntake.getCurrentPosition();
-
-        // limit the turn position of the turret to the TURRET_MAX_POSITION to avoid
-        // damaging the robot
-        if(targetPosition > robot.TURRET_MAX_POSITION){
-            targetPosition = robot.TURRET_MAX_POSITION;
-        } else if(targetPosition < -robot.TURRET_MAX_POSITION){
-            targetPosition = -robot.TURRET_MAX_POSITION;
-        }
-
-        // nested while loops are used to allow for a final check of an overshoot situation
-        while ((Math.abs(error) > 2) && opModeIsActive()) {
-            derivative = lastError - error;
-            rotationSpeed = ((Cp * error) + (Ci * integral) + (Cd * derivative)) * maxSpeed;
-
-            // Clip servo speed
-            rotationSpeed = Range.clip(rotationSpeed, -maxSpeed, maxSpeed);
-
-            // make sure the servo speed doesn't drop to a level where it is no longer able
-            // to rotate
-            if ((rotationSpeed < 0) && (rotationSpeed > -minSpeed)) {
-                rotationSpeed = -minSpeed;
-            } else if ((rotationSpeed > 0) && (rotationSpeed < minSpeed)) {
-                rotationSpeed = minSpeed;
-            }
-
-            setTurretRotation(rotationSpeed);
-            lastError = error;
-
-            error = targetPosition - robot.motorIntake.getCurrentPosition();
-
-            telemetry.addData("rotationSpeed = ", rotationSpeed);
-            telemetry.addData("Calculated error = ", error);
-            telemetry.addData("Turret Encoder = ", robot.motorIntake.getCurrentPosition());
-            telemetry.addData("Target Turret Position = ", targetPosition);
-            telemetry.update();
-        }   // end of while Math.abs(error)
-
-        setTurretRotation(0);       // stop the turrets
-    }   // end of turretControl() method
-
-    public void setTurretRotation(double rotationSpeed){
-        robot.turretServoBlue.setPower(-rotationSpeed);
-        robot.turretServoPink.setPower(-rotationSpeed);
-    }
-*/
 }   // end of TeleOp.java class
 
 

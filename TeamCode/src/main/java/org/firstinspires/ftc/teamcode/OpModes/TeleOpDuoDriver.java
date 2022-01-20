@@ -83,7 +83,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
             */
 
 //drive control section (GP1, Joysticks)
-            drive = -gamepad1.left_stick_y*robot.DRIVE_MULTIPLIER;
+            drive = -gamepad1.left_stick_y * robot.DRIVE_MULTIPLIER;
             if(drive<0){
                 drive*=robot.REVERSE_MULTIPLIER;
             }
@@ -316,8 +316,9 @@ public class TeleOpDuoDriver extends LinearOpMode {
             telemetry.update();
         }   // end of while opModeIsActive()
         //stops mechanism thread
-        mechControl.stop();
-        turretControl.stop();
+        mechControl.stop();                 // shut down the arm control thread
+        turretControl.stop();               // shut down the turret control thread
+        requestOpModeStop();                // shut down the opmode
     }   // end of runOpMode method
 
-}   // end of TeleOp.java class
+}   // end of TeleOpDuoDriver.java class
