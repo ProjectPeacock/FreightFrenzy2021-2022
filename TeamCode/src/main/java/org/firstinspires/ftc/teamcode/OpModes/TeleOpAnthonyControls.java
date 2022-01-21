@@ -281,8 +281,8 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 }else {
                     bucketAngle = 0.25;
                 }
-            }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode){
-                bucketAngle=0;
+            }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode) {
+                bucketAngle = 0;
             }else{
                 if(intakeDown){
                     bucketAngle=0.4;
@@ -290,8 +290,10 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;
-                }else if(bumpCount==3&&!TSEMode){
-                    bucketAngle=0.75;
+                }else if(bumpCount==3&&!TSEMode) {
+                    bucketAngle = 0.75;
+                }else if(bumpCount==1&&TSEMode){
+                    bucketAngle=0.4;
                 }else if(bumpCount==3&&TSEMode){
                     bucketAngle=0.7;
                 }else{

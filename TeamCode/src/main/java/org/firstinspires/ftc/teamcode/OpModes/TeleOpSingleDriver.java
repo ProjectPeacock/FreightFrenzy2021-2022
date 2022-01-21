@@ -261,8 +261,10 @@ public class TeleOpSingleDriver extends LinearOpMode {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;
-                }else if(bumpCount==3&&!TSEMode){
-                    bucketAngle=0.75;
+                }else if(bumpCount==3&&!TSEMode) {
+                    bucketAngle = 0.75;
+                }else if(bumpCount==1&&TSEMode){
+                    bucketAngle=0.45;
                 }else if(bumpCount==3&&TSEMode){
                     bucketAngle=0.7;
                 }else{

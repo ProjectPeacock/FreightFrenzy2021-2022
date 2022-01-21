@@ -106,7 +106,7 @@ public class MechControlLibrary implements Runnable{
     public void TSEDown(){
         arm1Power=0.5;
         arm2Power=0.5;
-        angle1=-970;
+        angle1=-1028;
         angle2=0;
     }
     public  void TSEresting(){
