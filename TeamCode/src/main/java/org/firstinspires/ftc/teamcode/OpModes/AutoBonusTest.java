@@ -118,8 +118,10 @@ public class AutoBonusTest extends LinearOpMode {
 
         armControl.intakeOn();
         sleep(350);
-        robot.motorIntake.setPower(1);
-        telemetry.addData("intake power:",robot.motorIntake.getPower());
+        robot.turrentEncoder.setPower(1);
+        telemetry.addData("chain power:",robot.motorChainsaw.getPower());
+        telemetry.addData("intake power:",robot.turrentEncoder.getPower());
+        telemetry.update();
 
         while(opModeIsActive() && (running)) {
 
