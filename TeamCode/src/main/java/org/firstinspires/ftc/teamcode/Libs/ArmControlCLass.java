@@ -55,10 +55,10 @@ public class ArmControlCLass {
         localRobot.motorArmAngle2.setTargetPosition(angle2);
     }
     public void beaterForward(){
-        localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
+        this.localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
     }
     public void beaterReverse(){
-        localRobot.motorIntake.setPower(-localRobot.INTAKE_POW);
+        this.localRobot.motorIntake.setPower(-localRobot.INTAKE_POW);
     }
 //end of deploy intake method
 
