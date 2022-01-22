@@ -42,11 +42,14 @@ public class MechControlLibrary implements Runnable{
 
         }
         angle1=localRobot.ARM_1_INTAKE;
-        if(localRobot.motorArmAngle1.getCurrentPosition()>900) {
+    }
+//end of deploy intake method
+
+    public void beaterOn(boolean deployed, int angle){
+        if(deployed&&angle>900){
             localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
         }
     }
-//end of deploy intake method
 
 //retract intake method
     public void intakeOff(boolean deployed){

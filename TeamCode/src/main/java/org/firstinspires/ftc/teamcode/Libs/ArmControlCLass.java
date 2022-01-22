@@ -37,7 +37,7 @@ public class ArmControlCLass {
     }
 
 //deploy intake method
-    public void intakeOn(boolean deployed){
+    public void intakeOn(){
         localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
         localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
         localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
@@ -50,22 +50,33 @@ public class ArmControlCLass {
         if(localRobot.motorArmAngle1.getCurrentPosition()>900) {
             localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
         }
+        localRobot.motorArmAngle1.setPower(arm1Power);
+        localRobot.motorArmAngle1.setTargetPosition(angle1);
+        localRobot.motorArmAngle2.setTargetPosition(angle2);
+    }
+    public void beaterForward(){
+        localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
+    }
+    public void beaterReverse(){
+        localRobot.motorIntake.setPower(-localRobot.INTAKE_POW);
     }
 //end of deploy intake method
 
 //retract intake method
-    public void intakeOff(boolean deployed){
-        if(!deployed){
-            angle1=0;
-            angle2=0;
-        }
+    public void intakeOff(){
+        angle1=0;
+        angle2=0;
+        localRobot.motorArmAngle1.setPower(arm1Power);
+        localRobot.motorArmAngle2.setPower(arm2Power);
+        localRobot.motorArmAngle1.setTargetPosition(angle1);
+        localRobot.motorArmAngle2.setTargetPosition(angle2);
         //waits for arm 1 to move up before moving intake to prevent collisions
-        if(localRobot.motorArmAngle1.getCurrentPosition()<750){
-            localRobot.motorIntake.setPower(0);
-            localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
-            localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
-            localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
+        while(localRobot.motorArmAngle1.getCurrentPosition()<750) {
         }
+        localRobot.motorIntake.setPower(0);
+        localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
+        localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
+        localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
     }
 //end of retract intake method
 

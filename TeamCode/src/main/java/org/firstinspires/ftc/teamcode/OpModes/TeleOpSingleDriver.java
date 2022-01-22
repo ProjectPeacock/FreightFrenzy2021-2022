@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
-import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
+//import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp 1 Driver", group = "Competition")
 //  @Disabled
@@ -21,7 +22,7 @@ public class TeleOpSingleDriver extends LinearOpMode {
     public void runOpMode(){
         MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
         Thread mechController = new Thread(mechControl);
-        TurretControlLibrary turretControl = new TurretControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        TurretControlThread turretControl = new TurretControlThread(robot, robot.ARM_THREAD_SLEEP);
         Thread turretController = new Thread(turretControl);
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
@@ -143,6 +144,7 @@ public class TeleOpSingleDriver extends LinearOpMode {
             }else{
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
             }
+            mechControl.beaterOn(intakeDown,robot.motorArmAngle1.getCurrentPosition());
 //end of intake controls
 
 //chainsaw control section (GP1, Bumpers)

@@ -259,6 +259,32 @@ public class DriveClass {
         robot.motorL2.setPower(L2);
     }   // end of the setDrivePower method
 
+    public void driveTime(double power, double time) {
+        ElapsedTime runTime = new ElapsedTime();
+        double currentTime = runTime.time();
+
+        while (((runTime.time() - currentTime) < time) && opMode.opModeIsActive()){
+
+            /*
+             * Limit that value of the drive motors so that the power does not exceed 100%
+             */
+            r1Power = Range.clip(power, -1,1);
+            l1Power = Range.clip(power, -1,1);
+            r2Power = Range.clip(power, -1,1);
+            l2Power = Range.clip(power, -1,1);
+
+            /*
+             * Apply power to the drive wheels
+             */
+            setDrivePower(r1Power, r2Power, l1Power, r2Power);
+
+            opMode.idle();
+
+        }   // end of while loop
+
+        motorsHalt();
+
+    } // close driveStraight method
 
 
     /*
