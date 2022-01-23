@@ -486,7 +486,6 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case MOVE_TSE:
-                    // Step 1
                     //drive forward and push TSE out of the way
                     drive.driveStraight(forwardSpeed, forwardDistance+10);
                     sleep(500);
@@ -499,7 +498,6 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case X_SCORE:
-
                     //turn towards the hub
                     drive.driveTurn(turnAngle * positionFactor, turnError);
 
@@ -542,20 +540,20 @@ public class AutoBonusTest extends LinearOpMode {
 
                     //drive to park if on warehouse side, drive to wall if on carousel side
                     drive.driveStraight(forwardSpeed, parkDistance);
-                    sleep(500);
+//                    sleep(500);
 
                     if(!alliance && !fieldSide){        // blue_Carousel
                         runState = State.BLUE_CAROUSEL;
-                    } else if(!alliance && fieldSide){
+                    } else if(!alliance && fieldSide){  // blue warehouse
                         if(bonusElements) {
                             runState = State.BLUE_WAREHOUSE_BONUS;
                         } else {
                             runState = State.WAREHOUSE_PARK;
                         }
-                    } else if(alliance && !fieldSide){
+                    } else if(alliance && !fieldSide){  // red carousel
                         runState = State.RED_CAROUSEL;
                     } else {
-                        if(bonusElements) {
+                        if(bonusElements) {             // red_warehouse
                             runState = State.RED_WAREHOUSE_BONUS;
                         } else {
                             runState = State.WAREHOUSE_PARK;
