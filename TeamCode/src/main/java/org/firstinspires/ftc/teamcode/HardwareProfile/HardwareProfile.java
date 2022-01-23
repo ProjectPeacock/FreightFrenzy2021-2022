@@ -92,8 +92,8 @@ public class HardwareProfile {
     public CRServo turretServoPink = null;  // second turret servo
 
     //public distance sensors;
-    public DistanceSensor sensorDistPink=null;
-    public DistanceSensor sensorDistBlue=null;
+//    public DistanceSensor sensorDistPink=null;
+//    public DistanceSensor sensorDistBlue=null;
     public DigitalChannel turretMagSensor = null;
 
     public DistanceSensor frontDistanceSensor=null;
@@ -194,8 +194,8 @@ public class HardwareProfile {
   //      LEDPort.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
 
 //initialize sensors
-        sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
-        sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
+//        sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
+//        sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
         frontDistanceSensor=hwMap.get(DistanceSensor.class,"frontDistanceSensor");
         turretMagSensor = hwMap.get(DigitalChannel.class, "turretMagSensor");
         turretMagSensor.setMode(DigitalChannel.Mode.INPUT);
