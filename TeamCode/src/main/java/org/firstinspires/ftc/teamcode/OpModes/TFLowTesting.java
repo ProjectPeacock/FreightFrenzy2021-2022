@@ -75,13 +75,13 @@ public class TFLowTesting extends LinearOpMode {
     };
      **/
 
-    private static final String TFOD_MODEL_ASSET = "PP_FF_TFModels.tflite";
+    private static final String TFOD_MODEL_ASSET = "PP_TSEv2.tflite";
     private static final String[] LABELS = {
-            "Ball",
+/**            "Ball",
             "Blue_Marker",
             "Cube",
             "Duck",
-            "Red_Marker",
+            "Red_Marker", **/
             "TSE"
     };
 
@@ -187,7 +187,7 @@ public class TFLowTesting extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minResultConfidence = 0.6f;
+       tfodParameters.minResultConfidence = 0.8f;
        tfodParameters.isModelTensorFlow2 = true;
        tfodParameters.inputSize = 320;
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);

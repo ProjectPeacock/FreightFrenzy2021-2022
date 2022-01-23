@@ -52,7 +52,7 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "TensorFlow Object Detection Webcam", group = "Competition")
+@TeleOp(name = "TFOD - Concept", group = "Competition")
 @Disabled
 public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
     /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
@@ -66,12 +66,9 @@ public class TensorFlowObjectDetectionWebcamTest extends LinearOpMode {
      *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
      *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
      */
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+    private static final String TFOD_MODEL_ASSET = "PP_TSEv2.tflite";
     private static final String[] LABELS = {
-            "Ball",
-            "Cube",
-            "Duck",
-            "Marker"
+                "TSE"
     };
 
     /*

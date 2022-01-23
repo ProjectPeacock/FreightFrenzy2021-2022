@@ -37,6 +37,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 // import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -44,20 +45,30 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
-
+import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
+import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
 
 @Autonomous(name="Test Bonus Auto", group="Competition")
 //@Disabled
 public class AutoBonusTest extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    HardwareProfile robot   = new HardwareProfile();
-    private LinearOpMode opMode = this;
-    private ElapsedTime   runtime = new ElapsedTime();
-    private State setupState = State.ALLIANCE_SELECT;
 
     @Override
     public void runOpMode() {
+
+        /* Declare OpMode members. */
+        HardwareProfile robot   = new HardwareProfile();
+        LinearOpMode opMode = this;
+        ElapsedTime   runtime = new ElapsedTime();
+        State setupState = State.ALLIANCE_SELECT;
+
+        MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+        Thread mechController = new Thread(mechControl);
+        TurretControlThread turretControl = new TurretControlThread(robot, robot.ARM_THREAD_SLEEP);
+        Thread turretController = new Thread(turretControl);
+        telemetry.addData("Robot State = ", "NOT READY");
+        telemetry.update();
+
 
         boolean autoReady = false;
         boolean running = true;
@@ -95,12 +106,16 @@ public class AutoBonusTest extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
-        robot.turrentEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//        robot.turrentEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.motorIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
         robot.bucketDump.setPosition(.5);
+
+
+
 
         DriveClass drive = new DriveClass(robot, opMode);
         // arm control
@@ -114,62 +129,61 @@ public class AutoBonusTest extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
 
-        waitForStart();
-
         armControl.intakeOn();
         sleep(350);
-        robot.turrentEncoder.setPower(1);
-        robot.motorIntake.setPower(1);
-        armControl.beaterForward();
+//        robot.turrentEncoder.setPower(1);
+//        armControl.beaterForward();
         telemetry.addData("chain power:",robot.motorChainsaw.getPower());
         telemetry.addData("intake power:",robot.turrentEncoder.getPower());
         telemetry.update();
 
+        waitForStart();
+
+
         while(opModeIsActive() && (running)) {
-
+            robot.motorIntake.setPower(.9);
         }
-
 
         if (opModeIsActive() && (running)) {
 
             // Step 1
             //drive forward and push TSE out of the way
-            drive.driveTime(1, 0.65);
+//            drive.driveTime(1, 0.65);
 
             //turn towards scoring elements
-            drive.driveTurn(45, turnError);
+//            drive.driveTurn(45, turnError);
 
             armControl.intakeOn();
             sleep(350);
             robot.motorIntake.setPower(1);
 
-            drive.driveTime(0.3, 1);
+//            drive.driveTime(0.3, 1);
             robot.motorIntake.setPower(-1);
-            drive.driveTime(-0.3, 1);
+//            drive.driveTime(-0.3, 1);
             robot.motorIntake.setPower(0);
 
             armControl.intakeOff();
 
             // turn towards barrier
-            drive.driveTurn(0, turnError);
+//            drive.driveTurn(0, turnError);
 
-            drive.driveTime(-0.3, 0.5);
+//            drive.driveTime(-0.3, 0.5);
             // drive over barrier
-            drive.driveTime(-1, 0.65);
+//            drive.driveTime(-1, 0.65);
 
             // turn towards hub
-            drive.driveTurn(45, turnError);
+//            drive.driveTurn(45, turnError);
 
             // drive towards hub
-            drive.driveStraight(0.3, 10);
+//            drive.driveStraight(0.3, 10);
 
             //dump bucket
-            robot.bucketDump.setPosition(bucketAngle);
+//            robot.bucketDump.setPosition(bucketAngle);
             sleep(500);
 
             //reset arms
-            robot.bucketDump.setPosition(0.5);
-            armControl.moveToZero();
+//            robot.bucketDump.setPosition(0.5);
+//            armControl.moveToZero();
 
             // reverse direction to drive forward to park
             forwardSpeed = forwardSpeed * -1;

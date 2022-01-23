@@ -38,6 +38,7 @@ public class ArmControlCLass {
 
 //deploy intake method
     public void intakeOn(){
+
         localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
         localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
         localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
@@ -53,7 +54,9 @@ public class ArmControlCLass {
         localRobot.motorArmAngle1.setPower(arm1Power);
         localRobot.motorArmAngle1.setTargetPosition(angle1);
         localRobot.motorArmAngle2.setTargetPosition(angle2);
-    }
+    }       // end of intakeOn()
+
+
     public void beaterForward(){
         this.localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
     }
