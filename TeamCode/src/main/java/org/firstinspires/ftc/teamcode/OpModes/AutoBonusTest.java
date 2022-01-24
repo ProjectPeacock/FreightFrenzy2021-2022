@@ -407,7 +407,6 @@ public class AutoBonusTest extends LinearOpMode {
             }   // end of switch(setupState)
         }   // end of while(autoReady)
 
-
         if(!alliance && !fieldSide){  // red carousel
             positionFactor = -1;
         } else if(!alliance && fieldSide){    // red warehouse
@@ -513,28 +512,9 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case MOVE_TSE:
-                    //move arm to scoring positions
-                    if(scoreLevel ==1){
-                        armControl.scoringPos1();
-                        turrentPosition = -236 * positionFactor;
-//                        goalAdjust = 2;
-                    }else if(scoreLevel ==2){
-                        armControl.scoringPos2();
-                        turrentPosition = -236 * positionFactor;
-//                        goalAdjust = 1;
-                    }else if(scoreLevel ==3){
-                        armControl.scoringPos3();
-                        turrentPosition = -236 * positionFactor;
-//                        goalAdjust = 0;
-                    }
-                    sleep(250);
-
                     //drive forward and push TSE out of the way
                     drive.driveStraight(forwardSpeed, forwardDistance+10);
                     sleep(500);
-
-                    // move arm into scoring position
-                    turretControl.setTargetPosition(turrentPosition);
 
                     //back up to turn to the shipping hub
                     drive.driveStraight(-forwardSpeed,10);
@@ -549,13 +529,23 @@ public class AutoBonusTest extends LinearOpMode {
                         telemetry.update();
                         sleep(3000);
                     }
+
                     //turn towards the hub
-//                    drive.driveTurn(turnAngle * positionFactor, turnError);
+                    drive.driveTurn(turnAngle * positionFactor, turnError);
 
+                    //move arm to scoring positions
+                    if(scoreLevel ==1){
+                        armControl.scoringPos1();
+                    }else if(scoreLevel ==2){
+                        armControl.scoringPos2();
+                    }else if(scoreLevel ==3){
+                        armControl.scoringPos3();
+                    }
+                    sleep(250);
 
-                    //drive towards the shipping hub to scor
-//                  drive.driveStraight(forwardSpeed, hubDistance);
-//                    sleep(500);
+                    //drive towards the shipping hub to score
+                    drive.driveStraight(forwardSpeed, hubDistance);
+                    sleep(500);
 
                     //dump bucket
                     robot.bucketDump.setPosition(bucketAngle);
@@ -564,9 +554,6 @@ public class AutoBonusTest extends LinearOpMode {
                     //reset arms
                     robot.bucketDump.setPosition(0.5);
                     armControl.moveToZero();
-
-                    turrentPosition = 0;
-                    turretControl.setTargetPosition(turrentPosition);
 
                     // reverse direction to drive forward to park
                     forwardSpeed = forwardSpeed * -1;
@@ -579,10 +566,6 @@ public class AutoBonusTest extends LinearOpMode {
                         //blue
                         forwardSpeed=1;
                     }
-
-                    //drive to park if on warehouse side, drive to wall if on carousel side
-//                    drive.driveStraight(forwardSpeed, parkDistance);
-//                    sleep(500);
 
                     if(!alliance && !fieldSide){        // blue_Carousel
                         runState = State.BLUE_CAROUSEL;
