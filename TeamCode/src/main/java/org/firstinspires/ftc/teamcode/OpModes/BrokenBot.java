@@ -67,10 +67,15 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             telemetry.addData("Robot state = ", "INITIALIZED");
             telemetry.update();
 
+
+            robot.motorArmAngle1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.motorArmAngle2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
             waitForStart();
             //mechController.start();
             while(opModeIsActive()) {
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
+                telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
                 telemetry.addData("Turret Angle:",robot.turrentEncoder.getCurrentPosition());
                 if(gamepad1.a){
                     robot.turrentEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

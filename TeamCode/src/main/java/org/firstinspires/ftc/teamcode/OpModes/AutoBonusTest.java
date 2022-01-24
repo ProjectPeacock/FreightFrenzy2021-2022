@@ -87,9 +87,9 @@ public class AutoBonusTest extends LinearOpMode {
         HardwareProfile robot   = new HardwareProfile();
         LinearOpMode opMode = this;
         ElapsedTime   runtime = new ElapsedTime();
-        State setupState = State.TEST_CONFIG;           // manually created config for testing only
-//        State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
+        State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
         State runState = State.LEVEL_SELECT;
+        boolean debugMode = true;
 
         MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
         Thread mechController = new Thread(mechControl);
@@ -102,9 +102,9 @@ public class AutoBonusTest extends LinearOpMode {
         String goalPosition = "";
         long startDelay = 0;
         double timeElapsed;
-        double positionFactor = 1;
+        int positionFactor = 1;
         int scoreLevel =1;
-        double forwardSpeed = -0.32;
+        double forwardSpeed = -0.4;
 
         double forwardDistance = 26.0;
         double hubDistance = 10.0;
@@ -114,7 +114,7 @@ public class AutoBonusTest extends LinearOpMode {
         double parkDistance = 35;
 
         double turnError = 0.5;
-        double bucketAngle = -1.0;
+        double bucketAngle = 0.3;
         double warehouseParkDistance = 100;
 
         //red if false, blue if true
@@ -128,6 +128,13 @@ public class AutoBonusTest extends LinearOpMode {
 
         // warehouse park
         boolean warehousePark = true;
+
+        int turrentPosition = 0;
+
+        if(debugMode){
+            setupState = State.TEST_CONFIG;           // manually created config for testing only
+            scoreLevel = 2;
+        }
 
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
@@ -156,6 +163,7 @@ public class AutoBonusTest extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
+        turretController.start();
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
@@ -360,8 +368,8 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case TEST_CONFIG:
-                    alliance = true;        // true for blue, false for red
-                    startDelay = 0;
+                    alliance = false;        // true for blue, false for red
+                    startDelay = 0;          // put start delay in ms
                     fieldSide = false;       // true for carousel, false for warehouse
                     warehousePark = true;   // true for warehouse, false for storage
 
@@ -399,28 +407,23 @@ public class AutoBonusTest extends LinearOpMode {
             }   // end of switch(setupState)
         }   // end of while(autoReady)
 
-        //red carousel
-        if(!alliance&&!fieldSide){
-            positionFactor=1;
-            //blue carousel
-        }else if(!alliance&& fieldSide){
-            forwardDistance=28;
-            hubDistance-=6;
-            positionFactor=-1;
-            parkDistance=50;
-            //blue warehouse
-        }else if(alliance&&!fieldSide){
-            hubDistance+=5;
-            positionFactor=-1;
-            //red carousel
-        }else{
-            forwardDistance=28;
-            hubDistance-=6;
-            positionFactor=1;
-            parkDistance=50;
-            //red warehouse
-        }
 
+        if(!alliance && !fieldSide){  // red carousel
+            positionFactor = -1;
+        } else if(!alliance && fieldSide){    // red warehouse
+            forwardDistance=28;
+            hubDistance-=6;
+            positionFactor = 1;
+            parkDistance=50;
+        } else if(alliance && !fieldSide){     //blue carousel
+            hubDistance+=5;
+            positionFactor = -1;
+        } else {                                //blue warehouse
+            forwardDistance=28;
+            hubDistance-=6;
+            positionFactor = 1;
+            parkDistance=50;
+        }
 
         // monitor the position of the TSE on the field
         while(!opModeIsActive() && running){
@@ -444,6 +447,7 @@ public class AutoBonusTest extends LinearOpMode {
                             scoreLevel = 2;
                         }
                         i++;
+                        if(updatedRecognitions.size() == 0) scoreLevel = 1;
                     }     // if (Recognition...
                     // Send telemetry message to signify robot waiting;
                     telemetry.addData("Robot Status : ", "READY TO RUN");    //
@@ -456,10 +460,21 @@ public class AutoBonusTest extends LinearOpMode {
             if(gamepad1.x || gamepad2.x) running = false;   // abort the program
         }   // end of while(!opModeIsActive...
 
+        robot.bucketDump.setPosition(0.6);
         if(!running) requestOpModeStop();   // user requested to abort setup
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        if(debugMode){
+            runState = State.LEVEL_SELECT;
+//            scoreLevel = 2;
+            telemetry.addData("> ","DEBUG MODE ENABLED ");
+            telemetry.addData("> runState = ",runState);
+            telemetry.addData("> scoreLevel = ",scoreLevel);
+            telemetry.update();
+            sleep(2000);
+        }
 
         runtime.reset();
 
@@ -472,12 +487,24 @@ public class AutoBonusTest extends LinearOpMode {
 
             switch(runState){
                 case LEVEL_SELECT:
-                    telemetry.addData("TSE Position = ", scoreLevel);
-                    telemetry.update();
+                    if(debugMode) {
+                        telemetry.addData("TSE Position = ", scoreLevel);
+                        telemetry.addData("Working on LEVEL_SELECT = ", "Now");
+                        telemetry.update();
+                        sleep(2000);
+                    } else {
+                        telemetry.addData("TSE Position = ", scoreLevel);
+                        telemetry.update();
+                    }
                     runState = State.SLEEP_DELAY;
                     break;
 
                 case SLEEP_DELAY:
+                    if(debugMode) {
+                        telemetry.addData("Working on Sleep Delay = ", "Now");
+                        telemetry.update();
+//                        startDelay = 2000;
+                    }
                     // sleep for set delay time. turn chainsaw on to show robot isn't dead
                     robot.motorChainsaw.setPower(0.2);
                     sleep(startDelay);
@@ -486,9 +513,28 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case MOVE_TSE:
+                    //move arm to scoring positions
+                    if(scoreLevel ==1){
+                        armControl.scoringPos1();
+                        turrentPosition = -236 * positionFactor;
+//                        goalAdjust = 2;
+                    }else if(scoreLevel ==2){
+                        armControl.scoringPos2();
+                        turrentPosition = -236 * positionFactor;
+//                        goalAdjust = 1;
+                    }else if(scoreLevel ==3){
+                        armControl.scoringPos3();
+                        turrentPosition = -236 * positionFactor;
+//                        goalAdjust = 0;
+                    }
+                    sleep(250);
+
                     //drive forward and push TSE out of the way
                     drive.driveStraight(forwardSpeed, forwardDistance+10);
                     sleep(500);
+
+                    // move arm into scoring position
+                    turretControl.setTargetPosition(turrentPosition);
 
                     //back up to turn to the shipping hub
                     drive.driveStraight(-forwardSpeed,10);
@@ -498,25 +544,18 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case X_SCORE:
-                    //turn towards the hub
-                    drive.driveTurn(turnAngle * positionFactor, turnError);
-
-                    //move arm to scoring positions
-                    if(scoreLevel ==1){
-                        armControl.scoringPos1();
-//                        goalAdjust = 2;
-                    }else if(scoreLevel ==2){
-                        armControl.scoringPos2();
-//                        goalAdjust = 1;
-                    }else if(scoreLevel ==3){
-                        armControl.scoringPos3();
-//                        goalAdjust = 0;
+                    if(debugMode) {
+                        telemetry.addData("Working on X_Score = ", "Now");
+                        telemetry.update();
+                        sleep(3000);
                     }
-                    sleep(250);
+                    //turn towards the hub
+//                    drive.driveTurn(turnAngle * positionFactor, turnError);
 
-                    //drive towards the shipping hub to score
-                    drive.driveStraight(forwardSpeed, hubDistance);
-                    sleep(500);
+
+                    //drive towards the shipping hub to scor
+//                  drive.driveStraight(forwardSpeed, hubDistance);
+//                    sleep(500);
 
                     //dump bucket
                     robot.bucketDump.setPosition(bucketAngle);
@@ -525,6 +564,9 @@ public class AutoBonusTest extends LinearOpMode {
                     //reset arms
                     robot.bucketDump.setPosition(0.5);
                     armControl.moveToZero();
+
+                    turrentPosition = 0;
+                    turretControl.setTargetPosition(turrentPosition);
 
                     // reverse direction to drive forward to park
                     forwardSpeed = forwardSpeed * -1;
@@ -539,7 +581,7 @@ public class AutoBonusTest extends LinearOpMode {
                     }
 
                     //drive to park if on warehouse side, drive to wall if on carousel side
-                    drive.driveStraight(forwardSpeed, parkDistance);
+//                    drive.driveStraight(forwardSpeed, parkDistance);
 //                    sleep(500);
 
                     if(!alliance && !fieldSide){        // blue_Carousel
@@ -559,9 +601,16 @@ public class AutoBonusTest extends LinearOpMode {
                             runState = State.WAREHOUSE_PARK;
                         }
                     }
+
+                    runState = State.HALT;
                     break;
 
                 case RED_CAROUSEL:
+                    if(debugMode) {
+                        telemetry.addData("Working on RED_Carousel = ", "Now");
+                        telemetry.update();
+                        sleep(5000);
+                    }
                     //go to carousel, red
                     //turn to face carousel
                     drive.driveTurn(0,turnError);
@@ -593,6 +642,11 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case BLUE_CAROUSEL:
+                    if(debugMode) {
+                        telemetry.addData("Working on BLUE Carousel = ", "Now");
+                        telemetry.update();
+                        sleep(5000);
+                    }
 
                     //go to carousel, blue (movements same as red, in reverse
 
@@ -619,6 +673,11 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case BLUE_WAREHOUSE_BONUS:
+                    if(debugMode) {
+                        telemetry.addData("Working on Blue Warehouse = ", "Now");
+                        telemetry.update();
+                        sleep(5000);
+                    }
                     // turn towards the warehouse
                     drive.driveTurn(90, turnError);
 
@@ -681,6 +740,11 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case RED_WAREHOUSE_BONUS:
+                    if(debugMode) {
+                        telemetry.addData("Working on Red_Bonus = ", "Now");
+                        telemetry.update();
+                        sleep(5000);
+                    }
                     // turn towards the warehouse
                     drive.driveTurn(-90, turnError);
 
@@ -743,6 +807,11 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case STORAGE_PARK:
+                    if(debugMode) {
+                        telemetry.addData("Working on X_Score = ", "Now");
+                        telemetry.update();
+                        sleep(5000);
+                    }
                     drive.driveStraight(-forwardSpeed, 4);
                     drive.driveTurn(15,turnError);
                     drive.driveStraight(-forwardSpeed,12);
@@ -751,6 +820,11 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case WAREHOUSE_PARK:
+                    if(debugMode) {
+                        telemetry.addData("Working on Warehouse Park = ", "Now");
+                        telemetry.update();
+                        sleep(5000);
+                    }
                     drive.driveStraight(-forwardSpeed, 8);
                     sleep(250);
 
@@ -763,6 +837,11 @@ public class AutoBonusTest extends LinearOpMode {
                     break;
 
                 case HALT:
+                    if(debugMode) {
+                        telemetry.addData("Working on Halt = ", "Now");
+                        telemetry.update();
+                        sleep(5000);
+                    }
                     // shut down the drive motors
                     drive.motorsHalt();
 
@@ -772,6 +851,7 @@ public class AutoBonusTest extends LinearOpMode {
             }   // end of switch(state)
         }   // end of while(opModeIsActive)
 
+        turretControl.stop();
         requestOpModeStop();
 
         telemetry.addData("Path", "Complete");

@@ -56,10 +56,10 @@ public class ArmControlCLass {
         localRobot.motorArmAngle2.setTargetPosition(angle2);
     }       // end of intakeOn()
 
-
     public void beaterForward(){
         this.localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
     }
+
     public void beaterReverse(){
         this.localRobot.motorIntake.setPower(-localRobot.INTAKE_POW);
     }
@@ -97,22 +97,22 @@ public class ArmControlCLass {
 //move to scoring positions methods
     //high platform scoring (default)
     public void scoringPos1(){
-        angle1=-549;
-        if(localRobot.motorArmAngle1.getCurrentPosition()<750){
-            angle2=1755;
-            setArmPosition();
+        angle1=-227;
+        if(localRobot.motorArmAngle1.getCurrentPosition() < 750){
+            angle2=-1125;
         }
+        setArmPosition();
     }
     //mid platform scoring
     public void scoringPos2(){
-        angle1=-230;
-        angle2=2411;
+        angle1=-590;
+        angle2=-900;
         setArmPosition();
     }
     //low platform & shared shipping hub scoring
     public void scoringPos3(){
         angle1=-1070;
-        angle2=2245;
+        angle2=-800;
         setArmPosition();
     }
 //end of scoring positions methods
