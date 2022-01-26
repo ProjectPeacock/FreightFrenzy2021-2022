@@ -75,9 +75,10 @@ public class FullAuto extends LinearOpMode {
         int scorePosition=1;
         double forwardSpeed = -0.32;
 
-        double forwardDistance = 26.0;
-        double hubDistance = 10.0;
-        double goalAdjust = 0;
+        double forwardDistance = 36.0;
+        double hubDistance = 8;
+        double TSEreturnDist=10;
+
 
         double turnAngle = 65;
         double parkDistance = 35;
@@ -256,6 +257,9 @@ public class FullAuto extends LinearOpMode {
             }   // end of switch(setupState)
         }   // end of while(autoReady)
 
+        if(position){
+            TSEreturnDist=8;
+        }
         //red carousel
         if(!alliance&&!position){
             positionFactor=1;
@@ -267,13 +271,13 @@ public class FullAuto extends LinearOpMode {
         //red warehouse
         }else if(!alliance&&position){
             forwardDistance=28;
-            hubDistance-=6;
+            hubDistance-=3;
             positionFactor=-1;
             parkDistance=50;
         //blue warehouse
         }else{
             forwardDistance=28;
-            hubDistance-=6;
+            hubDistance-=3;
             positionFactor=1;
             parkDistance=50;
         }
@@ -294,15 +298,32 @@ public class FullAuto extends LinearOpMode {
         sleep(startDelay);
         robot.motorChainsaw.setPower(0);
 
+        if(position){
+            if(scorePosition==1){
+
+            }else if(scorePosition==2){
+                forwardDistance = 10;
+                hubDistance = 14;
+                TSEreturnDist = 0;
+                bucketAngle=-0.55;
+            }else{
+                forwardDistance = 10;
+                hubDistance = 12;
+                TSEreturnDist = 0;
+                bucketAngle=-0.75;
+            }
+            turnAngle=35;
+        }
+
         while (opModeIsActive() && (running)) {
 
             // Step 1
             //drive forward and push TSE out of the way
-            drive.driveStraight(forwardSpeed, forwardDistance+10);
+            drive.driveStraight(forwardSpeed, forwardDistance);
             sleep(500);
 
             //back up to turn to the shipping hub
-            drive.driveStraight(-forwardSpeed,10);
+            drive.driveStraight(-forwardSpeed,TSEreturnDist);
             sleep(250);
 
             //turn towards the hub
@@ -311,16 +332,12 @@ public class FullAuto extends LinearOpMode {
             //move arm to scoring positions
             if(scorePosition==1){
                 armControl.scoringPos1();
-                goalAdjust = 2;
             }else if(scorePosition==2){
                 armControl.scoringPos2();
-                goalAdjust = 1;
             }else if(scorePosition==3){
                 armControl.scoringPos3();
-                goalAdjust = 0;
-
             }
-            sleep(250);
+            sleep(500);
 
             //drive towards the shipping hub to score
             drive.driveStraight(forwardSpeed, hubDistance);
@@ -344,6 +361,15 @@ public class FullAuto extends LinearOpMode {
             }else if(alliance&&position){
                 //blue
                 forwardSpeed=1;
+            }
+            if(position){
+                if(alliance) {
+                    drive.driveTurn(90, turnError);
+                }else{
+                    drive.driveTurn(-90,turnError);
+                }
+                drive.driveStraight(forwardSpeed,15);
+                parkDistance=36;
             }
 
             //drive to park if on warehouse side, drive to wall if on carousel side

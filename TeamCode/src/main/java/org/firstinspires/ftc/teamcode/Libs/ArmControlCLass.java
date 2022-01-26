@@ -97,22 +97,22 @@ public class ArmControlCLass {
 //move to scoring positions methods
     //high platform scoring (default)
     public void scoringPos1(){
-        angle1=-227;
+        angle1=-549;
         if(localRobot.motorArmAngle1.getCurrentPosition() < 750){
-            angle2=-1125;
+            angle2=1755;
         }
         setArmPosition();
     }
     //mid platform scoring
     public void scoringPos2(){
-        angle1=-590;
-        angle2=-900;
+        angle1=-230;
+        angle2=2411;
         setArmPosition();
     }
     //low platform & shared shipping hub scoring
     public void scoringPos3(){
-        angle1=-1070;
-        angle2=-800;
+        angle1=-816;
+        angle2=-100;
         setArmPosition();
     }
 //end of scoring positions methods
