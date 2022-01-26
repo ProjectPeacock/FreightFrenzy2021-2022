@@ -440,13 +440,16 @@ public class AutoBonusTest extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
-                        if(recognition.getLeft() < 150){
-                            scoreLevel = 3;
-                        } if(recognition.getLeft() > 150){
-                            scoreLevel = 2;
+                        if(recognition.getTop()<220) {
+                            if (recognition.getLeft() < 150) {
+                                scoreLevel = 3;
+                            }
+                            if (recognition.getLeft() > 150) {
+                                scoreLevel = 2;
+                            }
                         }
                         i++;
-                        if(updatedRecognitions.size() == 0) scoreLevel = 1;
+                        if (updatedRecognitions.size() == 0) scoreLevel = 1;
                     }     // if (Recognition...
                     // Send telemetry message to signify robot waiting;
                     telemetry.addData("Robot Status : ", "READY TO RUN");    //
