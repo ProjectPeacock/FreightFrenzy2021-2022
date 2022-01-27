@@ -459,6 +459,7 @@ public class AutoBonusTest extends LinearOpMode {
                     telemetry.update();
                 }   // if (updatedRecog...)
             }   // end of if (tfod != null)
+
             if(gamepad1.x || gamepad2.x) running = false;   // abort the program
         }   // end of while(!opModeIsActive...
 
