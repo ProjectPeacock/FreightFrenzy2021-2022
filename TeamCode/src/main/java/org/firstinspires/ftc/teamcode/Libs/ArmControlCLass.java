@@ -111,7 +111,7 @@ public class ArmControlCLass {
     }
     //low platform & shared shipping hub scoring
     public void scoringPos3(){
-        angle1=-816;
+        angle1=-938;
         angle2=-100;
         setArmPosition();
     }

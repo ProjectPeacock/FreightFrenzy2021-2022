@@ -220,6 +220,7 @@ public class FullAutoV2 extends LinearOpMode {
                         }
                         setupState = State.SELECT_PARK;
                     }   // end of if(gamepad1.dpad_left...
+                    sleep(350);
                     break;
 
                 case SELECT_PARK:
@@ -227,19 +228,20 @@ public class FullAutoV2 extends LinearOpMode {
                     telemetry.addData("Press DPAD Left  == ", " Park in Warehouse");
                     telemetry.addData("Press DPAD Right == ", " Park in Storage");
                     telemetry.update();
-
-                    if(gamepad1.dpad_left || gamepad1.dpad_right){
-                        if (gamepad1.dpad_left){
+                    timeElapsed = runtime.time();
+                    if (gamepad1.dpad_left || gamepad1.dpad_right) {
+                        if (gamepad1.dpad_left) {
                             warehousePark = true;
                             //sleep(1000);
-                        }  else {
+                        } else {
                             warehousePark = false;
                         }
                         setupState = State.VERIFY_CONFIG;
                         sleep(350);
-                    }   // end of if(gamepad1.dpad_left...
-                    break;
+                        break;
+                     // end of if(gamepad1.dpad_left...
 
+                    }
                 case VERIFY_CONFIG:
                     if (positionFactor==1) {
                         goalPosition="Right";
@@ -270,6 +272,7 @@ public class FullAutoV2 extends LinearOpMode {
             }   // end of switch(setupState)
         }   // end of while(autoReady)
 
+        // warehouse side
         if(position){
             TSEreturnDist=8;
         }
@@ -328,7 +331,7 @@ public class FullAutoV2 extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
-                        if(recognition.getTop()<220) {
+                        if(recognition.getTop()<220&&recognition.getTop()>115) {
                             if (recognition.getLeft() < 150) {
                                 scorePosition = 3;
                             }
@@ -340,11 +343,13 @@ public class FullAutoV2 extends LinearOpMode {
                         if (updatedRecognitions.size() == 0) scorePosition = 1;
                     }     // if (Recognition...
                     // Send telemetry message to signify robot waiting;
-                    telemetry.addData("Robot Status : ", "READY TO RUN");    //
+                /*    telemetry.addData("Robot Status : ", "READY TO RUN");    //
                     telemetry.addData("Scanning for : ", "TSE");
+                 */
                     telemetry.addData("Detected Level = ", scorePosition);
-                    telemetry.addData("Press X to : ", "ABORT Program");
+                 //   telemetry.addData("Press X to : ", "ABORT Program");
                     telemetry.update();
+
                 }   // if (updatedRecog...)
             }   // end of if (tfod != null)
 
@@ -364,6 +369,21 @@ public class FullAutoV2 extends LinearOpMode {
                     bucketAngle=-0.75;
                 }
                 turnAngle=35;
+            }else{
+                if(scorePosition==1){
+                    forwardDistance=32;
+                    hubDistance=10;
+                    parkDistance-=3;
+                    turnAngle=60;
+                }else if(scorePosition==2){
+                    hubDistance = 7;
+                    parkDistance-=1;
+                    bucketAngle=-0.55;
+                }else{
+                    hubDistance = 7.25;
+                    parkDistance-=1;
+                    bucketAngle=-0.75;
+                }
             }
 
 
@@ -498,7 +518,7 @@ public class FullAutoV2 extends LinearOpMode {
                     drive.driveTurn(90, turnError);
 
                     robot.motorChainsaw.setPower(0.2);
-                    sleep(7000 - startDelay);
+                    sleep(5000 - startDelay);
 
                     drive.driveStraight(1, 100);
                 }
