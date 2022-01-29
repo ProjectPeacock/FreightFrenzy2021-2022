@@ -92,12 +92,12 @@ public class FullAutoV2 extends LinearOpMode {
         long startDelay = 0;
         double timeElapsed;
         double positionFactor = 1;
-        int scorePosition=1;
+        int scorePosition = 1;
         double forwardSpeed = -0.32;
 
         double forwardDistance = 36.0;
         double hubDistance = 8;
-        double TSEreturnDist=10;
+        double TSEreturnDist = 10;
 
 
         double turnAngle = 65;
@@ -133,7 +133,7 @@ public class FullAutoV2 extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0 / 9.0);
         }
 
         /*
@@ -154,20 +154,20 @@ public class FullAutoV2 extends LinearOpMode {
         ArmControlCLass armControl = new ArmControlCLass(robot, robot.ARM_THREAD_SLEEP);
 
         timeElapsed = runtime.time();   // initialize timeElapsed to confirm button press time
-        while (!autoReady){
+        while (!autoReady) {
 
             switch (setupState) {
                 case ALLIANCE_SELECT:
-                    telemetry.addData("Drive Motor Encoders:",robot.motorR1.getCurrentPosition());
+                    telemetry.addData("Drive Motor Encoders:", robot.motorR1.getCurrentPosition());
                     telemetry.addData("Which Alliance are you on?", "");
                     telemetry.addData("Press X  == ", " BLUE Alliance");
                     telemetry.addData("Press Y  == ", " RED Alliance");
                     telemetry.update();
 
-                    if(gamepad1.x || gamepad1.y){
-                        if (gamepad1.x){
+                    if (gamepad1.x || gamepad1.y) {
+                        if (gamepad1.x) {
                             alliance = true;
-                        }  else {
+                        } else {
                             alliance = false;
                         }
                         setupState = State.DELAY_LENGTH;    // give option to add delay
@@ -185,21 +185,21 @@ public class FullAutoV2 extends LinearOpMode {
                     telemetry.addData("Press A to continue", "");
                     telemetry.update();
 
-                    if(gamepad1.dpad_up && (runtime.time()-timeElapsed) >0.3) {
-                        if(startDelay < 10){       // limit the max delay to 10 seconds
+                    if (gamepad1.dpad_up && (runtime.time() - timeElapsed) > 0.3) {
+                        if (startDelay < 10) {       // limit the max delay to 10 seconds
                             startDelay = startDelay + 1;
                         }
                         timeElapsed = runtime.time();
                     } //end of if(gamepad1.dpad_up)
 
-                    if(gamepad1.dpad_down && (runtime.time()-timeElapsed) >0.3) {
-                        if(startDelay > 0){       // confirm that the delay is not negative
+                    if (gamepad1.dpad_down && (runtime.time() - timeElapsed) > 0.3) {
+                        if (startDelay > 0) {       // confirm that the delay is not negative
                             startDelay = startDelay - 1;
                         } else startDelay = 0;
                         timeElapsed = runtime.time();
                     } //end of if(gamepad1.dpad_up)
 
-                    if(gamepad1.a){         // exit the setup
+                    if (gamepad1.a) {         // exit the setup
                         setupState = State.POSITION_SELECT;
                         startDelay = startDelay * 1000;
                     }   // end of if(gamepad1.x...
@@ -211,26 +211,28 @@ public class FullAutoV2 extends LinearOpMode {
                     telemetry.addData("Press DPAD Right == ", " WAREHOUSE Side");
                     telemetry.update();
 
-                    if(gamepad1.dpad_left || gamepad1.dpad_right){
-                        if (gamepad1.dpad_left){
-                            position=false;
+                    if ((gamepad1.dpad_left || gamepad1.dpad_right) && ((runtime.time() - timeElapsed) > 0.3)) {
+                        if (gamepad1.dpad_left) {
+                            position = false;
                             //sleep(1000);
-                        }  else {
-                            position=true;
+                        } else {
+                            position = true;
                         }
                         setupState = State.SELECT_PARK;
+                        timeElapsed = runtime.time();
+
                     }   // end of if(gamepad1.dpad_left...
                     sleep(350);
                     break;
 
                 case SELECT_PARK:
                     telemetry.addData("Warehouse park?", "");
-                    telemetry.addData("Press DPAD Left  == ", " Park in Warehouse");
-                    telemetry.addData("Press DPAD Right == ", " Park in Storage");
+                    telemetry.addData("Press DPAD Up  == ", " Park in Warehouse");
+                    telemetry.addData("Press DPAD Down == ", " Park in Storage");
                     telemetry.update();
                     timeElapsed = runtime.time();
-                    if (gamepad1.dpad_left || gamepad1.dpad_right) {
-                        if (gamepad1.dpad_left) {
+                    if (gamepad1.dpad_up || gamepad1.dpad_down) {
+                        if (gamepad1.dpad_up) {
                             warehousePark = true;
                             //sleep(1000);
                         } else {
@@ -238,15 +240,14 @@ public class FullAutoV2 extends LinearOpMode {
                         }
                         setupState = State.VERIFY_CONFIG;
                         sleep(350);
-                        break;
-                     // end of if(gamepad1.dpad_left...
 
-                    }
+                    }  // end of if(gamepad1.dpad_left..
+                    break;
                 case VERIFY_CONFIG:
-                    if (positionFactor==1) {
-                        goalPosition="Right";
-                    }else{
-                        goalPosition="Left";
+                    if (positionFactor == 1) {
+                        goalPosition = "Right";
+                    } else {
+                        goalPosition = "Left";
                     }
                     telemetry.addData("Verify the setup", "");
                     telemetry.addData("Alliance          == ", alliance);
@@ -255,16 +256,16 @@ public class FullAutoV2 extends LinearOpMode {
                     telemetry.addData("Goal position ==  ", goalPosition);
                     telemetry.addData("Goal on ==  ", positionFactor);
                     telemetry.addData("Warehouse Park ==  ", warehousePark);
-                    telemetry.addData("","");
-                    telemetry.addData("Press A to Confirm or B to start over","");
+                    telemetry.addData("", "");
+                    telemetry.addData("Press A to Confirm or B to start over", "");
                     telemetry.update();
 
-                    if(gamepad1.b || gamepad1.a){
-                        if (gamepad1.b){
+                    if (gamepad1.b || gamepad1.a) {
+                        if (gamepad1.b) {
                             autoReady = false;
                             startDelay = 0;     // reset the start delay
                             setupState = State.ALLIANCE_SELECT;
-                        }  else {
+                        } else {
                             autoReady = true;
                         }
                     }   // end of if(gamepad1.right_bumper...
@@ -273,35 +274,88 @@ public class FullAutoV2 extends LinearOpMode {
         }   // end of while(autoReady)
 
         // warehouse side
-        if(position){
-            TSEreturnDist=8;
+        if (position) {
+            TSEreturnDist = 8;
         }
         //red carousel
-        if(!alliance&&!position){
-            positionFactor=1;
+        if (!alliance && !position) {
+            positionFactor = 1;
 
-        //blue carousel
-        }else if(alliance&&!position){
-            hubDistance+=5;
-            positionFactor=-1;
-        //red warehouse
-        }else if(!alliance&&position){
-            forwardDistance=28;
-            hubDistance-=3;
-            positionFactor=-1;
-            parkDistance=50;
-        //blue warehouse
-        }else{
-            forwardDistance=28;
-            hubDistance-=3;
-            positionFactor=1;
-            parkDistance=50;
+            //blue carousel
+        } else if (alliance && !position) {
+            hubDistance += 5;
+            positionFactor = -1;
+            //red warehouse
+        } else if (!alliance && position) {
+            forwardDistance = 28;
+            hubDistance -= 3;
+            positionFactor = -1;
+            parkDistance = 50;
+            //blue warehouse
+        } else {
+            forwardDistance = 28;
+            hubDistance -= 3;
+            positionFactor = 1;
+            parkDistance = 50;
         }
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
+        while(!opModeIsActive()){
+
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    // step through the list of recognitions and display boundary info.
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions) {
+                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                recognition.getLeft(), recognition.getTop());
+                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                recognition.getRight(), recognition.getBottom());
+                        telemetry.update();
+                        if (!alliance) {
+                            if (recognition.getTop() < 220 && recognition.getTop() > 115) {
+                                if (recognition.getLeft() < 150) {
+                                    scorePosition = 3;
+                                }
+                                if (recognition.getLeft() > 150) {
+                                    scorePosition = 2;
+                                }
+                            }
+                            if (updatedRecognitions.size() == 0) scorePosition = 1;
+                        } else {
+                            if (recognition.getTop() < 220 && recognition.getTop() > 115) {
+                                if (recognition.getLeft() < 175) {
+                                    scorePosition = 2;
+                                }
+                                if (recognition.getLeft() > 400) {
+                                    scorePosition = 1;
+                                }
+                            }
+                            if (updatedRecognitions.size() == 0) scorePosition = 3;
+                        }
+                        i++;
+
+                    }     // if (Recognition...
+                    // Send telemetry message to signify robot waiting;
+                    /*    telemetry.addData("Robot Status : ", "READY TO RUN");    //
+                        telemetry.addData("Scanning for : ", "TSE");
+                     */
+                    telemetry.addData("Detected Level = ", scorePosition);
+                    //   telemetry.addData("Press X to : ", "ABORT Program");
+                    //telemetry.update();
+
+                }   // if (updatedRecog...)
+            }   // end of if (tfod != null)
+        }
+
 
         waitForStart();
         startTime = runtime.time() + startDelay;
@@ -331,16 +385,30 @@ public class FullAutoV2 extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
-                        if(recognition.getTop()<220&&recognition.getTop()>115) {
-                            if (recognition.getLeft() < 150) {
-                                scorePosition = 3;
+                        telemetry.update();
+                        if(!alliance) {
+                            if (recognition.getTop() < 220 && recognition.getTop() > 115) {
+                                if (recognition.getLeft() < 150) {
+                                    scorePosition = 3;
+                                }
+                                if (recognition.getLeft() > 150) {
+                                    scorePosition = 2;
+                                }
                             }
-                            if (recognition.getLeft() > 150) {
-                                scorePosition = 2;
+                            if (updatedRecognitions.size() == 0) scorePosition = 1;
+                        }else{
+                            if (recognition.getTop() < 220 && recognition.getTop() > 115) {
+                                if (recognition.getLeft() < 175) {
+                                    scorePosition = 2;
+                                }
+                                if (recognition.getLeft() > 400) {
+                                    scorePosition = 1;
+                                }
                             }
+                            if (updatedRecognitions.size() == 0) scorePosition = 3;
                         }
                         i++;
-                        if (updatedRecognitions.size() == 0) scorePosition = 1;
+
                     }     // if (Recognition...
                     // Send telemetry message to signify robot waiting;
                 /*    telemetry.addData("Robot Status : ", "READY TO RUN");    //
@@ -348,12 +416,13 @@ public class FullAutoV2 extends LinearOpMode {
                  */
                     telemetry.addData("Detected Level = ", scorePosition);
                  //   telemetry.addData("Press X to : ", "ABORT Program");
-                    telemetry.update();
+                    //telemetry.update();
 
                 }   // if (updatedRecog...)
             }   // end of if (tfod != null)
 
 
+            //warehouse
             if(position){
                 if(scorePosition==1){
 
@@ -438,7 +507,8 @@ public class FullAutoV2 extends LinearOpMode {
                 }else{
                     drive.driveTurn(-90,turnError);
                 }
-                drive.driveStraight(forwardSpeed,15);
+            //    drive.driveStraight(forwardSpeed,15);
+                drive.driveStraight(forwardSpeed,17);
                 parkDistance=36;
             }
 

@@ -300,7 +300,7 @@ public class FullAuto extends LinearOpMode {
 
         if(position){
             if(scorePosition==1){
-
+                hubDistance=10;
             }else if(scorePosition==2){
                 forwardDistance = 10;
                 hubDistance = 14;
@@ -312,7 +312,7 @@ public class FullAuto extends LinearOpMode {
                 TSEreturnDist = 0;
                 bucketAngle=-0.75;
             }
-            turnAngle=35;
+            turnAngle=40;
         }
 
         while (opModeIsActive() && (running)) {
@@ -363,6 +363,7 @@ public class FullAuto extends LinearOpMode {
                 forwardSpeed=1;
             }
             if(position){
+                drive.driveStraight(forwardSpeed,6);
                 if(alliance) {
                     drive.driveTurn(90, turnError);
                 }else{
