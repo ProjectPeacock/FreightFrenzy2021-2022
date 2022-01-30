@@ -36,6 +36,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 //
 // import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -45,7 +46,7 @@ import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 
 
 @Autonomous(name="IMU Testing", group="Competition")
-//@Disabled
+@Disabled
 public class IMUTesting extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -262,6 +262,7 @@ public class FullAuto extends LinearOpMode {
         }
         //red carousel
         if(!alliance&&!position){
+            hubDistance+=5;
             positionFactor=1;
 
         //blue carousel
@@ -273,13 +274,13 @@ public class FullAuto extends LinearOpMode {
             forwardDistance=28;
             hubDistance-=3;
             positionFactor=-1;
-            parkDistance=50;
+            parkDistance=20;
         //blue warehouse
         }else{
             forwardDistance=28;
             hubDistance-=3;
             positionFactor=1;
-            parkDistance=50;
+            parkDistance=20;
         }
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -370,7 +371,7 @@ public class FullAuto extends LinearOpMode {
                     drive.driveTurn(-90,turnError);
                 }
                 drive.driveStraight(forwardSpeed,15);
-                parkDistance=36;
+                parkDistance=26;
             }
 
             //drive to park if on warehouse side, drive to wall if on carousel side

@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import org.firstinspires.ftc.teamcode.Libs.Detector;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Detector Test", group="test")
+@Disabled
 public class DetectorTest extends LinearOpMode {
     @Override
     public void runOpMode() {

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Threads.TurretControlLibrary;
 import dalvik.system.DelegateLastClassLoader;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "2 Driver - States", group = "Development")
-//  @Disabled
+  @Disabled
 
 public class DuoDriverOptimized extends LinearOpMode {
 

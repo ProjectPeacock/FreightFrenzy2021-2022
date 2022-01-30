@@ -36,6 +36,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 //
 // import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,9 +54,10 @@ import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 import java.util.List;
 
 
-@Autonomous(name="FullAutoV2", group="Competition")
-//@Disabled
-public class FullAutoV2 extends LinearOpMode {
+//@Autonomous(name="FullAutoV2", group="Competition")
+@Autonomous(name="FullAutoV3", group="Competition")
+@Disabled
+public class FullAutoV3 extends LinearOpMode {
 
     public static final String TFOD_MODEL_ASSET = "PP_TSEv2.tflite";
     public static final String[] LABELS = {
@@ -72,8 +74,6 @@ public class FullAutoV2 extends LinearOpMode {
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
-
-
     /* Declare OpMode members. */
     HardwareProfile robot   = new HardwareProfile();
     private LinearOpMode opMode = this;
@@ -86,31 +86,31 @@ public class FullAutoV2 extends LinearOpMode {
         boolean autoReady = false;
         boolean running = true;
         double startTime;
-        String oldalliance = "";
+
         String startPosition = "";
         String goalPosition = "";
         long startDelay = 0;
         double timeElapsed;
-        double positionFactor = 1;
-        int scorePosition = 1;
-        double forwardSpeed = -0.32;
+        //hub position factor. changes turnAngle to negative if hub on left
+        double hubFactor = 1;
 
+        // scoring level: 1 = top, 2 = middle, 3 = bottom
+        int scorePosition = 1;
+
+        double forwardSpeed = -0.32;
         double forwardDistance = 36.0;
         double hubDistance = 8;
         double TSEreturnDist = 10;
-
-
-        double turnAngle = 65;
         double parkDistance = 35;
-
+        double turnAngle = 65;
         double turnError = 0.5;
         double bucketAngle = -1.0;
 
         //red if false, blue if true
-        boolean alliance = false;
+        boolean blueAlliance = false;
 
         //carousel if false, warehouse if true
-        boolean position = false;
+        boolean warehouseSide = false;
 
         // warehouse park
         boolean warehousePark = true;
@@ -166,13 +166,13 @@ public class FullAutoV2 extends LinearOpMode {
 
                     if (gamepad1.x || gamepad1.y) {
                         if (gamepad1.x) {
-                            alliance = true;
+                            blueAlliance = true;
                         } else {
-                            alliance = false;
+                            blueAlliance = false;
                         }
                         setupState = State.DELAY_LENGTH;    // give option to add delay
-                        telemetry.addData("Goal on ==  ", positionFactor);
-                        telemetry.update();
+//                        telemetry.addData("Goal on ==  ", goalPosition);
+//                        telemetry.update();
                     }   // end of if(gamepad1.x...
                     break;
 
@@ -213,12 +213,15 @@ public class FullAutoV2 extends LinearOpMode {
 
                     if ((gamepad1.dpad_left || gamepad1.dpad_right) && ((runtime.time() - timeElapsed) > 0.3)) {
                         if (gamepad1.dpad_left) {
-                            position = false;
+                            warehouseSide = false;
                             //sleep(1000);
                         } else {
-                            position = true;
+                            warehouseSide = true;
                         }
                         setupState = State.SELECT_PARK;
+                        timeElapsed = runtime.time();
+
+
                     }   // end of if(gamepad1.dpad_left...
                     sleep(350);
                     break;
@@ -228,7 +231,7 @@ public class FullAutoV2 extends LinearOpMode {
                     telemetry.addData("Press DPAD Up  == ", " Park in Warehouse");
                     telemetry.addData("Press DPAD Down == ", " Park in Storage");
                     telemetry.update();
-
+                    timeElapsed = runtime.time();
                     if (gamepad1.dpad_up || gamepad1.dpad_down) {
                         if (gamepad1.dpad_up) {
                             warehousePark = true;
@@ -238,21 +241,32 @@ public class FullAutoV2 extends LinearOpMode {
                         }
                         setupState = State.VERIFY_CONFIG;
                         sleep(350);
-
+                        //red carousel
+                        if (!blueAlliance && !warehouseSide) {
+                            hubFactor = 1;
+                            //blue carousel
+                        } else if (blueAlliance && !warehouseSide) {
+                             hubFactor = -1;
+                            //red warehouse
+                        } else if (!blueAlliance && warehouseSide) {
+                            hubFactor = -1;
+                            //blue warehouse
+                        } else {
+                            hubFactor = 1;
+                        }
+                        if (hubFactor == 1) {
+                            goalPosition = "Right";
+                        } else {
+                            goalPosition = "Left";
+                        }
                     }  // end of if(gamepad1.dpad_left..
                     break;
                 case VERIFY_CONFIG:
-                    if (positionFactor == 1) {
-                        goalPosition = "Right";
-                    } else {
-                        goalPosition = "Left";
-                    }
                     telemetry.addData("Verify the setup", "");
-                    telemetry.addData("Alliance          == ", alliance);
+                    telemetry.addData("Alliance          == ", blueAlliance);
                     telemetry.addData("Start Delay == ", startDelay);
                     telemetry.addData("Starting Position ==  ", startPosition);
                     telemetry.addData("Goal position ==  ", goalPosition);
-                    telemetry.addData("Goal on ==  ", positionFactor);
                     telemetry.addData("Warehouse Park ==  ", warehousePark);
                     telemetry.addData("", "");
                     telemetry.addData("Press A to Confirm or B to start over", "");
@@ -272,28 +286,24 @@ public class FullAutoV2 extends LinearOpMode {
         }   // end of while(autoReady)
 
         // warehouse side
-        if (position) {
+        if (warehouseSide) {
             TSEreturnDist = 8;
         }
         //red carousel
-        if (!alliance && !position) {
-            positionFactor = 1;
+        if (!blueAlliance && !warehouseSide) {
 
             //blue carousel
-        } else if (alliance && !position) {
+        } else if (blueAlliance && !warehouseSide) {
             hubDistance += 5;
-            positionFactor = -1;
             //red warehouse
-        } else if (!alliance && position) {
+        } else if (!blueAlliance && warehouseSide) {
             forwardDistance = 28;
             hubDistance -= 3;
-            positionFactor = -1;
             parkDistance = 50;
             //blue warehouse
         } else {
             forwardDistance = 28;
             hubDistance -= 3;
-            positionFactor = 1;
             parkDistance = 50;
         }
         // Send telemetry message to signify robot waiting;
@@ -318,7 +328,7 @@ public class FullAutoV2 extends LinearOpMode {
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
                         telemetry.update();
-                        if (!alliance) {
+                        if (!blueAlliance) {
                             if (recognition.getTop() < 220 && recognition.getTop() > 115) {
                                 if (recognition.getLeft() < 150) {
                                     scorePosition = 3;
@@ -342,13 +352,8 @@ public class FullAutoV2 extends LinearOpMode {
                         i++;
 
                     }     // if (Recognition...
-                    // Send telemetry message to signify robot waiting;
-                    /*    telemetry.addData("Robot Status : ", "READY TO RUN");    //
-                        telemetry.addData("Scanning for : ", "TSE");
-                     */
+
                     telemetry.addData("Detected Level = ", scorePosition);
-                    //   telemetry.addData("Press X to : ", "ABORT Program");
-                    //telemetry.update();
 
                 }   // if (updatedRecog...)
             }   // end of if (tfod != null)
@@ -365,7 +370,6 @@ public class FullAutoV2 extends LinearOpMode {
         robot.motorChainsaw.setPower(0.2);
         sleep(startDelay);
         robot.motorChainsaw.setPower(0);
-
 
         while (opModeIsActive() && (running)) {
 
@@ -384,7 +388,7 @@ public class FullAutoV2 extends LinearOpMode {
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
                         telemetry.update();
-                        if(!alliance) {
+                        if(!blueAlliance) {
                             if (recognition.getTop() < 220 && recognition.getTop() > 115) {
                                 if (recognition.getLeft() < 150) {
                                     scorePosition = 3;
@@ -408,20 +412,13 @@ public class FullAutoV2 extends LinearOpMode {
                         i++;
 
                     }     // if (Recognition...
-                    // Send telemetry message to signify robot waiting;
-                /*    telemetry.addData("Robot Status : ", "READY TO RUN");    //
-                    telemetry.addData("Scanning for : ", "TSE");
-                 */
                     telemetry.addData("Detected Level = ", scorePosition);
-                 //   telemetry.addData("Press X to : ", "ABORT Program");
-                    //telemetry.update();
-
                 }   // if (updatedRecog...)
             }   // end of if (tfod != null)
 
 
             //warehouse
-            if(position){
+            if(warehouseSide){
                 if(scorePosition==1){
 
                 }else if(scorePosition==2){
@@ -464,7 +461,7 @@ public class FullAutoV2 extends LinearOpMode {
             sleep(250);
 
             //turn towards the hub
-            drive.driveTurn(turnAngle * positionFactor, turnError);
+            drive.driveTurn(turnAngle * hubFactor, turnError);
 
             //move arm to scoring positions
             if(scorePosition==1){
@@ -492,15 +489,15 @@ public class FullAutoV2 extends LinearOpMode {
             forwardSpeed = forwardSpeed * -1;
 
             //set forward speed to full power if in either warehouse position
-            if(!alliance&&position){
+            if(!blueAlliance&&warehouseSide){
                 //red
                 forwardSpeed=1;
-            }else if(alliance&&position){
+            }else if(blueAlliance&&warehouseSide){
                 //blue
                 forwardSpeed=1;
             }
-            if(position){
-                if(alliance) {
+            if(warehouseSide){
+                if(blueAlliance) {
                     drive.driveTurn(90, turnError);
                 }else{
                     drive.driveTurn(-90,turnError);
@@ -515,7 +512,7 @@ public class FullAutoV2 extends LinearOpMode {
             sleep(500);
 
             //go to carousel, red
-            if(!alliance&&!position){
+            if(!blueAlliance&&!warehouseSide){
                 //turn to face carousel
                 drive.driveTurn(0,turnError);
                 sleep(350);
@@ -559,7 +556,7 @@ public class FullAutoV2 extends LinearOpMode {
             }
 
             //go to carousel, blue (movements same as red, in reverse
-            if(alliance&&!position){
+            if(blueAlliance&&!warehouseSide){
 
                 drive.driveTurn(0,turnError);
                 sleep(350);

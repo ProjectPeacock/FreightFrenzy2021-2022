@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Turret testing & debugging", group = "Dev")
-//@Disabled
+@Disabled
 public class TurretTestCTSDELETE extends LinearOpMode {
 
     private final static HardwareProfile robot = new HardwareProfile();

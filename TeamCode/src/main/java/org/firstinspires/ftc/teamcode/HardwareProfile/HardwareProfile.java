@@ -43,12 +43,12 @@ public class HardwareProfile {
     public final double BLUE_ZERO = 0.50; //IntakeDeployBlue zero pos
     public final double PINK_ZERO = 0.50; //IntakeDeployPink zero pos
     public final double INTAKE_DEPLOY_BLUE = 0.275; //Distance to deploy intake
-    public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.13; // distance to deploy pink intake
+    public final double INTAKE_DEPLOY_PINK = INTAKE_DEPLOY_BLUE+0.145; // distance to deploy pink intake
     public final double INTAKE_OUTTAKE = 0.05; //Distance to deploy intake for outtaking
     public final double INTAKE_TILT_INPUT= 0.595;
     public final double INTAKE_STARTING_POS= 0.45;
     //intake motor
-    public final double INTAKE_POW = 1; //intaking power
+    public final double INTAKE_POW = 0.75; //intaking power
     public final double INTAKE_IDLE = 1; //intake idling power (for using intake as outtake)
     public final double INTAKE_REVERSE_POW = -0.8; //intake reverse power (for using intake as outtake)
 
