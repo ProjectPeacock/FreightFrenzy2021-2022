@@ -317,27 +317,21 @@ public class FullAutoV2 extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
+                        if (scorePosition == 1) {
+                            telemetry.addData("TSE targeting ", " Top Level");
+                        } else if (scorePosition == 2) {
+                            telemetry.addData("TSE targeting ", " Middle Level");
+                        } else if (scorePosition == 3) {
+                            telemetry.addData("TSE targeting ", " Bottom Level");
+                        }
                         telemetry.update();
-                        if (!alliance) {
-                            if (recognition.getTop() < 220 && recognition.getTop() > 115) {
-                                if (recognition.getLeft() < 150) {
-                                    scorePosition = 3;
-                                }
-                                if (recognition.getLeft() > 150) {
-                                    scorePosition = 2;
-                                }
-                            }
-                            if (updatedRecognitions.size() == 0) scorePosition = 1;
-                        } else {
-                            if (recognition.getTop() < 220 && recognition.getTop() > 115) {
-                                if (recognition.getLeft() < 175) {
-                                    scorePosition = 2;
-                                }
-                                if (recognition.getLeft() > 400) {
-                                    scorePosition = 1;
-                                }
-                            }
-                            if (updatedRecognitions.size() == 0) scorePosition = 3;
+
+                        if (recognition.getLeft() < 150) {
+                            scorePosition = 3;
+                        } else if (recognition.getLeft() > 150 && recognition.getLeft() < 400 ) {
+                            scorePosition = 2;
+                        } else if (recognition.getLeft() > 400) {
+                            scorePosition = 1;
                         }
                         i++;
 
