@@ -92,6 +92,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
         State runState = State.SET_DISTANCES;
         boolean debugMode = true;
 
+        // do we need these threads in an autonomous opmode?
         MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
         Thread mechController = new Thread(mechControl);
         TurretControlThread turretControl = new TurretControlThread(robot, robot.ARM_THREAD_SLEEP);
@@ -113,8 +114,8 @@ public class AutoBonusTestV2 extends LinearOpMode {
         double hubDistance = 10.0;
         double turnAngle = 65;
         double TSEreturnDist=10;
-        double TSEturnAngle = 65;
-        int TSEturnFactor = 1;
+//        double TSEturnAngle = 65;
+//        int TSEturnFactor = 1;
         double parkDistance = 35;
         double warehouseParkDistance = 100;
         double turnError = 0.5;
@@ -509,8 +510,8 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     hubDistance = 10.0;
                     turnAngle = 65;
                     TSEreturnDist = 10;
-                    TSEturnAngle = 20;
-                    TSEturnFactor = 1;
+    //                TSEturnAngle = 20;
+    //                TSEturnFactor = 1;
                     parkDistance = 35;
                     warehouseParkDistance = 100;
                     turnError = 0.5;
