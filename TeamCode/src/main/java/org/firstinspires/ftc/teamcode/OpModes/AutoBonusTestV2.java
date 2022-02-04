@@ -556,7 +556,8 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     break;
 
                 case MOVE_TSE:
-                    if ((scoreLevel == 1)||(scoreLevel==3)) {
+                    // test code before sweeper bar added
+                 /*   if ((scoreLevel == 1)||(scoreLevel==3)) {
                         if (scoreLevel == 1) {
                             TSEturnFactor = -1;  // turn left
                         } else if (scoreLevel == 3) {
@@ -565,6 +566,9 @@ public class AutoBonusTestV2 extends LinearOpMode {
                         //turn towards the TSE
                         drive.driveTurn(TSEturnAngle * TSEturnFactor, turnError);
                     }
+                    */
+
+                    // deploy sweeper bar
 
                     //drive forward and push TSE out of the way
                     drive.driveStraight(forwardSpeed, forwardDistance+TSEreturnDist);
@@ -574,15 +578,16 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     drive.driveStraight(-forwardSpeed,TSEreturnDist);
                     sleep(250);
 
+                    // test code before sweeper bar
+                    /*
                     if ((scoreLevel == 1)||(scoreLevel==3)) {
-                        if (scoreLevel == 1) {
-                            TSEturnFactor = 1;  // turn right
-                        } else if (scoreLevel == 3) {
-                            TSEturnFactor = -1;  // turn left
-                        }
-                        //turn towards the TSE
-                        drive.driveTurn(TSEturnAngle * TSEturnFactor, turnError);
+                         //turn back to original orientation
+                        drive.driveTurn(0, turnError);
                     }
+                    */
+
+                    // retract sweeper bar
+
 
                     runState = State.X_SCORE;       // score in the hub
                     break;
