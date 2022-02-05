@@ -25,7 +25,7 @@ public class TurretControlThread implements Runnable{
     double Ci = 0.002;
     double Cd = 0.008;
     double minSpeed = -0.40;
-    double maxSpeed = 0.40;
+    double maxSpeed = 1;
     public double rotationSpeed;
     double derivative = 0;
     public double lastError = 0;

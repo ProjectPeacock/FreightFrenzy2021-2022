@@ -66,6 +66,12 @@ public class HardwareProfile {
     public final int TURRET_MAX_POSITION = 275;
     public final int TURRET_INCREMENTS = 3;
     public final int TURRET_STEP=((275/TURRET_INCREMENTS)/10)*10;
+
+//sweeper bar constants
+    public final double SWEEPER_INIT=0.5;
+    public final double SWEEPER_UP=0.45;
+    public final double SWEEPER_DOWN=0.2;
+
     /*
      * Hardware devices
      */
@@ -90,6 +96,8 @@ public class HardwareProfile {
     public Servo bucketDump = null; //Bucket turning servo
     public CRServo turretServoBlue = null;  // first turret servo
     public CRServo turretServoPink = null;  // second turret servo
+    public Servo sweeperPink = null; //pink sweeper bar servo
+    public Servo sweeperBlue = null; //blue sweeper bar servo
 
     //public distance sensors;
 //    public DistanceSensor sensorDistPink=null;
@@ -178,6 +186,8 @@ public class HardwareProfile {
         bucketDump = hwMap.servo.get("bucketDump");
         turretServoBlue = hwMap.crservo.get("turretServoBlue");
         turretServoPink = hwMap.crservo.get("turretServoPink");
+        sweeperPink=hwMap.servo.get("sweeperPink");
+        sweeperBlue=hwMap.servo.get("sweeperBlue");
 
 
 /*

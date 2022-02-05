@@ -54,6 +54,9 @@ public class TeleOpDuoDriver extends LinearOpMode {
         boolean toggleIntake=false;
         boolean turretToggle=false;
 
+        boolean sweeperToggle=false;
+        boolean sweeperDown=false;
+
         boolean TSEMode=false;
         boolean TSEtoggle=false;
 
@@ -248,6 +251,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
 //end of arm controls
 
 //turret control section (GP2, left stick)
+            /*
             if(!intakeDown){
                 if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
                     turretToggle=true;
@@ -271,6 +275,13 @@ public class TeleOpDuoDriver extends LinearOpMode {
                 turretPosition=-robot.TURRET_MAX_POSITION;
             }
             turretControl.setTargetPosition(turretPosition);
+            */
+            turretPosition=(int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
+            if(!intakeDown&&!TSEMode){
+                turretControl.setTargetPosition((int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION));
+            }else {
+                turretControl.setTargetPosition(0);
+            }
 //end of turret control section
 
 //bucket control section (GP2, Dpad Right)
@@ -282,8 +293,8 @@ public class TeleOpDuoDriver extends LinearOpMode {
                 }else {
                     bucketAngle = 0.25;
                 }
-            }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode){
-                bucketAngle=0;
+            }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode) {
+                bucketAngle = 0;
             }else{
                 if(intakeDown){
                     bucketAngle=0.4;
@@ -291,8 +302,10 @@ public class TeleOpDuoDriver extends LinearOpMode {
                     bucketAngle = 0.6;
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;
-                }else if(bumpCount==3&&!TSEMode){
-                    bucketAngle=0.75;
+                }else if(bumpCount==3&&!TSEMode) {
+                    bucketAngle = 0.75;
+                }else if(bumpCount==1&&TSEMode){
+                    bucketAngle=0.4;
                 }else if(bumpCount==3&&TSEMode){
                     bucketAngle=0.7;
                 }else{
@@ -303,6 +316,26 @@ public class TeleOpDuoDriver extends LinearOpMode {
             }
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
+            if(!gamepad1.y){
+                sweeperToggle=true;
+            }
+            if(gamepad1.y&&sweeperToggle){
+                sweeperToggle=false;
+                sweeperDown=!sweeperDown;
+            }
+
+            if(sweeperDown) {
+                robot.sweeperBlue.setPosition(0);
+                robot.sweeperPink.setPosition(1);
+            }else if(Math.abs(robot.turrentEncoder.getCurrentPosition())>50){
+                robot.sweeperBlue.setPosition(0.25);
+                robot.sweeperPink.setPosition(0.75);
+            }else{
+                robot.sweeperBlue.setPosition(0.45);
+                robot.sweeperPink.setPosition(0.55);
+            }
+//sweeper controls
+
 
             telemetry.addData("TSE MODE: ",TSEMode);
             telemetry.addData("","");
@@ -313,6 +346,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
             telemetry.addData("Left Power: ",left);
             telemetry.addData("Right Power: ",right);
             telemetry.addData("Chainsaw Power: ",chainsawPower);
+            telemetry.addData("Sweeper Down:",sweeperDown);
             telemetry.addData("Happy Driving ",")");
             telemetry.update();
         }   // end of while opModeIsActive()
