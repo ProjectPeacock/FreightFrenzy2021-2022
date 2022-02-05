@@ -48,6 +48,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
+import org.firstinspires.ftc.teamcode.Libs.AutoParams;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
@@ -97,6 +98,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
         Thread mechController = new Thread(mechControl);
         TurretControlThread turretControl = new TurretControlThread(robot, robot.ARM_THREAD_SLEEP);
         Thread turretController = new Thread(turretControl);
+        AutoParams params = new AutoParams();
 
         boolean autoReady = false;
         boolean running = true;
@@ -495,7 +497,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
             telemetry.addData("> scoreLevel = ",scoreLevel);
             telemetry.update();
             sleep(2000);
-        }
+        }   // end if(debugMode)
 
         runtime.reset();
 
@@ -508,6 +510,13 @@ public class AutoBonusTestV2 extends LinearOpMode {
 
             switch(runState){
                 case SET_DISTANCES:
+                    // Setup parameters per settings
+                    params.initParams(blueAlliance, warehouseSide);
+
+                    /*
+                     * The parameters below will be replaced with the values from teh AutoParams class
+                     */
+
                     forwardSpeed = -0.32;
                     forwardDistance = 20.0;
                     hubDistance = 10.0;
@@ -522,25 +531,23 @@ public class AutoBonusTestV2 extends LinearOpMode {
 
                     runState = State.LEVEL_ADJUST;
                     break;
+
                 case LEVEL_ADJUST:
                     if(debugMode) {
                         telemetry.addData("TSE Position = ", scoreLevel);
                         telemetry.addData("Working on LEVEL_SELECT = ", "Now");
                         telemetry.update();
-//                        sleep(500);
                     } else {
                         telemetry.addData("TSE Position = ", scoreLevel);
                         telemetry.update();
                     } // end debugMode
 
                     if (scoreLevel == 1){        // bottom
-                        bucketAngle=-0.75;
+                        bucketAngle = -0.75;
                     } else if (scoreLevel == 2){ // middle
-                        bucketAngle=-0.55;
-                        hubDistance+=1.5;
+                        bucketAngle= -0.55;
                     } else {                     // top
                         bucketAngle = -1.0;
-                        hubDistance+=3;
                     }
 
                     runState = State.SLEEP_DELAY;
@@ -556,6 +563,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     robot.motorChainsaw.setPower(0.2);
                     sleep(startDelay);
                     robot.motorChainsaw.setPower(0);
+
                     runState = State.MOVE_TSE;
                     break;
 
@@ -573,17 +581,16 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     */
 
                     // deploy sweeper bar
-                    robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_DOWN);
-                    robot.sweeperPink.setPosition(robot.PINK_SWEEPER_DOWN);
-
+                    drive.deployTSEBar();
 
                     //drive forward and push TSE out of the way
+//                    drive.driveStraight(params.forwardSpeed, params.tseDistance);
                     drive.driveStraight(forwardSpeed, forwardDistance+TSEreturnDist);
-                    sleep(500);
+                    sleep(250);
 
                     //back up to turn to the shipping hub
-                    drive.driveStraight(0.40,TSEreturnDist);
-//                    drive.driveStraight(-forwardSpeed,TSEreturnDist);
+//                    drive.driveStraight(params.forwardSpeed, params.TSEreturnDist);
+                    drive.driveStraight(-forwardSpeed,TSEreturnDist);
                     sleep(250);
 
                     // test code before sweeper bar
@@ -595,9 +602,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     */
 
                     // retract sweeper bar
-//                    robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
-//                    robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
-
+//                    drive.resetTSEBar();
 
                     runState = State.X_SCORE;       // score in the hub
                     break;
@@ -612,6 +617,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     }
 
                     //turn towards the hub
+//                    drive.driveTime(params.turnAngle, params.turnError);
                     drive.driveTurn(50 * hubFactor, 1);
 //                    drive.driveTurn(turnAngle * hubFactor, 1);
 //                    drive.driveTurn(turnAngle * hubFactor, turnError);
@@ -619,17 +625,21 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     //move arm to scoring positions
                     if(scoreLevel ==1){             //bottom
                         armControl.scoringPos3();
-                        hubDistance = 6;
+                        hubDistance = params.hubDistance1;
+                        bucketAngle = params.bucketAngle1;
                     }else if(scoreLevel ==2){       // middle
                         armControl.scoringPos2();
-                        hubDistance = 6;
+                        hubDistance = params.hubDistance2;
+                        bucketAngle = params.bucketAngle2;
                     }else if(scoreLevel ==3){       // top
                         armControl.scoringPos1();
-                        hubDistance = 5;
+                        hubDistance = params.hubDistance3;
+                        bucketAngle = params.bucketAngle3;
                     }
                     sleep(500);
 
                     //drive towards the shipping hub to score
+//                    drive.driveStraight(params.forwardSpeed, hubDistance);
                     drive.driveStraight(-0.4, hubDistance);
 //                    drive.driveStraight(forwardSpeed, hubDistance);
                     sleep(350);
@@ -646,11 +656,8 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     forwardSpeed = forwardSpeed * -1;
 
                     //set forward speed to full power if in either warehouse fieldSide
-                    if(!blueAlliance && warehouseSide){
+                    if(warehouseSide){
                         //red
-                        forwardSpeed=1;
-                    }else if(blueAlliance && warehouseSide){
-                        //blue
                         forwardSpeed=1;
                     }
 

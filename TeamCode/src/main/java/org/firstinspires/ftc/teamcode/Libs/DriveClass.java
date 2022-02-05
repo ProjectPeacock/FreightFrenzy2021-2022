@@ -290,8 +290,13 @@ public class DriveClass {
     public void resetTSEBar(){
         robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
         robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
-
     }
+
+    public void deployTSEBar(){
+        robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_DOWN);
+        robot.sweeperPink.setPosition(robot.PINK_SWEEPER_DOWN);
+    }
+
     /*
      * Method motorsHalt
      *  -   stops all drive motors
