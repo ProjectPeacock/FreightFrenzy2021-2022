@@ -68,9 +68,11 @@ public class HardwareProfile {
     public final int TURRET_STEP=((275/TURRET_INCREMENTS)/10)*10;
 
 //sweeper bar constants
-    public final double SWEEPER_INIT=0.5;
-    public final double SWEEPER_UP=0.45;
-    public final double SWEEPER_DOWN=0.2;
+//    public final double SWEEPER_INIT    = 0.5;
+    public final double BLUE_SWEEPER_UP      = 0.45;
+    public final double BLUE_SWEEPER_DOWN    = 1;
+    public final double PINK_SWEEPER_UP      = 0.45;
+    public final double PINK_SWEEPER_DOWN    = 1;
 
     /*
      * Hardware devices
