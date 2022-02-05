@@ -44,8 +44,8 @@ public class IntakeRampReset extends LinearOpMode {
             robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO - robot.INTAKE_DEPLOY_BLUE);
             robot.intakeDeployPink.setPosition(robot.PINK_ZERO + robot.INTAKE_DEPLOY_PINK);
             robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
-            robot.sweeperBlue.setPosition(robot.SWEEPER_INIT);
-            robot.sweeperPink.setPosition(robot.SWEEPER_INIT);
+            robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
+            robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
         }   // end of while opModeIsActive()
     }   // end of runOpMode method
 

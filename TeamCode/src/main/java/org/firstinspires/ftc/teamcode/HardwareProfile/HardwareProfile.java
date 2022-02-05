@@ -69,10 +69,10 @@ public class HardwareProfile {
 
 //sweeper bar constants
 //    public final double SWEEPER_INIT    = 0.5;
-    public final double BLUE_SWEEPER_UP      = 0.45;
-    public final double BLUE_SWEEPER_DOWN    = 1;
-    public final double PINK_SWEEPER_UP      = 0.45;
-    public final double PINK_SWEEPER_DOWN    = 1;
+    public final double BLUE_SWEEPER_UP      = 0.8;
+    public final double BLUE_SWEEPER_DOWN    = 0.1;
+    public final double PINK_SWEEPER_UP      = .2;
+    public final double PINK_SWEEPER_DOWN    = .9;
 
     /*
      * Hardware devices

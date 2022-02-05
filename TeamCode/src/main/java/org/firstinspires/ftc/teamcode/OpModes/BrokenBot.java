@@ -60,8 +60,8 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             /*
              * Initialize the drive class
              */
-            robot.sweeperBlue.setPosition(robot.SWEEPER_INIT);
-            robot.sweeperPink.setPosition(robot.SWEEPER_INIT);
+            robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
+            robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
 
             /*
              * Calibrate / initialize the gyro sensor
@@ -81,13 +81,13 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                 telemetry.addData("Turret Angle:",robot.turrentEncoder.getCurrentPosition());
 
                 if (gamepad1.dpad_up) {
-                    robot.sweeperBlue.setPosition(robot.SWEEPER_UP);
-                    robot.sweeperPink.setPosition(robot.SWEEPER_UP);
+                    robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
+                    robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
                     telemetry.addData("sweeper = ", "Up");
                 }
                 if (gamepad1.dpad_down) {
-                    robot.sweeperBlue.setPosition(robot.SWEEPER_DOWN);
-                    robot.sweeperPink.setPosition(robot.SWEEPER_DOWN);
+                    robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_DOWN);
+                    robot.sweeperPink.setPosition(robot.PINK_SWEEPER_DOWN);
                     telemetry.addData("sweeper = ", "Down");
                 }
 
