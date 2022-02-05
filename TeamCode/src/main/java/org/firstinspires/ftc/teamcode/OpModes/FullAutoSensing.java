@@ -36,6 +36,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 //
 // import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -54,7 +55,7 @@ import java.util.List;
 
 
 @Autonomous(name="FullAutoSensing", group="Competition")
-//@Disabled
+@Disabled
 public class FullAutoSensing extends LinearOpMode {
     public static final String TFOD_MODEL_ASSET = "PP_TSEv2.tflite";
     public static final String[] LABELS = {

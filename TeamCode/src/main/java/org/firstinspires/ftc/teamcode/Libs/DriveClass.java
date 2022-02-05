@@ -123,10 +123,10 @@ public class DriveClass {
         double startTime = timeElapsed.time();
         double totalTime;
         double error;
-        double Cp = 0.06;
+        double Cp = 0.02;
         double Ci = 0.0003;
         double Cd = 0.0001;
-        double maxSpeed = 0.5;
+        double maxSpeed = 0.8;
         double rotationSpeed;
         double derivative = 0, deltaError, lastError = 0;
 
@@ -147,9 +147,9 @@ public class DriveClass {
                 rotationSpeed = Range.clip(rotationSpeed, -maxSpeed, maxSpeed);
 
                 if ((rotationSpeed > -0.35) && (rotationSpeed < 0)) {
-                    rotationSpeed = -0.35;
-                } else if ((rotationSpeed < 0.35) && (rotationSpeed > 0)) {
-                    rotationSpeed = 0.35;
+                    rotationSpeed = -0.32;
+                } else if ((rotationSpeed < 0.4) && (rotationSpeed > 0)) {
+                    rotationSpeed = 0.4;
                 }
 
                 r1Power = rotationSpeed;
@@ -287,6 +287,11 @@ public class DriveClass {
     } // close driveStraight method
 
 
+    public void resetTSEBar(){
+        robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
+        robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
+
+    }
     /*
      * Method motorsHalt
      *  -   stops all drive motors

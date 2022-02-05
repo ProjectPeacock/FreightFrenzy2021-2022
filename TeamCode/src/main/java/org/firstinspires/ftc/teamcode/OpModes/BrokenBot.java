@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
+import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
         }   // end of BrokenBotTS constructor
 
         public void runOpMode(){
+            DriveClass drive = new DriveClass(robot, opMode);
             //MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
             //Thread mechController = new Thread(mechControl);
 
@@ -55,6 +57,8 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
              * Setup the initial state of the robot
              */
             robot.init(hardwareMap);
+            ArmControlCLass armControl = new ArmControlCLass(robot, robot.ARM_THREAD_SLEEP);
+
 
 
             /*
@@ -76,10 +80,29 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             waitForStart();
             //mechController.start();
             while(opModeIsActive()) {
+                telemetry.addData("DistanceUnit (CM)", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
                 telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
                 telemetry.addData("Turret Angle:",robot.turrentEncoder.getCurrentPosition());
 
+                if(gamepad2.dpad_left){
+                    drive.driveTurn(-90, 2);
+                }
+                if(gamepad2.dpad_right) {
+                    drive.driveTurn(90, 2);
+                }
+                if (gamepad2.dpad_down){
+                    drive.driveTurn(0, 2);
+                }
+                if(gamepad2.dpad_up){
+                    armControl.scoringPos3();
+                }
+                if(gamepad2.right_bumper){
+                    armControl.scoringPos2();
+                }
+                if(gamepad2.left_bumper){
+                    armControl.scoringPos1();
+                }
                 if (gamepad1.dpad_up) {
                     robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
                     robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
@@ -236,7 +259,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
                  * ##############################################################################
                  * ##############################################################################
                  */
-                telemetry.addData("IMU Angle: ",robot.imu.getAngularOrientation());
+                telemetry.addData("IMU Angle: ",drive.getZAngle());
 
                 telemetry.update();
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Libs;
 
 public class AutoParams {
 
+    public double forwardSpeed = 0;
     public double forwardDistance = 0;
     public double hubDistance1 = 0;
     public double hubDistance2 = 0;
@@ -10,6 +11,16 @@ public class AutoParams {
     public double bucketAngle1= 0;
     public double bucketAngle2= 0;
     public double bucketAngle3= 0;
+
+    public double hubDistance = 10.0;
+    public double turnAngle = 65;
+    //                TSEturnAngle = 20;
+    //                TSEturnFactor = 1;
+    public double parkDistance = 35;
+    public double warehouseParkDistance = 100;
+    public double turnError = 0.75;
+    public double bucketAngle = 0.3;
+
 
     public void AutoParams(String alliance, String side){
         // alliance options are "Red" or "Blue"
@@ -34,7 +45,17 @@ public class AutoParams {
     }   // end method redWarehouse
 
     private void blueCarousel(){
-
+        forwardSpeed = -0.32;
+        forwardDistance = 20.0;
+        hubDistance = 10.0;
+        turnAngle = 65;
+        TSEreturnDist = 16;
+        //                TSEturnAngle = 20;
+        //                TSEturnFactor = 1;
+        parkDistance = 35;
+        warehouseParkDistance = 100;
+        turnError = 0.75;
+        bucketAngle = 0.3;
     }   // end method blueCarousel
 
     private void blueWarehouse() {
