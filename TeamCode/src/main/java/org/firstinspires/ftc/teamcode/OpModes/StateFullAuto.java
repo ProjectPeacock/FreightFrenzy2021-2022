@@ -110,17 +110,9 @@ public class StateFullAuto extends LinearOpMode {
         int hubFactor = 1;
         int scoreLevel = 1;
 
-        double forwardSpeed = -0.32;
-        double forwardDistance = 36.0;
-        double hubDistance = 10.0;
-        double turnAngle = 65;
-        double TSEreturnDist=10;
-        double parkDistance = 35;
-        double warehouseParkDistance = 100;
+        double hubDistance = 0;
         double turnError = 2;
         double bucketAngle = 0.3;
-
-        double goalAdjust = 0;
 
         //red if false, blue if true
         boolean blueAlliance = false;
@@ -133,8 +125,6 @@ public class StateFullAuto extends LinearOpMode {
 
         // warehouse park
         boolean warehousePark = true;
-
-        int turrentPosition = 0;
 
         if(debugMode){
             setupState = State.TEST_CONFIG;           // manually created config for testing only
@@ -169,17 +159,19 @@ public class StateFullAuto extends LinearOpMode {
         robot.init(hardwareMap);
 
         turretController.start();
-        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
-        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
-        robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
-        robot.bucketDump.setPosition(.5);
-        robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
-        robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
-
 
         DriveClass drive = new DriveClass(robot, opMode);
         // arm control
         ArmControlCLass armControl = new ArmControlCLass(robot, robot.ARM_THREAD_SLEEP);
+
+        // initialize servos
+        robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
+        robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
+        robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);
+        robot.bucketDump.setPosition(0.5);
+
+        // reset the sweeper bar to stored position
+        drive.resetTSEBar();
 
         timeElapsed = runtime.time();   // initialize timeElapsed to confirm button press time
 
@@ -187,7 +179,7 @@ public class StateFullAuto extends LinearOpMode {
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
+        // Allow drivers to setup for the game.
 
         while (!autoReady){
 
@@ -625,22 +617,14 @@ public class StateFullAuto extends LinearOpMode {
                     robot.bucketDump.setPosition(0.5);
                     armControl.moveToZero();
 
-                    // reverse direction to drive forward to park
-                    forwardSpeed = forwardSpeed * -1;
-
-                    //set forward speed to full power if in either warehouse fieldSide
-                    if(warehouseSide){
-                        //red
-                        forwardSpeed=1;
-                    }
-
                     // turn towards outside wall
                     drive.driveTurn(90 * hubFactor, turnError);
                     sleep(350);
 
                     // drive towards the outside wall
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 30) {
-                        drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
+                        drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
+                                params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
 
                         telemetry.addData("Headed towards ","outside wall");
@@ -722,7 +706,8 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveTurn(0, params.turnError);
 
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
-                        drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
+                        drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
+                                    params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
                     }   // end of while(robot.frontDistanceSensor
 
@@ -873,7 +858,7 @@ public class StateFullAuto extends LinearOpMode {
 
                     if(runtime.time() > 25) {
                         runState = State.WAREHOUSE_PARK;
-                        warehouseParkDistance = 20;
+                        params.warehouseParkDistance = 20;
                     }
                     break;
 
@@ -903,8 +888,13 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveTurn(90 * params.hubFactor, params.turnError);
                     drive.driveTurn(90 * params.hubFactor, params.turnError);
 
+                    // turn on the chainsaw so that we know the program is still running
                     robot.motorChainsaw.setPower(0.2);
-//                    sleep(7000 - startDelay);     // this timing needs to be based on how much time is left in auto
+
+                    // wait until there is just a few seconds to go park
+                    while(startTime - runtime.time() > 3){
+                        // do nothing
+                    }   // end of while(startTime - runtime.time() > 3)
 
                     drive.driveStraight(-1 * params.hubFactor, params.warehouseParkDistance);
                     robot.motorChainsaw.setPower(0);
@@ -915,17 +905,19 @@ public class StateFullAuto extends LinearOpMode {
                     if(debugMode) {
                         telemetry.addData("Working on Halt = ", "Now");
                         telemetry.update();
-//                        sleep(5000);
-                    }
+                    }   // if(debugMode)
+
                     armControl.resetArm();          // reset the arm to the right initialized position
                     turretControl.resetTurret();    // reset the arm to the right initialized position
-                    // shut down the drive motors
+
+                    // shut down all motors
                     robot.motorChainsaw.setPower(0);
                     robot.motorIntake.setPower(0);
                     drive.motorsHalt();
 
-                    requestOpModeStop();
-                    running = false;
+                    running = false;        // exit the program loop
+                    requestOpModeStop();    // request stoppage of the program
+
                     break;
             }   // end of switch(state)
         }   // end of while(opModeIsActive)
@@ -935,7 +927,6 @@ public class StateFullAuto extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-//        sleep(1000);
 
     } // end of opmode
 
