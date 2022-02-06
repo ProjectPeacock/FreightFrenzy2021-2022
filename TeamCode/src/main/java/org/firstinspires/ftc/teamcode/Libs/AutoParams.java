@@ -41,18 +41,18 @@ public class AutoParams {
     }   // end AutoParams constructor
 
     private void redCarousel(){
-        this.forwardSpeed = -0.32;
-        this.forwardDistance = 20.0;
-        this.hubDistance1 = 5;
+        this.forwardSpeed = -0.32;      // speed at which the robot moves
+        this.tseDistance = 34;          // take off distance from the starting point to move TSE
+        this.TSEreturnDist = 14;        // distance to back up from pushing the TSE out
+        this.turnAngle = 50;
+        this.hubDistance1 = 5;          // distance to
         this.hubDistance2 = 6;
         this.hubDistance3 = 7;
         this.bucketAngle1 = 0.3;
         this.bucketAngle2 = 0.3;
         this.bucketAngle3 = 0.3;
-        this.tseDistance = 34;
-        this.TSEreturnDist = 14;
+        this.forwardDistance = 20.0;
 
-        this.turnAngle = 50;
         this.parkDistance = 35;
         this.warehouseParkDistance = 100;
         this.turnError = 2;
