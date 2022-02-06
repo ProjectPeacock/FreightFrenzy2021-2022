@@ -112,8 +112,30 @@ public class DriveClass {
 
 
     // distance will power side with highest power
-    public void driveArcTurn(double powerLeft, double powerRight, double heading, double distance) {
+    public void driveArcTurn(double powerLeft, double powerRight, double time) {
+        ElapsedTime runTime = new ElapsedTime();
+        double currentTime = runTime.time();
 
+        while (((runTime.time() - currentTime) < time) && opMode.opModeIsActive()){
+
+            /*
+             * Limit that value of the drive motors so that the power does not exceed 100%
+             */
+            r1Power = Range.clip(powerRight, -1,1);
+            l1Power = Range.clip(powerLeft, -1,1);
+            r2Power = Range.clip(powerRight, -1,1);
+            l2Power = Range.clip(powerLeft, -1,1);
+
+            /*
+             * Apply power to the drive wheels
+             */
+            setDrivePower(r1Power, r2Power, l1Power, r2Power);
+
+            opMode.idle();
+
+        }   // end of while loop
+
+        motorsHalt();
     }
 
     public void driveTurn(double targetAngle, double errorFactor) {
@@ -184,15 +206,11 @@ public class DriveClass {
             }   // end of while Math.abs(error)
             motorsHalt();
 
+            opMode.sleep(10);   // take 10 ms to allow gyro to settle
             // Perform a final calc on the error to confirm that the robot didn't overshoot the
             // target position after the last measurement was taken.
-//            opMode.sleep(5);
-//            if (targetAngle > 90 || targetAngle < -90) {
-//                error = gyro360(targetAngle) - targetAngle;
-//            } else {
-                error = getZAngle() - targetAngle;
-//            }
-        }
+            error = getZAngle() - targetAngle;
+        }       // end of outside while loop
 
         // shut off the drive motors
         motorsHalt();
@@ -205,41 +223,10 @@ public class DriveClass {
     }   //end of the PIDRotate Method
 
     /**
-     * Method gyro360
-     * - Causes the Gyro to behave in 360 mode instead of 180 degree mode
-     *
-     * @param targetAngle - Reference angle for the gyro sensor
-     */
-    private double gyro360(double targetAngle) {
-        double currentZ = getZAngle();
-        double rotationalAngle;
-
-        if (targetAngle > 0) {
-            if ((currentZ >= 0) && (currentZ <= 180)) {
-                rotationalAngle = currentZ;
-            } else {
-                rotationalAngle = 180 + (180 + currentZ);
-            }// end if(currentZ <=0) - else
-        } else {
-            if ((currentZ <= 0) && (currentZ >= -180)) {
-                rotationalAngle = currentZ;
-            } else {
-                rotationalAngle = -180 - (180 - currentZ);
-            }   // end if(currentZ <=0) - else
-        }   // end if(targetAngle >0)-else
-
-        return rotationalAngle;
-    }   // end method gyro360
-
-    /**
      * Method getZAngle()
      *  -   This method returns the gyro position of the robot.
      * @return zAngle
      */
-
-    public void getStartAngle(){
-        startZAngle=robot.imu.getAngularOrientation().firstAngle;
-    }
     public double getZAngle(){
         return (-robot.imu.getAngularOrientation().firstAngle);
     }   // close getZAngle method
@@ -308,5 +295,4 @@ public class DriveClass {
         robot.motorR2.setPower(0);
     }   // end of motorsHalt method
 
-
-}
+}       // end of DriveClass class

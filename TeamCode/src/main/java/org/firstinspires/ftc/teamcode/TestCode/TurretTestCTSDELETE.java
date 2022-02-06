@@ -3,7 +3,7 @@
     IMPORTANT NOTE: This program is strictly to be used to refine the turret control library and
     for general turret thread testing.
  */
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.TestCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

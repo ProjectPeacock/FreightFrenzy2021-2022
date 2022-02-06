@@ -31,7 +31,7 @@
 12/07/21 added  back code to drive to goal, changed bucket dump setting,
          added SCORING_POSITION state to initialization. use dpad to set level
 */
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.TestCode;
 
 //
 // import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
