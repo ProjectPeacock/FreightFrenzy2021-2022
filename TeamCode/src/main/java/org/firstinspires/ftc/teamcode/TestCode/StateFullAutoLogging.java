@@ -393,7 +393,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                     blueAlliance = false;        // true for blue, false for red
                     startDelay = 0;          // put start delay in ms
                     warehouseSide = false;       // true for warehouse, false for carousel
-                    warehousePark = true;   // true for warehouse, false for storage
+                    warehousePark = false;   // true for warehouse, false for storage
                     hubFactor = 1;   // red carousel
 
                     if(blueAlliance){
