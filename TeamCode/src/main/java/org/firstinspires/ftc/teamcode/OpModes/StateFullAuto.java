@@ -937,6 +937,7 @@ public class StateFullAuto extends LinearOpMode {
             }   // end of switch(state)
         }   // end of while(opModeIsActive)
 
+        dlStop();               // stop the data logger
         turretControl.stop();
         requestOpModeStop();
 
