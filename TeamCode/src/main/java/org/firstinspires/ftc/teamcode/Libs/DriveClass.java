@@ -202,7 +202,7 @@ public class DriveClass {
 //                } else {
                     error = getZAngle() - targetAngle;
 //                }
-
+                opMode.idle();
             }   // end of while Math.abs(error)
             motorsHalt();
 
@@ -210,6 +210,7 @@ public class DriveClass {
             // Perform a final calc on the error to confirm that the robot didn't overshoot the
             // target position after the last measurement was taken.
             error = getZAngle() - targetAngle;
+            opMode.idle();
         }       // end of outside while loop
 
         // shut off the drive motors

@@ -48,6 +48,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.AutoParams;
+import org.firstinspires.ftc.teamcode.Libs.DataLogger;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
@@ -63,6 +64,7 @@ public class StateFullAuto extends LinearOpMode {
             "TSEv3"
     };
 
+    private DataLogger Dl;
     private static final String VUFORIA_KEY =
             "ARLYRsf/////AAABmWpsWSsfQU1zkK0B5+iOOr0tULkAWVuhNuM3EbMfgb1+zbcOEG8fRRe3G+iLqL1/iAlTYqqoLetWeulG8hkCOOtkMyHwjS/Ir8/2vUVgC36M/wb9a7Ni2zuSrlEanb9jPVsNqq+71/uzTpS3TNvJI8WeICQNPAq3qMwmfqnCphVlC6h2ZSLsAR3wcdzknFmtpApdOp1jHJvITPeD/CMdAXjZDN0XJwJNQJ6qtaYSLGC23vJdQ2b1aeqnJauOvswapsG7BlmR7m891VN92rNEcOX7WmMT4L0JOM0yKKhPfF/aSROwIdNtSOpQW4qEKVjw3aMU1QDZ0jj5SnRV8RPO0hGiHtXy6QJcZsSj/Y6q5nyf";
 
@@ -77,6 +79,20 @@ public class StateFullAuto extends LinearOpMode {
      * Detection engine.
      */
     private TFObjectDetector tfod;
+    private ElapsedTime runtime = new ElapsedTime();
+
+    private boolean blueAlliance = false;       //red if false, blue if true
+
+    /* Declare OpMode members. */
+    private HardwareProfile robot   = new HardwareProfile();
+    private LinearOpMode opMode = this;
+    private State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
+    private State runState = State.SET_DISTANCES;
+    private DriveClass drive = new DriveClass(robot, opMode);
+    boolean debugMode = true;
+
+    /* Declare DataLogger variables */
+    private String action = "";
 
     @Override
     public void runOpMode() {
@@ -84,13 +100,6 @@ public class StateFullAuto extends LinearOpMode {
         telemetry.addData("Robot State = ", "NOT READY");
         telemetry.update();
 
-        /* Declare OpMode members. */
-        HardwareProfile robot   = new HardwareProfile();
-        LinearOpMode opMode = this;
-        ElapsedTime   runtime = new ElapsedTime();
-        State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
-        State runState = State.SET_DISTANCES;
-        boolean debugMode = true;
 
         // do we need these threads in an autonomous opmode?
         MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
@@ -98,6 +107,7 @@ public class StateFullAuto extends LinearOpMode {
         TurretControlThread turretControl = new TurretControlThread(robot, robot.ARM_THREAD_SLEEP);
         Thread turretController = new Thread(turretControl);
         AutoParams params = new AutoParams();
+
 
         boolean autoReady = false;
         boolean running = true;
@@ -114,9 +124,6 @@ public class StateFullAuto extends LinearOpMode {
         double turnError = 2;
         double bucketAngle = 0.3;
 
-        //red if false, blue if true
-        boolean blueAlliance = false;
-
         //No bonus elements if false, bonus elements if true
         boolean bonusElements = false;
 
@@ -129,6 +136,7 @@ public class StateFullAuto extends LinearOpMode {
         if(debugMode){
             setupState = State.TEST_CONFIG;           // manually created config for testing only
             scoreLevel = 2;
+            createDl();
         }
 
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -160,7 +168,6 @@ public class StateFullAuto extends LinearOpMode {
 
         turretController.start();
 
-        DriveClass drive = new DriveClass(robot, opMode);
         // arm control
         ArmControlCLass armControl = new ArmControlCLass(robot, robot.ARM_THREAD_SLEEP);
 
@@ -218,6 +225,7 @@ public class StateFullAuto extends LinearOpMode {
                     telemetry.addData("Press A to continue", "");
                     telemetry.addData("Press X to abort program ","");
                     telemetry.update();
+                    logData();
 
                     if(gamepad1.dpad_up && (runtime.time()-timeElapsed) >0.3) {
                         if(startDelay < 10){       // limit the max delay to 10 seconds
@@ -480,6 +488,9 @@ public class StateFullAuto extends LinearOpMode {
         if(debugMode){
             runState = State.SET_DISTANCES;
 
+            action = "Initialized Settings";
+            logData();      // Write data to the data logger
+
             telemetry.addData("> ","DEBUG MODE ENABLED ");
             telemetry.addData("> runState = ",runState);
             telemetry.addData("> scoreLevel = ",scoreLevel);
@@ -496,6 +507,10 @@ public class StateFullAuto extends LinearOpMode {
                 case SET_DISTANCES:
                     // Setup parameters per settings
                     params.initParams(blueAlliance, warehouseSide);
+
+                    if (debugMode) {
+                        logData();      // Write data to the data logger
+                    }
 
                     runState = State.LEVEL_ADJUST;
                     break;
@@ -971,5 +986,57 @@ public class StateFullAuto extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
+
+    /**
+     * Setup the dataLogger
+     * The dataLogger takes a set of fields defined here and sets up the file on the Android device
+     * to save them to.  We then log data later throughout the class.
+     */
+    public void createDl() {
+
+        Dl = new DataLogger("AutoMecanumSimpleTest" + runtime.time());
+        Dl.addField("runTime:       ");
+        Dl.addField("Alliance:      ");
+        Dl.addField("State:         ");
+        Dl.addField("Action:        ");
+        Dl.addField("Gyro value:    ");
+        Dl.addField("Dist. Sensor:  ");
+        Dl.addField("L1 Encoder:    ");
+        Dl.addField("L2 Encoder:    ");
+        Dl.addField("R1 Encoder:    ");
+        Dl.addField("R2 Encoder:    ");
+        Dl.newLine();
+    }
+
+    /**
+     * Log data to the file on the phone.
+     */
+    public void logData() {
+
+        Dl.addField(String.valueOf(runtime.time()));
+        if(blueAlliance) {
+            Dl.addField("Blue Alliance");
+        } else {
+            Dl.addField("Red Alliance");
+        }
+        Dl.addField(String.valueOf(runState));
+        Dl.addField(String.valueOf(action));
+        Dl.addField(String.valueOf(drive.getZAngle()));
+        Dl.addField(String.valueOf(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)));
+        Dl.addField(String.valueOf(robot.motorL1.getCurrentPosition()));
+        Dl.addField(String.valueOf(robot.motorL2.getCurrentPosition()));
+        Dl.addField(String.valueOf(robot.motorR1.getCurrentPosition()));
+        Dl.addField(String.valueOf(robot.motorR2.getCurrentPosition()));
+        Dl.newLine();
+    }
+
+    /**
+     * Stop the DataLogger
+     */
+    private void dlStop() {
+        Dl.closeDataLogger();
+
+    }
+
 
 }
