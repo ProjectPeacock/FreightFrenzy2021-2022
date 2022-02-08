@@ -36,9 +36,16 @@ public class ArmControlCLass {
         this.sleepTime=threadSleepDelay;
     }
 
+//initialize arms method
+    public void initArms(){
+        angle1=350;
+        angle2=-700;
+        setArmPosition();
+    }
+
 //deploy intake method
     public void intakeOn(){
-
+/*
         localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
         localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
         localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
@@ -52,6 +59,25 @@ public class ArmControlCLass {
             localRobot.motorIntake.setPower(localRobot.INTAKE_POW);
         }
         localRobot.motorArmAngle1.setPower(arm1Power);
+        localRobot.motorArmAngle1.setTargetPosition(angle1);
+        localRobot.motorArmAngle2.setTargetPosition(angle2);
+
+ */
+        localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
+        localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
+        localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
+        if(localRobot.motorArmAngle1.getCurrentPosition()<0) {
+            angle1 = 0;
+        }
+        if(localRobot.motorArmAngle2.getCurrentPosition()>1000){
+            angle2=75;
+        }
+        if(localRobot.motorArmAngle2.getCurrentPosition()>=65&&localRobot.motorArmAngle2.getCurrentPosition()<100){
+            angle1=localRobot.ARM_1_INTAKE;
+            if(localRobot.motorArmAngle1.getCurrentPosition()>300){
+                angle2=localRobot.ARM_2_INTAKE;
+            }
+        }
         localRobot.motorArmAngle1.setTargetPosition(angle1);
         localRobot.motorArmAngle2.setTargetPosition(angle2);
     }       // end of intakeOn()
@@ -68,10 +94,12 @@ public class ArmControlCLass {
 //retract intake method
     public void intakeOff(){
         angle1=0;
-        angle2=0;
         localRobot.motorArmAngle1.setPower(arm1Power);
-        localRobot.motorArmAngle2.setPower(arm2Power);
         localRobot.motorArmAngle1.setTargetPosition(angle1);
+        while(localRobot.motorArmAngle1.getCurrentPosition()<500) {
+        }
+        angle2=75;
+        localRobot.motorArmAngle2.setPower(arm2Power);
         localRobot.motorArmAngle2.setTargetPosition(angle2);
         //waits for arm 1 to move up before moving intake to prevent collisions
         while(localRobot.motorArmAngle1.getCurrentPosition()<750) {

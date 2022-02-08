@@ -172,6 +172,7 @@ public class StateFullAuto extends LinearOpMode {
         ArmControlCLass armControl = new ArmControlCLass(robot, robot.ARM_THREAD_SLEEP);
 
         // initialize servos
+        armControl.initArms();
         robot.intakeDeployBlue.setPosition(robot.BLUE_ZERO);
         robot.intakeDeployPink.setPosition(robot.PINK_ZERO);
         robot.intakeTilt.setPosition(robot.INTAKE_TILT_INPUT);

@@ -281,6 +281,8 @@ public class TeleOpSingleDriver extends LinearOpMode {
 
             telemetry.addData("TSE MODE: ",TSEMode);
             telemetry.addData("","");
+            telemetry.addData("Arm angle 1:",robot.motorArmAngle1.getCurrentPosition());
+            telemetry.addData("Arm angle 2:",robot.motorArmAngle2.getCurrentPosition());
             telemetry.addData("Last Intake Servo Pos",robot.bucketDump.getPosition());
             telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Left Power: ",left);

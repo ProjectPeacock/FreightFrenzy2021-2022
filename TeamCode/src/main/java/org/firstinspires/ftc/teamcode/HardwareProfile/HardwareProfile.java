@@ -59,8 +59,8 @@ public class HardwareProfile {
 
 //arm control constants
     //arm intake positions
-    public final int ARM_1_INTAKE=1200;
-    public final int ARM_2_INTAKE=0;
+    public final int ARM_1_INTAKE=1050;
+    public final int ARM_2_INTAKE=-100;
 
 //turret constants
     public final int TURRET_MAX_POSITION = 275;
