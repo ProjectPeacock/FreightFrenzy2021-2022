@@ -139,7 +139,7 @@ public class TeleOpSingleDriver extends LinearOpMode {
                         mechControl.intakeOn(isDeployed);
                     }
                 } else {
-                    mechControl.intakeOff(isDeployed);
+                    mechControl.intakeOff(isDeployed, TSEMode);
                 }
             }else{
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
@@ -241,7 +241,7 @@ public class TeleOpSingleDriver extends LinearOpMode {
             if(gamepad1.dpad_left){
                 bumpCount=0;
                 isDeployed=false;
-                mechControl.moveToZero();
+                mechControl.moveToZero(TSEMode);
             }
 //end of arm controls
 
@@ -277,6 +277,13 @@ public class TeleOpSingleDriver extends LinearOpMode {
             }
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
+
+//sweeper controls
+            robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
+            robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
+//end of sweeper controls
+
+//keep turret zeroed
             turretControl.setTargetPosition(0);
 
             telemetry.addData("TSE MODE: ",TSEMode);

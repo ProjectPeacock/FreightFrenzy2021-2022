@@ -140,7 +140,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                         mechControl.intakeOn(isDeployed);
                     }
                 } else {
-                    mechControl.intakeOff(isDeployed);
+                    mechControl.intakeOff(isDeployed,TSEMode);
                 }
             } else {
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
@@ -242,37 +242,12 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             if (gamepad2.dpad_left) {
                 bumpCount = 0;
                 isDeployed = false;
-                mechControl.moveToZero();
+                mechControl.moveToZero(TSEMode);
                 turretPreset=0;
             }
 //end of arm controls
 
 //turret control section (GP2, left stick)
-            /*
-            if(!intakeDown){
-                if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
-                    turretToggle=true;
-                }
-                if(turretToggle&&gamepad2.left_bumper&&turretPreset<robot.TURRET_INCREMENTS){
-                    turretToggle=false;
-                    turretPreset++;
-                }else if(turretToggle&&gamepad2.right_bumper&&turretPreset>-robot.TURRET_INCREMENTS){
-                    turretToggle=false;
-                    turretPreset--;
-                }
-                if(gamepad2.right_stick_button){
-                    turretPreset=0;
-                }
-            }
-            turretPosition=turretPreset*robot.TURRET_STEP;
-            //apply angle to turret PID
-            if(turretPosition>robot.TURRET_MAX_POSITION){
-                turretPosition=robot.TURRET_MAX_POSITION;
-            }else if(turretPosition<-robot.TURRET_MAX_POSITION){
-                turretPosition=-robot.TURRET_MAX_POSITION;
-            }
-            turretControl.setTargetPosition(turretPosition);
-            */
             turretPosition=(int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
             if(!intakeDown&&!TSEMode){
                 turretControl.setTargetPosition((int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION));

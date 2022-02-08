@@ -136,7 +136,7 @@ public class TurretTestCTSDELETE extends LinearOpMode {
             if (gamepad2.dpad_left) {
                 bumpCount = 0;
                 isDeployed = false;
-                mechControl.moveToZero();
+                mechControl.moveToZero(false);
                 turretPreset=0;
             }
 //end of arm controls

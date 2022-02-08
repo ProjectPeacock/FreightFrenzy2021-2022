@@ -75,7 +75,7 @@ public class ArmTesting extends LinearOpMode {
             }else if(gamepad1.b){
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
             }else{
-                armControl.intakeOff(isDeployed);
+                armControl.intakeOff(isDeployed,false);
             }
 
 
@@ -162,7 +162,7 @@ public class ArmTesting extends LinearOpMode {
             if(gamepad1.dpad_down){
                 bumpCount=0;
                 isDeployed=false;
-                armControl.moveToZero();
+                armControl.moveToZero(false);
             }else{
 
             }

@@ -121,7 +121,7 @@ public class TeleOpThreads extends LinearOpMode {
                 if (intakeDown) {
                     mechControl.intakeOn(isDeployed);
                 } else {
-                    mechControl.intakeOff(isDeployed);
+                    mechControl.intakeOff(isDeployed,false);
                 }
             }else{
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
@@ -211,7 +211,7 @@ public class TeleOpThreads extends LinearOpMode {
             if(gamepad1.dpad_down){
                 bumpCount=0;
                 isDeployed=false;
-                mechControl.moveToZero();
+                mechControl.moveToZero(false);
             }else{
 
             }

@@ -40,10 +40,15 @@ public class MechControlLibrary implements Runnable{
             angle1 = 0;
         }
         if(localRobot.motorArmAngle2.getCurrentPosition()>1000){
-            angle2=75;
+            angle2=localRobot.ARM_2_RESTING_INTAKE;
         }
-        if(localRobot.motorArmAngle2.getCurrentPosition()>=65&&localRobot.motorArmAngle2.getCurrentPosition()<100){
+        if(localRobot.motorArmAngle2.getCurrentPosition()>=65&&localRobot.motorArmAngle2.getCurrentPosition()<200){
             angle1=localRobot.ARM_1_INTAKE;
+            if(localRobot.motorArmAngle1.getCurrentPosition()<750){
+                arm1Power=0.75;
+            }else{
+                arm1Power=1;
+            }
             if(localRobot.motorArmAngle1.getCurrentPosition()>300){
                 angle2=localRobot.ARM_2_INTAKE;
             }
@@ -60,11 +65,15 @@ public class MechControlLibrary implements Runnable{
     }
 
 //retract intake method
-    public void intakeOff(boolean deployed){
+    public void intakeOff(boolean deployed, boolean TSEMode){
         if(!deployed){
             angle1=0;
             if(localRobot.motorArmAngle1.getCurrentPosition()<500) {
-                angle2 = 75;
+                if(TSEMode) {
+                    angle2 = localRobot.ARM_2_RESTING_TSE;
+                }else{
+                    angle2=localRobot.ARM_2_RESTING_INTAKE;
+                }
             }
         }
 
@@ -119,8 +128,10 @@ public class MechControlLibrary implements Runnable{
     public void TSEDown(){
         arm1Power=0.5;
         arm2Power=0.5;
-        angle1=-1020;
-        angle2=0;
+        angle2=localRobot.ARM_2_RESTING_TSE;
+        if(localRobot.motorArmAngle2.getCurrentPosition()<50) {
+            angle1 = -1020;
+        }
     }
     public  void TSEresting(){
         angle1=-133;
@@ -144,9 +155,13 @@ public class MechControlLibrary implements Runnable{
 
 //soft arm reset method (returns to original zero)
     //moves arm to 0 (over the top)
-    public void moveToZero(){
+    public void moveToZero(boolean TSEMode){
         angle1=0;
-        angle2=0;
+        if(TSEMode) {
+            angle2 = localRobot.ARM_2_RESTING_TSE;
+        }else{
+            angle2 = localRobot.ARM_1_INTAKE;
+        }
     }
 //end of soft arm reset method
 //arm 2 position manual increment methods

@@ -144,7 +144,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
                         telemetry.addData("Arm ","Down");
                     }
                 } else {
-                    mechControl.intakeOff(isDeployed);
+                    mechControl.intakeOff(isDeployed,TSEMode);
                 }
             } else {
                 robot.motorIntake.setPower(robot.INTAKE_REVERSE_POW);
@@ -245,13 +245,13 @@ public class TeleOpDuoDriver extends LinearOpMode {
             if (gamepad2.dpad_left) {
                 bumpCount = 0;
                 isDeployed = false;
-                mechControl.moveToZero();
+                mechControl.moveToZero(TSEMode);
                 turretPreset=0;
             }
 //end of arm controls
 
 //turret control section (GP2, left stick)
-            /*
+              /*
             if(!intakeDown){
                 if(!gamepad2.left_bumper&&!gamepad2.right_bumper){
                     turretToggle=true;
@@ -325,14 +325,14 @@ public class TeleOpDuoDriver extends LinearOpMode {
             }
 
             if(sweeperDown) {
-                robot.sweeperBlue.setPosition(0);
-                robot.sweeperPink.setPosition(1);
+                robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_DOWN);
+                robot.sweeperPink.setPosition(robot.PINK_SWEEPER_DOWN);
             }else if(Math.abs(robot.turrentEncoder.getCurrentPosition())>50){
-                robot.sweeperBlue.setPosition(0.25);
-                robot.sweeperPink.setPosition(0.75);
+                robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP-0.2);
+                robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP+0.2);
             }else{
-                robot.sweeperBlue.setPosition(0.45);
-                robot.sweeperPink.setPosition(0.55);
+                robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
+                robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
             }
 //sweeper controls
 
