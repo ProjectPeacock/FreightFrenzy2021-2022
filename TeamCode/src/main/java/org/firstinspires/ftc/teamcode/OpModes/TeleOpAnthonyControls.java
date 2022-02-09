@@ -248,7 +248,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
 //end of arm controls
 
 //turret control section (GP2, left stick)
-            turretPosition=(int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
+            turretPosition=(int)(-gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
             if(!intakeDown&&!TSEMode){
                 turretControl.setTargetPosition((int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION));
             }else {
@@ -256,8 +256,8 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             }
 //end of turret control section
 
-//bucket control section (GP2, Dpad Right)
-            if(gamepad2.dpad_right&&!TSEMode){
+//bucket control section (GP2, B)
+            if(gamepad2.b&&!TSEMode){
                 if(bumpCount==1){
                     bucketAngle=0.15;
                 }else if(bumpCount==2){
@@ -265,7 +265,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 }else {
                     bucketAngle = 0.25;
                 }
-            }else if(gamepad2.dpad_right&&bumpCount==3&&TSEMode) {
+            }else if(gamepad2.b&&bumpCount==3&&TSEMode) {
                 bucketAngle = 0;
             }else{
                 if(intakeDown){
