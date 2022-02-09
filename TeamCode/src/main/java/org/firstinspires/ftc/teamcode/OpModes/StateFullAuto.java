@@ -582,7 +582,7 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(250);
 
                     //Return to starting position
-                    drive.driveArcTurn(-params.powerLeft, -params.powerRight, params.arcTime/4);
+                    drive.driveStraight(params.forwardSpeed, 10);
                     sleep(250);
 
                     // realign the robot to face forward
@@ -700,6 +700,7 @@ public class StateFullAuto extends LinearOpMode {
                     //sleep to wait for carousel to drop duck to the floor
                     sleep(2500);
 
+                    // 
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 35) {
                         drive.setDrivePower(-params.forwardSpeed, -params.forwardSpeed,
                                 -params.forwardSpeed, -params.forwardSpeed);
