@@ -44,7 +44,7 @@ public class AutoParams {
     }   // end AutoParams constructor
 
     private void redCarousel(){
-        this.forwardSpeed = -0.32;      // speed at which the robot moves
+        this.forwardSpeed = 0.32;      // speed at which the robot moves
         this.tseDistance = 34;          // take off distance from the starting point to move TSE
         this.tseReturnDist = 14;        // distance to back up from pushing the TSE out
         this.turnAngle = 50;            // angle to turn towards the shipping hub
@@ -58,9 +58,9 @@ public class AutoParams {
         this.warehouseParkDistance = 100;   // distance to travel to get in warehouse parking location
         this.turnError = 2;             // error to use when turning
         this.hubFactor = 1;             // sets direction to rotate depending on where the hub is
-        this.powerLeft = -0.4;          // power to put on the left side of the robot for arc turn
-        this.powerRight = -0.3;         // power to put on the right side of the robot for arc turn
-        this.arcTime = 1;               // length of time for the arc turn
+        this.powerLeft = -0.7;          // power to put on the left side of the robot for arc turn
+        this.powerRight = -0.2;         // power to put on the right side of the robot for arc turn
+        this.arcTime = 1.7;               // length of time for the arc turn
 
         this.forwardDistance = 20.0;    //  if using the arcTurn to move a TSE out of the way,
                                         // use forward distance to position to score in the hub

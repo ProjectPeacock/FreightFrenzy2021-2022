@@ -578,7 +578,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                     break;
 
                 case X_SCORE:
-                    turnError = 2;
+//                    turnError = 2;
 
                     if(debugMode) {
                         telemetry.addData("Working on X_Score = ", "Now");
@@ -909,7 +909,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                         telemetry.update();
                     }   // if(debugMode)
 
-                    armControl.resetArm();          // reset the arm to the right initialized position
+                    armControl.moveToZero();          // reset the arm to the right initialized position
                     turretControl.resetTurret();    // reset the arm to the right initialized position
 
                     // shut down all motors

@@ -503,7 +503,8 @@ public class StateFullAuto extends LinearOpMode {
         startTime = runtime.time() + startDelay;
 
         while (opModeIsActive() && (running)) {
-
+            robot.motorArmAngle1.setTargetPosition(0);
+            robot.motorArmAngle2.setTargetPosition(0);
             switch(runState){
                 case SET_DISTANCES:
                     // Setup parameters per settings
@@ -559,13 +560,14 @@ public class StateFullAuto extends LinearOpMode {
                     break;
 
                 case MOVE_TSE_STRAIGHT:
+
                     // if the TSE is not in front of the robot, arc turn to move it out of the way
                     //drive forward and push TSE out of the way
                     drive.driveStraight(params.forwardSpeed, params.tseDistance);
                     sleep(250);
 
                     //back up to turn to the shipping hub
-                    drive.driveStraight(params.forwardSpeed, params.tseReturnDist);
+                    drive.driveStraight(-params.forwardSpeed, params.tseReturnDist);
                     sleep(250);
 
                     runState = State.X_SCORE;       // score in the hub
@@ -575,18 +577,20 @@ public class StateFullAuto extends LinearOpMode {
 
                     // if the TSE is not in front of the robot, arc turn to move it out of the way
                     //drive forward and push TSE out of the way
+
                     drive.driveArcTurn(params.powerLeft, params.powerRight, params.arcTime);
                     sleep(250);
 
                     //Return to starting position
-                    drive.driveArcTurn(-params.powerLeft, -params.powerRight, params.arcTime);
+                    drive.driveArcTurn(-params.powerLeft, -params.powerRight, params.arcTime/4);
                     sleep(250);
 
                     // realign the robot to face forward
                     drive.driveTurn(0, params.turnError);
 
                     // drive forward to get to scoring position
-                    drive.driveStraight(params.forwardSpeed, params.forwardDistance);
+                    drive.driveStraight(params.forwardSpeed, -7);
+                    drive.driveStraight(params.forwardSpeed, -params.forwardDistance);
 
                     runState = State.X_SCORE;       // score in the hub
                     break;
@@ -600,7 +604,7 @@ public class StateFullAuto extends LinearOpMode {
                     }   // end if(debugMode)
 
                     //turn towards the hub
-                    drive.driveTime(params.turnAngle, params.turnError);
+                    drive.driveTurn(params.turnAngle, params.turnError);
 
                     //move arm to scoring positions
                     if(scoreLevel ==1){             //bottom
@@ -619,7 +623,7 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(500);
 
                     //drive towards the shipping hub to score
-                    drive.driveStraight(params.forwardSpeed, hubDistance);
+                    drive.driveStraight(-params.forwardSpeed, hubDistance);
                     sleep(350);
 
                     //dump bucket
@@ -627,7 +631,7 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(500);     // allow time to dump the cube
 
                     // drive away from the alliance hub
-                    drive.driveStraight(-params.forwardSpeed, hubDistance);
+                    drive.driveStraight(params.forwardSpeed, hubDistance+5);
 
                     //reset arms
                     robot.bucketDump.setPosition(0.5);
@@ -637,8 +641,8 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveTurn(90 * hubFactor, turnError);
                     sleep(350);
 
-                    // drive towards the outside wall
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 30) {
+                    // drive towards the outside wall using distance sensor
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 35) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -683,6 +687,7 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(350);
 
                     //drive forward until distance sensor is tripped
+                    // drive towards the carousel
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 30) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
@@ -695,7 +700,17 @@ public class StateFullAuto extends LinearOpMode {
                     //sleep to wait for carousel to drop duck to the floor
                     sleep(2500);
 
-                    drive.driveStraight(-params.forwardSpeed, 4);
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 35) {
+                        drive.setDrivePower(-params.forwardSpeed, -params.forwardSpeed,
+                                -params.forwardSpeed, -params.forwardSpeed);
+                        robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
+
+                        telemetry.addData("Headed towards ","outside wall");
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.update();
+                    }   // end of while(robot.frontDistanceSensor
+
+//                    drive.driveStraight(-params.forwardSpeed, 4);
 
                     //reposition to face carousel again
                     drive.driveTurn(0,params.turnError);
@@ -923,7 +938,7 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.update();
                     }   // if(debugMode)
 
-                    armControl.resetArm();          // reset the arm to the right initialized position
+                    armControl.moveToZero();          // reset the arm to the right initialized position
                     turretControl.resetTurret();    // reset the arm to the right initialized position
 
                     // shut down all motors

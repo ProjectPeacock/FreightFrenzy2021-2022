@@ -38,8 +38,8 @@ public class ArmControlCLass {
 
 //initialize arms method
     public void initArms(){
-        angle1=350;
-        angle2=-700;
+        angle1 = 810;
+        angle2=-364;
         setArmPosition();
     }
 
@@ -125,7 +125,7 @@ public class ArmControlCLass {
 //move to scoring positions methods
     //high platform scoring (default)
     public void scoringPos1(){
-        angle1=-549;
+        angle1=-555;
         if(localRobot.motorArmAngle1.getCurrentPosition() < 750){
             angle2=1755;
         }
@@ -135,20 +135,20 @@ public class ArmControlCLass {
     public void scoringPos2(){
 //        angle1=-230;
 //        angle2=2411;
-        angle1=-700;
-        angle2=-445;
+        angle1=-410;
+        angle2=-364;
         setArmPosition();
     }
     //low platform & shared shipping hub scoring
     public void scoringPos3(){
-        angle1=-938;
+        angle1=-717;
         angle2=-100;
         setArmPosition();
     }
 //end of scoring positions methods
 
 //hard arm reset method (DO NOT USE IF POSSIBLE)
-    public void resetArm(){
+    private void resetArm(){
         angle1=0;
         angle2=2786; //moves arm 2 to one full rotation
         while(localRobot.motorArmAngle2.getCurrentPosition()!=angle2){
