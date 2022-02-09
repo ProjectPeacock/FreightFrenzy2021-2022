@@ -567,7 +567,7 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(250);
 
                     //back up to turn to the shipping hub
-                    drive.driveStraight(-params.forwardSpeed, params.tseReturnDist);
+                    drive.driveStraight(params.reverseSpeed, params.tseReturnDist);
                     sleep(250);
 
                     runState = State.X_SCORE;       // score in the hub
@@ -581,16 +581,20 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveArcTurn(params.powerLeft, params.powerRight, params.arcTime);
                     sleep(250);
 
-                    //Return to starting position
-                    drive.driveStraight(params.forwardSpeed, 10);
+                    //Drive into position to approach the hub
+                    drive.driveStraight(params.forwardSpeed, 17);
                     sleep(250);
 
                     // realign the robot to face forward
+                    /*
+                     ***** This code should be unnecessary for this portion
                     drive.driveTurn(0, params.turnError);
 
                     // drive forward to get to scoring position
                     drive.driveStraight(params.forwardSpeed, -7);
                     drive.driveStraight(params.forwardSpeed, -params.forwardDistance);
+
+                    */
 
                     runState = State.X_SCORE;       // score in the hub
                     break;
@@ -623,7 +627,7 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(500);
 
                     //drive towards the shipping hub to score
-                    drive.driveStraight(-params.forwardSpeed, hubDistance);
+                    drive.driveStraight(params.reverseSpeed, hubDistance);
                     sleep(350);
 
                     //dump bucket
@@ -700,10 +704,13 @@ public class StateFullAuto extends LinearOpMode {
                     //sleep to wait for carousel to drop duck to the floor
                     sleep(2500);
 
-                    // 
+                    //reposition to face carousel again
+                    drive.driveTurn(0,params.turnError);
+
+                    // drive away from the carousel
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 35) {
-                        drive.setDrivePower(-params.forwardSpeed, -params.forwardSpeed,
-                                -params.forwardSpeed, -params.forwardSpeed);
+                        drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
+                                params.reverseSpeed, params.reverseSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
 
                         telemetry.addData("Headed towards ","outside wall");
@@ -711,10 +718,7 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
 
-//                    drive.driveStraight(-params.forwardSpeed, 4);
-
-                    //reposition to face carousel again
-                    drive.driveTurn(0,params.turnError);
+//                    drive.driveStraight(params.reverseSpeed, 4);
 
                     //turn off chainsaw
                     robot.motorChainsaw.setPower(0);
@@ -737,7 +741,7 @@ public class StateFullAuto extends LinearOpMode {
                     // turn towards the carousel
                     drive.driveTurn(0, params.turnError);
 
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>35) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -751,6 +755,17 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveTurn(0,params.turnError);
 
                     robot.motorChainsaw.setPower(0);
+
+                    // drive away from the carousel to make room to rotate
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 35) {
+                        drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
+                                params.reverseSpeed, params.reverseSpeed);
+                        robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
+
+                        telemetry.addData("Headed towards ","outside wall");
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.update();
+                    }   // end of while(robot.frontDistanceSensor
 
                     if(!warehousePark) {
                         runState = State.STORAGE_PARK;
@@ -900,9 +915,9 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.update();
 //                        sleep(5000);
                     }
-                    drive.driveStraight(-params.forwardSpeed, 4);
+                    drive.driveStraight(params.reverseSpeed, 4);
                     drive.driveTurn(15, params.turnError);
-                    drive.driveStraight(-params.forwardSpeed,12);
+                    drive.driveStraight(params.reverseSpeed,12);
 
                     runState = State.HALT;
                     break;
@@ -913,7 +928,7 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.update();
 //                        sleep(5000);
                     }
-                    drive.driveStraight(-params.forwardSpeed, 4);
+//                    drive.driveStraight(params.reverseSpeed, 4);
                     sleep(250);
 
                     // turn towards the warehouse
