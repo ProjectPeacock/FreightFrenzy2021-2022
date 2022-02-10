@@ -89,7 +89,7 @@ public class StateFullAuto extends LinearOpMode {
     private State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
     private State runState = State.SET_DISTANCES;
     private DriveClass drive = new DriveClass(robot, opMode);
-    boolean debugMode = true;
+    boolean debugMode = false;
 
     /* Declare DataLogger variables */
     private String action = "";
@@ -272,7 +272,7 @@ public class StateFullAuto extends LinearOpMode {
                             setupState = State.SELECT_PARK;
                         } else {
                             telemetry.addData("Side of the field == ", "WAREHOUSE Side");
-                            setupState = State.SELECT_BONUS;
+                            setupState = State.SELECT_PARK;
                         }
                         telemetry.update();
                         sleep(2000);
@@ -347,7 +347,7 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.addData("Alliance          == ", "RED");
                     }   // end of if(alliance)
                     telemetry.addData("Start Delay == ", startDelay);
-                    if(!warehouseSide){
+                    if(warehouseSide){
                         telemetry.addData("Side of the field ==  ", "WAREHOUSE");
                     } else {
                         telemetry.addData("Side of the field ==  ", "CAROUSEL");
@@ -381,7 +381,7 @@ public class StateFullAuto extends LinearOpMode {
                 case TEST_CONFIG:
                     blueAlliance = true;        // true for blue, false for red
                     startDelay = 0;          // put start delay in ms
-                    warehouseSide = false;       // true for warehouse, false for carousel
+                    warehouseSide = true;       // true for warehouse, false for carousel
                     warehousePark = false;   // true for warehouse, false for storage
 
                     if(blueAlliance){
@@ -620,28 +620,12 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(500);     // allow time to dump the cube
 
                     // drive away from the alliance hub
-                    drive.driveStraight(params.forwardSpeed, hubDistance+5);
+                    drive.driveStraight(params.forwardSpeed, (hubDistance+params.extraDistance));
 
                     //reset arms
                     robot.bucketDump.setPosition(0.5);
                     armControl.moveToZero();
 
-                    // turn towards outside wall
-                    drive.driveTurn((90 * params.hubFactor), turnError);
-                    sleep(350);
-
-                    // drive towards the outside wall using distance sensor
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 35) {
-                        drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
-                                params.forwardSpeed, params.forwardSpeed);
-                        robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
-
-                        telemetry.addData("Headed towards ","outside wall");
-                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
-                        telemetry.update();
-                    }   // end of while(robot.frontDistanceSensor
-
-                    drive.motorsHalt();
 
                     // reset the sweeper bar
                     drive.resetTSEBar();
@@ -669,6 +653,23 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.addData("Working on RED_Carousel = ", "Now");
                         telemetry.update();
                     }
+
+                    // turn towards outside wall
+                    drive.driveTurn((90 * params.hubFactor), turnError);
+                    sleep(350);
+
+                    // drive towards the outside wall using distance sensor
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 32) {
+                        drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
+                                params.forwardSpeed, params.forwardSpeed);
+                        robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
+
+                        telemetry.addData("Headed towards ","outside wall");
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.update();
+                    }   // end of while(robot.frontDistanceSensor
+
+                    drive.motorsHalt();
 
                     //go to carousel, red
                     //turn to face carousel
@@ -720,6 +721,23 @@ public class StateFullAuto extends LinearOpMode {
                     break;
 
                 case BLUE_CAROUSEL:
+                    // turn towards outside wall
+                    drive.driveTurn((90 * params.hubFactor), turnError);
+                    sleep(350);
+
+                    // drive towards the outside wall using distance sensor
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 32) {
+                        drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
+                                params.forwardSpeed, params.forwardSpeed);
+                        robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
+
+                        telemetry.addData("Headed towards ","outside wall");
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.update();
+                    }   // end of while(robot.frontDistanceSensor
+
+                    drive.motorsHalt();
+
                     if(debugMode) {
                         telemetry.addData("Working on BLUE Carousel = ", "Now");
                         telemetry.update();
@@ -728,6 +746,7 @@ public class StateFullAuto extends LinearOpMode {
                     //go to carousel, blue (movements same as red, in reverse
 
                     // turn towards the carousel
+                    drive.driveTurn(0, params.turnError);
                     drive.driveTurn(0, params.turnError);
 
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>32) {
@@ -740,6 +759,7 @@ public class StateFullAuto extends LinearOpMode {
                     drive.setDrivePower(0.1,0.1,0.1,0.1);
                     sleep(2500);
 
+                    drive.driveStraight(params.reverseSpeed, 2);
                     // turn towards the storage
                     drive.driveTurn(0,params.turnError);
 
@@ -903,9 +923,9 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.update();
 //                        sleep(5000);
                     }
-                    drive.driveStraight(params.reverseSpeed, 4);
+                    drive.driveStraight(params.reverseSpeed, 1);
                     drive.driveTurn(15, params.turnError);
-                    drive.driveStraight(params.reverseSpeed,12);
+                    drive.driveStraight(params.reverseSpeed,10);
 
                     runState = State.HALT;
                     break;
@@ -920,18 +940,21 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(250);
 
                     // turn towards the warehouse
-                    drive.driveTurn(90 * params.hubFactor, params.turnError);
-                    drive.driveTurn(90 * params.hubFactor, params.turnError);
+                    drive.driveTurn((90 * params.hubFactor), params.turnError);
+                    drive.driveTurn((90 * params.hubFactor), params.turnError);
 
                     // turn on the chainsaw so that we know the program is still running
                     robot.motorChainsaw.setPower(0.2);
 
                     // wait until there is just a few seconds to go park
-                    while(startTime - runtime.time() > 3){
+                    while(((runtime.time() - startTime) < 25) && opModeIsActive()){
+                        telemetry.addData("Time Left = ", (runtime.time() - startTime));
+                        telemetry.addData("Hubfactor = ", params.hubFactor);
+                        telemetry.update();
                         // do nothing
                     }   // end of while(startTime - runtime.time() > 3)
 
-                    drive.driveStraight(-1 * params.hubFactor, params.warehouseParkDistance);
+                    drive.driveStraight(params.hubFactor, params.warehouseParkDistance);
                     robot.motorChainsaw.setPower(0);
                     runState = State.HALT;
                     break;

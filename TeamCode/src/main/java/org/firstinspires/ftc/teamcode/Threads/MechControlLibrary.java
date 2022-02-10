@@ -137,10 +137,20 @@ public class MechControlLibrary implements Runnable{
         angle1=195;
         angle2=-739;
     }
+
     public void TSEtop(){
         angle1=-456;
         angle2=-1116;
     }
+
+    public void TSETriggerUp(){
+        angle1 = localRobot.motorArmAngle1.getCurrentPosition() + 5;
+    }
+
+    public void TSETriggerDown(){
+        angle1 = localRobot.motorArmAngle1.getCurrentPosition() - 5;
+    }
+
 //hard arm reset method (DO NOT USE IF POSSIBLE)
     public void resetArm(){
         angle1=0;

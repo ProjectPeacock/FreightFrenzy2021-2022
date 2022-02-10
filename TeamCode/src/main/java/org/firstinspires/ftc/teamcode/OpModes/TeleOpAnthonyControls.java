@@ -257,35 +257,48 @@ public class TeleOpAnthonyControls extends LinearOpMode {
 //end of turret control section
 
 //bucket control section (GP2, B)
-            if(gamepad2.b&&!TSEMode){
-                if(bumpCount==1){
-                    bucketAngle=0.15;
-                }else if(bumpCount==2){
-                    bucketAngle=0.05;
-                }else {
-                    bucketAngle = 0.25;
-                }
-            }else if(gamepad2.b&&bumpCount==3&&TSEMode) {
-                bucketAngle = 0;
-            }else{
-                if(intakeDown){
-                    bucketAngle=0.4;
-                }else if(bumpCount==1&&!TSEMode&&robot.motorArmAngle1.getCurrentPosition()<750) {
-                    bucketAngle = 0.6;
-                }else if(bumpCount==2&&!TSEMode){
-                    bucketAngle=0.55;
-                }else if(bumpCount==3&&!TSEMode) {
-                    bucketAngle = 0.75;
-                }else if(bumpCount==1&&TSEMode){
-                    bucketAngle=0.4;
-                }else if(bumpCount==3&&TSEMode){
-                    bucketAngle=0.7;
-                }else{
-                    if(robot.motorArmAngle1.getCurrentPosition()<500) {
-                        bucketAngle = 0.5;
+            if (!TSEMode) {         // Operations for NOT TSE mode
+                if (gamepad2.b) {
+                    if (bumpCount == 1) {
+                        bucketAngle = 0.15;
+                    } else if (bumpCount == 2) {
+                        bucketAngle = 0.05;
+                    } else {
+                        bucketAngle = 0.25;
                     }
+                } else {
+                    if (intakeDown) {
+                        bucketAngle = 0.4;
+                    } else if (bumpCount == 1 && robot.motorArmAngle1.getCurrentPosition() < 750) {
+                        bucketAngle = 0.6;
+                    } else if (bumpCount == 2) {
+                        bucketAngle = 0.55;
+                    } else if (bumpCount == 3) {
+                        bucketAngle = 0.75;
+                    } else if (robot.motorArmAngle1.getCurrentPosition() < 500) {
+                            bucketAngle = 0.5;
+                    }
+                }   // end of if(gamepad2.b)
+            } else {            // Operations for TSE mode
+                // give driver 2 the ability to move the arm controller up and down for placing
+                // the TSE
+                if(gamepad2.right_trigger > 0.5){
+                    mechControl.TSETriggerUp();
+                } else if(gamepad2.left_trigger > 0.5){
+                    mechControl.TSETriggerDown();
                 }
-            }
+                if (gamepad2.b && bumpCount == 3 && TSEMode) {
+                    bucketAngle = 0;
+                }
+
+                if (bumpCount == 1) {
+                    bucketAngle = 0.4;
+                } else if (bumpCount == 3) {
+                    bucketAngle = 0.7;
+                } else if (robot.motorArmAngle1.getCurrentPosition() < 500) {
+                    bucketAngle = 0.5;
+                }   // if (bumpCount == 1)
+            }   // end of if (!TSEMode) w/else
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
 

@@ -169,7 +169,7 @@ public class DriveClass {
                 rotationSpeed = Range.clip(rotationSpeed, -maxSpeed, maxSpeed);
 
                 if ((rotationSpeed > -0.35) && (rotationSpeed < 0)) {
-                    rotationSpeed = -0.32;
+                    rotationSpeed = -0.35;
                 } else if ((rotationSpeed < 0.4) && (rotationSpeed > 0)) {
                     rotationSpeed = 0.4;
                 }
