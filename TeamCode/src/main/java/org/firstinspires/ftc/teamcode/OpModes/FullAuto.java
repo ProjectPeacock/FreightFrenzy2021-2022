@@ -51,7 +51,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 
 @Autonomous(name="FullAuto", group="Competition")
-//@Disabled
+@Disabled
 public class FullAuto extends LinearOpMode {
 
     /* Declare OpMode members. */

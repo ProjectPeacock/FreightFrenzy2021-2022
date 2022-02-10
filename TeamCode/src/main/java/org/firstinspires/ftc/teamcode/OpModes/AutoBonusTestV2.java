@@ -56,7 +56,7 @@ import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
 import java.util.List;
 
 @Autonomous(name="Test Bonus Auto V2", group="Competition")
-//@Disabled
+@Disabled
 public class AutoBonusTestV2 extends LinearOpMode {
 
     public static final String TFOD_MODEL_ASSET = "PP_FF_TSEv3-Green.tflite";
