@@ -148,7 +148,7 @@ public class DriveClass {
         double Cp = 0.02;
         double Ci = 0.0003;
         double Cd = 0.0001;
-        double maxSpeed = 0.8;
+        double maxSpeed = 0.6;
         double rotationSpeed;
         double derivative = 0, deltaError, lastError = 0;
 

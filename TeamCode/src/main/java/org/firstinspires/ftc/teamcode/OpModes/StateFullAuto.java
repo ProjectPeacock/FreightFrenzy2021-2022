@@ -312,30 +312,35 @@ public class StateFullAuto extends LinearOpMode {
                     break;
 
                 case SELECT_PARK:
-                    telemetry.addData("Where to park?", "");
-                    telemetry.addData("Press DPAD Up  == ", " Park in Warehouse");
-                    telemetry.addData("Press DPAD Down == ", " Park in Storage");
-                    telemetry.addData("Press X to abort program ","");
-                    telemetry.update();
-
-                    if(gamepad1.dpad_up || gamepad1.dpad_down){
-                        //sleep(1000);
-                        warehousePark = gamepad1.dpad_up;
-                        if(warehousePark) {
-                            telemetry.addData("Park Location == ", "WAREHOUSE");
-                        } else {
-                            telemetry.addData("Park Location == ", "STORAGE");
-                        }
+                    if(!warehouseSide) {
+                        telemetry.addData("Where to park?", "");
+                        telemetry.addData("Press DPAD Up  == ", " Park in Warehouse");
+                        telemetry.addData("Press DPAD Down == ", " Park in Storage");
+                        telemetry.addData("Press X to abort program ", "");
                         telemetry.update();
-                        sleep(2000);
+
+                        if (gamepad1.dpad_up || gamepad1.dpad_down) {
+                            //sleep(1000);
+                            warehousePark = gamepad1.dpad_up;
+                            if (warehousePark) {
+                                telemetry.addData("Park Location == ", "WAREHOUSE");
+                            } else {
+                                telemetry.addData("Park Location == ", "STORAGE");
+                            }
+                            telemetry.update();
+                            sleep(2000);
+                            setupState = State.VERIFY_CONFIG;
+                            //red carousel
+
+                        }   // end of if(gamepad1.dpad_left...
+
+                        if (gamepad1.x) {
+                            running = false;
+                            autoReady = true;
+                        }
+                    } else {
+                        warehousePark = true;
                         setupState = State.VERIFY_CONFIG;
-                        //red carousel
-
-                    }   // end of if(gamepad1.dpad_left...
-
-                    if(gamepad1.x){
-                        running = false;
-                        autoReady = true;
                     }
                     break;
 
@@ -675,6 +680,7 @@ public class StateFullAuto extends LinearOpMode {
                     //turn to face carousel
                     drive.driveTurn(0, params.turnError);
                     sleep(350);
+                    drive.driveTurn(0, params.turnError);       // double check angle towards carousel
 
                     //drive forward until distance sensor is tripped
                     // drive towards the carousel
@@ -688,13 +694,13 @@ public class StateFullAuto extends LinearOpMode {
                     drive.setDrivePower(0.1,0.1,0.1,0.1);
 
                     //sleep to wait for carousel to drop duck to the floor
-                    sleep(3000);
+                    sleep(4000);
 
                     //reposition to face carousel again
                     drive.driveTurn(0,params.turnError);
 
                     // drive away from the carousel
-                    drive.driveStraight(params.reverseSpeed, 5);
+                    drive.driveStraight(params.reverseSpeed, 1);
                     /*
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 30) {
                         drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
@@ -757,7 +763,7 @@ public class StateFullAuto extends LinearOpMode {
 
                     // drive slowly into the carousel to apply constant pressure
                     drive.setDrivePower(0.1,0.1,0.1,0.1);
-                    sleep(2500);
+                    sleep(4000);
 
                     drive.driveStraight(params.reverseSpeed, 2);
                     // turn towards the storage
@@ -783,140 +789,6 @@ public class StateFullAuto extends LinearOpMode {
 
                     break;
 
-                case BLUE_WAREHOUSE_BONUS:
-                    if(debugMode) {
-                        telemetry.addData("Working on Blue Warehouse = ", "Now");
-                        telemetry.update();
-                    }   // end of if(debugMode)
-
-                    // turn towards the warehouse
-                    drive.driveTurn(90, params.turnError);
-
-                    //drive forward over the barrier into the warehouse
-                    drive.driveTime(1, 0.65);
-
-                    //turn towards scoring elements
-                    drive.driveTurn(45, params.turnError);
-
-                    // turn on intake
-                    armControl.intakeOn();
-                    sleep(350);
-
-                    // turn the intake on to take in scoring elements
-                    robot.motorIntake.setPower(1);
-
-                    // drive towards the elements to collect an element
-                    drive.driveTime(0.3, 1);
-                    robot.motorIntake.setPower(-1); // reverse motor to kick out any excess elements
-                    drive.driveTime(-0.3, 1);
-                    robot.motorIntake.setPower(0);
-
-                    // put the intake away
-                    armControl.intakeOff();
-
-                    // turn towards barrier
-                    drive.driveTurn(90, params.turnError);
-
-                    // drive towards barrier
-                    drive.driveTime(-0.4, 0.5);
-
-                    // drive over barrier
-                    drive.driveTime(-1, 0.65);
-
-                    // turn towards hub
-                    drive.driveTurn(45, params.turnError);
-
-                    // set the arm in scoring position - Level 1
-                    armControl.scoringPos1();
-
-                    // drive towards hub
-                    drive.driveStraight(0.3, 10);
-
-                    //dump bucket
-                    robot.bucketDump.setPosition(params.bucketAngle3);
-                    sleep(500);
-
-                    //reset arms
-                    robot.bucketDump.setPosition(0.5);
-                    armControl.moveToZero();
-
-                    // drive back to the barrier
-                    drive.driveStraight(0.3, -10);
-
-                    // turn towards barrier
-                    drive.driveTurn(90, params.turnError);
-
-                    if(runtime.time() > 25) {
-                        runState = State.WAREHOUSE_PARK;
-                    }
-                    break;
-
-                case RED_WAREHOUSE_BONUS:
-                    if(debugMode) {
-                        telemetry.addData("Working on Red_Bonus = ", "Now");
-                        telemetry.update();
-                    }
-                    // turn towards the warehouse
-                    drive.driveTurn(-90, params.turnError);
-
-                    //drive forward over the barrier into the warehouse
-                    drive.driveTime(1, 0.65);
-
-                    //turn towards scoring elements
-                    drive.driveTurn(-45, params.turnError);
-
-                    // turn on intake
-                    armControl.intakeOn();
-                    sleep(350);
-                    robot.motorIntake.setPower(1);
-
-                    // drive towards the elements to collect an element
-                    drive.driveTime(0.3, 1);
-                    robot.motorIntake.setPower(-1); // reverse motor to kick out any excess elements
-                    drive.driveTime(-0.3, 1);
-                    robot.motorIntake.setPower(0);
-
-                    // put the intake away
-                    armControl.intakeOff();
-
-                    // turn towards barrier
-                    drive.driveTurn(-90, params.turnError);
-
-                    // drive towards barrier
-                    drive.driveTime(-0.4, 0.5);
-
-                    // drive over barrier
-                    drive.driveTime(-1, 0.65);
-
-                    // turn towards hub
-                    drive.driveTurn(-45, params.turnError);
-
-                    // set the arm in scoring position - Level 1
-                    armControl.scoringPos1();
-
-                    // drive towards hub
-                    drive.driveStraight(0.3, 10);
-
-                    //dump bucket
-                    robot.bucketDump.setPosition(params.bucketAngle1);
-                    sleep(500);
-
-                    //reset arms
-                    robot.bucketDump.setPosition(0.5);
-                    armControl.moveToZero();
-
-                    // drive back to the barrier
-                    drive.driveStraight(0.3, -10);
-
-                    // turn towards barrier
-                    drive.driveTurn(-90, params.turnError);
-
-                    if(runtime.time() > 25) {
-                        runState = State.WAREHOUSE_PARK;
-                        params.warehouseParkDistance = 20;
-                    }
-                    break;
-
                 case STORAGE_PARK:
                     if(debugMode) {
                         telemetry.addData("Working on X_Score = ", "Now");
@@ -924,9 +796,10 @@ public class StateFullAuto extends LinearOpMode {
 //                        sleep(5000);
                     }
                     drive.driveStraight(params.reverseSpeed, 1);
-                    drive.driveTurn(15, params.turnError);
+                    drive.driveTurn((-15 * params.hubFactor), params.turnError);
                     drive.driveStraight(params.reverseSpeed,10);
 
+                    drive.driveTurn(0, params.turnError);
                     runState = State.HALT;
                     break;
 
@@ -940,21 +813,21 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(250);
 
                     // turn towards the warehouse
-                    drive.driveTurn((90 * params.hubFactor), params.turnError);
-                    drive.driveTurn((90 * params.hubFactor), params.turnError);
+                    drive.driveTurn((90 * -params.hubFactor), params.turnError);
+                    drive.driveTurn((90 * -params.hubFactor), params.turnError);
 
                     // turn on the chainsaw so that we know the program is still running
                     robot.motorChainsaw.setPower(0.2);
 
                     // wait until there is just a few seconds to go park
-                    while(((runtime.time() - startTime) < 25) && opModeIsActive()){
+                    while(((runtime.time() - startTime) < params.warehouseParkDelay) && opModeIsActive()){
                         telemetry.addData("Time Left = ", (runtime.time() - startTime));
                         telemetry.addData("Hubfactor = ", params.hubFactor);
                         telemetry.update();
                         // do nothing
                     }   // end of while(startTime - runtime.time() > 3)
 
-                    drive.driveStraight(params.hubFactor, params.warehouseParkDistance);
+                    drive.driveStraight(1, params.warehouseParkDistance);
                     robot.motorChainsaw.setPower(0);
                     runState = State.HALT;
                     break;
