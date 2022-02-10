@@ -248,7 +248,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
 //end of arm controls
 
 //turret control section (GP2, left stick)
-            turretPosition=(int)(-gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
+            turretPosition=(int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION);
             if(!intakeDown&&!TSEMode){
                 turretControl.setTargetPosition((int)(gamepad2.left_stick_x*robot.TURRET_MAX_POSITION));
             }else {

@@ -108,7 +108,6 @@ public class StateFullAuto extends LinearOpMode {
         Thread turretController = new Thread(turretControl);
         AutoParams params = new AutoParams();
 
-
         boolean autoReady = false;
         boolean running = true;
         double startTime;
@@ -117,7 +116,6 @@ public class StateFullAuto extends LinearOpMode {
         double timeElapsed;
 
         // set default values
-        int hubFactor = 1;
         int scoreLevel = 1;
 
         double hubDistance = 0;
@@ -226,7 +224,9 @@ public class StateFullAuto extends LinearOpMode {
                     telemetry.addData("Press A to continue", "");
                     telemetry.addData("Press X to abort program ","");
                     telemetry.update();
-                    logData();
+                    if(debugMode) {
+                        logData();
+                    }
 
                     if(gamepad1.dpad_up && (runtime.time()-timeElapsed) >0.3) {
                         if(startDelay < 10){       // limit the max delay to 10 seconds
@@ -330,23 +330,6 @@ public class StateFullAuto extends LinearOpMode {
                         sleep(2000);
                         setupState = State.VERIFY_CONFIG;
                         //red carousel
-                        if (!blueAlliance && !warehouseSide) {
-                            hubFactor = 1;
-                            //blue carousel
-                        } else if (blueAlliance && !warehouseSide) {
-                            hubFactor = -1;
-                            //red warehouse
-                        } else if (!blueAlliance && warehouseSide) {
-                            hubFactor = -1;
-                            //blue warehouse
-                        } else {
-                            hubFactor = 1;
-                        }
-                        if (hubFactor == 1) {
-                            goalPosition = "Right";
-                        } else {
-                            goalPosition = "Left";
-                        }
 
                     }   // end of if(gamepad1.dpad_left...
 
@@ -369,7 +352,6 @@ public class StateFullAuto extends LinearOpMode {
                     } else {
                         telemetry.addData("Side of the field ==  ", "CAROUSEL");
                     }   //end of if(fieldSide)
-                    telemetry.addData("Goal position ==  ", goalPosition);
                     if(warehousePark) {
                         telemetry.addData("Park Location == ", "WAREHOUSE");
                     } else {
@@ -397,11 +379,10 @@ public class StateFullAuto extends LinearOpMode {
                     break;
 
                 case TEST_CONFIG:
-                    blueAlliance = false;        // true for blue, false for red
+                    blueAlliance = true;        // true for blue, false for red
                     startDelay = 0;          // put start delay in ms
                     warehouseSide = false;       // true for warehouse, false for carousel
-                    warehousePark = true;   // true for warehouse, false for storage
-                    hubFactor = 1;   // red carousel
+                    warehousePark = false;   // true for warehouse, false for storage
 
                     if(blueAlliance){
                         telemetry.addData("Alliance          == ", "BLUE");
@@ -506,6 +487,10 @@ public class StateFullAuto extends LinearOpMode {
             robot.motorArmAngle1.setTargetPosition(0);
             robot.motorArmAngle2.setTargetPosition(0);
             switch(runState){
+                case TEST:
+                    drive.driveTurn(-90, 2);
+                    runState = State.HALT;
+                    break;
                 case SET_DISTANCES:
                     // Setup parameters per settings
                     params.initParams(blueAlliance, warehouseSide);
@@ -563,11 +548,11 @@ public class StateFullAuto extends LinearOpMode {
 
                     // if the TSE is not in front of the robot, arc turn to move it out of the way
                     //drive forward and push TSE out of the way
-                    drive.driveStraight(params.forwardSpeed, params.tseDistance);
+                    drive.driveStraight(params.reverseSpeed, params.tseDistance);
                     sleep(250);
 
                     //back up to turn to the shipping hub
-                    drive.driveStraight(params.reverseSpeed, params.tseReturnDist);
+                    drive.driveStraight(params.forwardSpeed, params.tseReturnDist);
                     sleep(250);
 
                     runState = State.X_SCORE;       // score in the hub
@@ -582,7 +567,7 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(250);
 
                     //Drive into position to approach the hub
-                    drive.driveStraight(params.forwardSpeed, 17);
+                    drive.driveStraight(params.forwardSpeed, params.arcTurnReturn);
                     sleep(250);
 
                     // realign the robot to face forward
@@ -642,7 +627,7 @@ public class StateFullAuto extends LinearOpMode {
                     armControl.moveToZero();
 
                     // turn towards outside wall
-                    drive.driveTurn(90 * hubFactor, turnError);
+                    drive.driveTurn((90 * params.hubFactor), turnError);
                     sleep(350);
 
                     // drive towards the outside wall using distance sensor
@@ -702,13 +687,15 @@ public class StateFullAuto extends LinearOpMode {
                     drive.setDrivePower(0.1,0.1,0.1,0.1);
 
                     //sleep to wait for carousel to drop duck to the floor
-                    sleep(2500);
+                    sleep(3000);
 
                     //reposition to face carousel again
                     drive.driveTurn(0,params.turnError);
 
                     // drive away from the carousel
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 35) {
+                    drive.driveStraight(params.reverseSpeed, 5);
+                    /*
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 30) {
                         drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
                                 params.reverseSpeed, params.reverseSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -717,6 +704,8 @@ public class StateFullAuto extends LinearOpMode {
                         telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
+
+                     */
 
 //                    drive.driveStraight(params.reverseSpeed, 4);
 
@@ -741,7 +730,7 @@ public class StateFullAuto extends LinearOpMode {
                     // turn towards the carousel
                     drive.driveTurn(0, params.turnError);
 
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>35) {
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>32) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -757,10 +746,9 @@ public class StateFullAuto extends LinearOpMode {
                     robot.motorChainsaw.setPower(0);
 
                     // drive away from the carousel to make room to rotate
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 35) {
-                        drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
-                                params.reverseSpeed, params.reverseSpeed);
-                        robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
+                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 20) {
+//                        drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
+//                                params.reverseSpeed, params.reverseSpeed);
 
                         telemetry.addData("Headed towards ","outside wall");
                         telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
@@ -969,7 +957,9 @@ public class StateFullAuto extends LinearOpMode {
             }   // end of switch(state)
         }   // end of while(opModeIsActive)
 
-        dlStop();               // stop the data logger
+        if(debugMode){
+            dlStop();               // stop the data logger
+        }
         turretControl.stop();
         requestOpModeStop();
 
@@ -982,7 +972,7 @@ public class StateFullAuto extends LinearOpMode {
      * Enumerate the states of the machine
      */
     enum State {
-        ALLIANCE_SELECT, DELAY_LENGTH, FIELD_SIDE_SELECT, SELECT_BONUS, VERIFY_CONFIG, TEST_CONFIG,
+        TEST, ALLIANCE_SELECT, DELAY_LENGTH, FIELD_SIDE_SELECT, SELECT_BONUS, VERIFY_CONFIG, TEST_CONFIG,
         SLEEP_DELAY, LEVEL_ADJUST, MOVE_TSE_STRAIGHT, MOVE_TSE_ARC, X_SCORE, RED_CAROUSEL, BLUE_CAROUSEL, BONUS_SCORES,
         BLUE_WAREHOUSE_BONUS, RED_WAREHOUSE_BONUS, STORAGE_PARK, WAREHOUSE_PARK, HALT, SELECT_PARK,
         SET_DISTANCES
@@ -1070,6 +1060,4 @@ public class StateFullAuto extends LinearOpMode {
         Dl.closeDataLogger();
 
     }
-
-
 }

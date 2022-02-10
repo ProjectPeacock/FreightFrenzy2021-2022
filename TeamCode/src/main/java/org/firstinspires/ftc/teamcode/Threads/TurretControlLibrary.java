@@ -43,7 +43,7 @@ public class TurretControlLibrary implements Runnable{
 
     private void turretControl(int targetPosition){
         double integral = 0;
-        double Cp = 0.0012;
+        double Cp = 0.0024;
         double Ci = 0.002;
         double Cd = 0.008;
         double maxSpeed = 1;
