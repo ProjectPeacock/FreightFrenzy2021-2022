@@ -50,6 +50,8 @@ public class AutoParams {
     private void redCarousel(){
         this.warehouseParkDelay = 25;   // Time consumed before parking in the warehouse
         this.arcTime = 1.9;               // length of time for the arc turn
+        this.powerLeft = -0.8;          // power to put on the left side of the robot for arc turn
+        this.powerRight = -0.2;         // power to put on the right side of the robot for arc turn
         this.forwardSpeed = 0.32;       // speed at which the robot moves
         this.reverseSpeed = -0.32;      // speed at which the robot moves in reverse
         this.tseDistance = 34;          // take off distance from the starting point to move TSE
@@ -67,8 +69,6 @@ public class AutoParams {
         this.warehouseParkDistance = 100;   // distance to travel to get in warehouse parking location
         this.turnError = 2;             // error to use when turning
         this.hubFactor = 1;             // sets direction to rotate depending on where the hub is
-        this.powerLeft = -0.8;          // power to put on the left side of the robot for arc turn
-        this.powerRight = -0.2;         // power to put on the right side of the robot for arc turn
 
         this.forwardDistance = 30.0;    //  if using the arcTurn to move a TSE out of the way,
                                         // use forward distance to position to score in the hub
@@ -76,6 +76,10 @@ public class AutoParams {
 
     private void redWarehouse() {
         this.warehouseParkDelay = 0;   // Time consumed before parking in the warehouse
+        this.arcTime = 1.3;               // length of time for the arc turn
+        this.powerLeft = -0.3;          // power to put on the left side of the robot for arc turn
+        this.powerRight = -0.5;         // power to put on the right side of the robot for arc turn
+        this.arcTurnReturn = 15;
         this.forwardSpeed = 0.32;       // speed at which the robot moves
         this.reverseSpeed = -0.32;      // speed at which the robot moves in reverse
         this.tseDistance = 34;          // take off distance from the starting point to move TSE
@@ -97,18 +101,19 @@ public class AutoParams {
     private void blueCarousel(){
         this.warehouseParkDelay = 25;   // Time consumed before parking in the warehouse
         this.arcTime = 1;               // length of time for the arc turn
+        this.arcTurnReturn = 15;
         this.forwardSpeed = 0.32;       // speed at which the robot moves forward
         this.reverseSpeed = -0.32;      // speed at which the robot moves in reverse
         this.tseDistance = 34;          // take off distance from the starting point to move TSE
         this.tseReturnDist = 14;        // distance to back up from pushing the TSE out
         this.turnAngle = -50;            // angle to turn towards the shipping hub
-        this.hubDistance1 = 5;          // distance to move towards the hub if placing in level 1
+        this.hubDistance1 = 6;          // distance to move towards the hub if placing in level 1
         this.hubDistance2 = 8;          // distance to move towards the hub if placing in level 2
-        this.hubDistance3 = 4;          // distance to move towards the hub if placing in level 3
+        this.hubDistance3 = 7;          // distance to move towards the hub if placing in level 3
         this.bucketAngle1 = -0.75;        // angle of the bucket if placing in level 1
         this.bucketAngle2 = -0.55;        // angle of the bucket if placing in level 1
         this.bucketAngle3 = -1.0;        // angle of the bucket if placing in level 1
-        this.arcTurnReturn = 15;
+
         this.extraDistance = 5;         // extra distance to back up from the hub after X_SCORE
         this.parkDistance = 35;         // distance to travel to get in storage parking location
         this.warehouseParkDistance = 100;   // distance to travel to get in warehouse parking location
@@ -121,20 +126,24 @@ public class AutoParams {
 
     private void blueWarehouse() {
         this.warehouseParkDelay = 0;   // Time consumed before parking in the warehouse
+        this.arcTime = 1.6;               // length of time for the arc turn
+        this.powerLeft = -0.55;          // power to put on the left side of the robot for arc turn
+        this.powerRight = -0.2;         // power to put on the right side of the robot for arc turn
+        this.arcTurnReturn = 5;
         this.forwardSpeed = 0.32;      // speed at which the robot moves
         this.reverseSpeed = -0.32;      // speed at which the robot moves in reverse
         this.tseDistance = 34;          // take off distance from the starting point to move TSE
         this.tseReturnDist = 14;        // distance to back up from pushing the TSE out
         this.turnAngle = 50;            // angle to turn towards the shipping hub
-        this.hubDistance1 = 7;          // distance to move towards the hub if placing in level 1
-        this.hubDistance2 = 5;          // distance to move towards the hub if placing in level 2
-        this.hubDistance3 = 5;          // distance to move towards the hub if placing in level 3
+        this.hubDistance1 = 8;          // distance to move towards the hub if placing in level 1
+        this.hubDistance2 = 6;          // distance to move towards the hub if placing in level 2
+        this.hubDistance3 = 8;          // distance to move towards the hub if placing in level 3
         this.bucketAngle1 = -0.75;        // angle of the bucket if placing in level 1
         this.bucketAngle2 = -0.55;        // angle of the bucket if placing in level 1
         this.bucketAngle3 = -1.0;        // angle of the bucket if placing in level 1
         this.parkDistance = 35;         // distance to travel to get in storage parking location
         this.extraDistance = 0;         // extra distance to back up from the hub after X_SCORE
-        this.warehouseParkDistance = 20;   // distance to travel to get in warehouse parking location
+        this.warehouseParkDistance = 30;   // distance to travel to get in warehouse parking location
         this.turnError = 2;             // error to use when turning
         this.hubFactor = -1;             // sets direction to rotate depending on where the hub is
 

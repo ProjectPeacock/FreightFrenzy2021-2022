@@ -36,6 +36,7 @@ package org.firstinspires.ftc.teamcode.TestCode;
 //
 // import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -56,7 +57,7 @@ import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
 import java.util.List;
 
 @Autonomous(name="State Auto Logging", group="Test")
-//@Disabled
+@Disabled
 public class StateFullAutoLogging extends LinearOpMode {
 
     public static final String TFOD_MODEL_ASSET = "PP_FF_TSEv3-Green.tflite";

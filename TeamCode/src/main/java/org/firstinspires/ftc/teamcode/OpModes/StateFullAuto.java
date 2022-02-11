@@ -106,6 +106,7 @@ public class StateFullAuto extends LinearOpMode {
         Thread mechController = new Thread(mechControl);
         TurretControlThread turretControl = new TurretControlThread(robot, robot.ARM_THREAD_SLEEP);
         Thread turretController = new Thread(turretControl);
+
         AutoParams params = new AutoParams();
 
         boolean autoReady = false;
@@ -542,7 +543,14 @@ public class StateFullAuto extends LinearOpMode {
                         if(blueAlliance && scoreLevel == 3){
                             runState = State.MOVE_TSE_ARC; // default to STRAIGHT
                         }
-                    }   // end of if(!warehouseSide)
+                    } else {
+                        if (blueAlliance && scoreLevel == 1){  // red alliance, level 1
+                            runState = State.MOVE_TSE_ARC; // default to STRAIGHT
+                        }
+                        if(!blueAlliance && scoreLevel == 3){
+                            runState = State.MOVE_TSE_ARC; // default to STRAIGHT
+                        }
+                    }// end of if(!warehouseSide)
 
                     // deploy sweeper bar
                     drive.deployTSEBar();
