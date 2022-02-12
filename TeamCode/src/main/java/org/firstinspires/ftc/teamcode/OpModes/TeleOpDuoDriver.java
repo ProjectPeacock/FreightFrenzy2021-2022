@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
@@ -53,6 +54,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
         boolean intakeDown=false;
         boolean toggleIntake=false;
         boolean turretToggle=false;
+        boolean upFlag=false;
 
         boolean sweeperToggle=false;
         boolean sweeperDown=false;
@@ -184,7 +186,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
 //arm control section (GP2, X, Dpad Down)
             //allows for toggling between arm positions and not only going to lowest one because of button being held
-            if(!gamepad2.x){
+            if(!gamepad2.x&&!gamepad2.right_bumper){
                 toggleReadyDown=true;
             }
             if(!gamepad2.dpad_up){
@@ -193,10 +195,22 @@ public class TeleOpDuoDriver extends LinearOpMode {
             //end of arm toggle checks
 
             //adds 1 to bumpCount if x isn't held down
-            if(gamepad2.x && toggleReadyDown){
-                toggleReadyDown=false;
-                if(bumpCount<3) {
-                    bumpCount += 1;
+            if(!TSEMode) {
+                if (gamepad2.x && toggleReadyDown) {
+                    toggleReadyDown = false;
+                    if (bumpCount < 2) {
+                        bumpCount += 1;
+                    }
+                }
+                if(gamepad2.right_bumper&&toggleReadyDown){
+                    bumpCount=3;
+                }
+            }else{
+                if (gamepad2.x && toggleReadyDown) {
+                    toggleReadyDown = false;
+                    if (bumpCount < 3) {
+                        bumpCount += 1;
+                    }
                 }
             }
 
@@ -226,10 +240,19 @@ public class TeleOpDuoDriver extends LinearOpMode {
                 //mode to pick up TSE
                 if (bumpCount == 1) {
                     mechControl.TSEDown();
+                    upFlag=false;
                 } else if (bumpCount == 2) {
                     mechControl.TSEresting();
-                } else if (bumpCount == 3) {
+                    upFlag=false;
+                } else if (bumpCount == 3&&!upFlag) {
                     mechControl.TSEtop();
+                    upFlag=true;
+                }else if(bumpCount==3&&upFlag){
+                    if(gamepad2.right_trigger > 0.5){
+                        mechControl.TSETriggerUp();
+                    } else if(gamepad2.left_trigger > 0.5){
+                        mechControl.TSETriggerDown();
+                    }
                 }
             }else{
                 //move arm to score
@@ -303,7 +326,9 @@ public class TeleOpDuoDriver extends LinearOpMode {
                 }else if(bumpCount==2&&!TSEMode){
                     bucketAngle=0.55;
                 }else if(bumpCount==3&&!TSEMode) {
-                    bucketAngle = 0.75;
+                    if(robot.motorArmAngle1.getCurrentPosition()<-1000) {
+                        bucketAngle = 0.75;
+                    }
                 }else if(bumpCount==1&&TSEMode){
                     bucketAngle=0.4;
                 }else if(bumpCount==3&&TSEMode){
@@ -339,6 +364,7 @@ public class TeleOpDuoDriver extends LinearOpMode {
 
             telemetry.addData("TSE MODE: ",TSEMode);
             telemetry.addData("","");
+            telemetry.addData("Bucket servo pos:",bucketAngle);
             telemetry.addData("Last Intake Servo Pos",robot.bucketDump.getPosition());
             telemetry.addData("Turret Current Angle: ",robot.turrentEncoder.getCurrentPosition());
             telemetry.addData("Turret Target Angle: ",turretPosition);

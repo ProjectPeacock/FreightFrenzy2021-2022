@@ -126,6 +126,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 toggleIntake=true;
             }
 
+
             //if intake isn't deployed, deploy it & vice versa
 
             if(gamepad1.right_bumper&&toggleIntake){
@@ -182,7 +183,7 @@ public class TeleOpAnthonyControls extends LinearOpMode {
 
 //arm control section (GP2, X, Dpad Down)
             //allows for toggling between arm positions and not only going to lowest one because of button being held
-            if(!gamepad2.x){
+            if(!gamepad2.x&&!gamepad2.right_bumper){
                 toggleReadyDown=true;
             }
             if(!gamepad2.dpad_up){
@@ -191,10 +192,22 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             //end of arm toggle checks
 
             //adds 1 to bumpCount if x isn't held down
-            if(gamepad2.x && toggleReadyDown){
-                toggleReadyDown=false;
-                if(bumpCount<3) {
-                    bumpCount += 1;
+            if(!TSEMode) {
+                if (gamepad2.x && toggleReadyDown) {
+                    toggleReadyDown = false;
+                    if (bumpCount < 2) {
+                        bumpCount += 1;
+                    }
+                }
+                if(gamepad2.right_bumper&&toggleReadyDown){
+                    bumpCount=3;
+                }
+            }else{
+                if (gamepad2.x && toggleReadyDown) {
+                    toggleReadyDown = false;
+                    if (bumpCount < 3) {
+                        bumpCount += 1;
+                    }
                 }
             }
 
@@ -204,6 +217,9 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                 if(bumpCount>1) {
                     bumpCount -= 1;
                 }
+            }
+            if(gamepad2.right_bumper&&toggleReadyDown){
+                bumpCount=3;
             }
             if(!gamepad2.y){
                 TSEtoggle=true;

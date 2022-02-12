@@ -119,8 +119,8 @@ public class MechControlLibrary implements Runnable{
     public void scoringPos3(){
         arm1Power=0.75;
         arm2Power=0.75;
-        angle1=-874;
-        angle2=2126;
+        angle1=-1250;
+        angle2=-605;
     }
 //end of scoring positions methods
 
