@@ -54,6 +54,8 @@ public class TeleOpAnthonyControls extends LinearOpMode {
         boolean toggleIntake=false;
         boolean turretToggle=false;
         boolean upFlag = false;
+        boolean sweeperToggle=false;
+        boolean sweeperDown=false;
 
         boolean TSEMode=false;
         boolean TSEtoggle=false;
@@ -295,7 +297,9 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                     } else if (bumpCount == 2) {
                         bucketAngle = 0.55;
                     } else if (bumpCount == 3) {
-                        bucketAngle = 0.75;
+                        if(robot.motorArmAngle1.getCurrentPosition()<-1000) {
+                            bucketAngle = 0.75;
+                        }
                     } else if (robot.motorArmAngle1.getCurrentPosition() < 500) {
                             bucketAngle = 0.5;
                     }
@@ -326,6 +330,25 @@ public class TeleOpAnthonyControls extends LinearOpMode {
             }   // end of if (!TSEMode) w/else
             robot.bucketDump.setPosition(bucketAngle);
 //end of bucket controls
+
+            if(!gamepad1.y){
+                sweeperToggle=true;
+            }
+            if(gamepad1.y&&sweeperToggle){
+                sweeperToggle=false;
+                sweeperDown=!sweeperDown;
+            }
+
+            if(sweeperDown) {
+                robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_DOWN);
+                robot.sweeperPink.setPosition(robot.PINK_SWEEPER_DOWN);
+            }else if(Math.abs(robot.turrentEncoder.getCurrentPosition())>50){
+                robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP-0.2);
+                robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP+0.2);
+            }else{
+                robot.sweeperBlue.setPosition(robot.BLUE_SWEEPER_UP);
+                robot.sweeperPink.setPosition(robot.PINK_SWEEPER_UP);
+            }
 
             telemetry.addData("TSE MODE: ",TSEMode);
             telemetry.addData("","");
