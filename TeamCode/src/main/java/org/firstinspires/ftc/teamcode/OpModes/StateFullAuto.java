@@ -102,11 +102,11 @@ public class StateFullAuto extends LinearOpMode {
 
 
         // do we need these threads in an autonomous opmode?
-        MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
+    /*    MechControlLibrary mechControl = new MechControlLibrary(robot, robot.ARM_THREAD_SLEEP);
         Thread mechController = new Thread(mechControl);
         TurretControlThread turretControl = new TurretControlThread(robot, robot.ARM_THREAD_SLEEP);
         Thread turretController = new Thread(turretControl);
-
+*/
         AutoParams params = new AutoParams();
 
         boolean autoReady = false;
@@ -165,7 +165,7 @@ public class StateFullAuto extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
-        turretController.start();
+    //    turretController.start();
 
         // arm control
         ArmControlCLass armControl = new ArmControlCLass(robot, robot.ARM_THREAD_SLEEP);
@@ -847,7 +847,7 @@ public class StateFullAuto extends LinearOpMode {
                     }   // if(debugMode)
 
                     armControl.moveToZero();          // reset the arm to the right initialized position
-                    turretControl.resetTurret();    // reset the arm to the right initialized position
+                //    turretControl.resetTurret();    // reset the arm to the right initialized position
 
                     // shut down all motors
                     robot.motorChainsaw.setPower(0);
@@ -864,7 +864,7 @@ public class StateFullAuto extends LinearOpMode {
         if(debugMode){
             dlStop();               // stop the data logger
         }
-        turretControl.stop();
+    //    turretControl.stop();
         requestOpModeStop();
 
         telemetry.addData("Path", "Complete");

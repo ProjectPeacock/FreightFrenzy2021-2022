@@ -77,7 +77,7 @@ public class AutoParams {
     private void redWarehouse() {
         this.warehouseParkDelay = 0;   // Time consumed before parking in the warehouse
         this.arcTime = 1.3;               // length of time for the arc turn
-        this.powerLeft = -0.3;          // power to put on the left side of the robot for arc turn
+        this.powerLeft = -0.2;          // power to put on the left side of the robot for arc turn
         this.powerRight = -0.5;         // power to put on the right side of the robot for arc turn
         this.arcTurnReturn = 15;
         this.forwardSpeed = 0.32;       // speed at which the robot moves
