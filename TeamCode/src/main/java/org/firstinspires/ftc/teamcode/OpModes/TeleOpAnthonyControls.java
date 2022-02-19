@@ -305,13 +305,20 @@ public class TeleOpAnthonyControls extends LinearOpMode {
                     }
                 }   // end of if(gamepad2.b)
             } else {            // Operations for TSE mode
-                // give driver 2 the ability to move the arm controller up and down for placing
-                // the TSE
-                if(gamepad2.right_trigger > 0.5){
+                // give driver 2 the ability to move arm 2 for placing TSE
+                if(gamepad2.right_bumper){
+                    mechControl.TSEBumperUp();
+                } else if(gamepad2.left_bumper){
+                    mechControl.TSEBumperDown();
+                }
+
+                // give driver 2 the ability to move arm 1 for placing TSE
+                if(gamepad2.right_trigger>0.5){
                     mechControl.TSETriggerUp();
-                } else if(gamepad2.left_trigger > 0.5){
+                }else if(gamepad2.left_trigger>0.5){
                     mechControl.TSETriggerDown();
                 }
+
                 if(upFlag) {
                     if (gamepad2.b) {
                         bucketAngle = robot.bucketDump.getPosition() - 0.05;

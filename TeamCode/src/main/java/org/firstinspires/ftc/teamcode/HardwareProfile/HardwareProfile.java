@@ -66,6 +66,10 @@ public class HardwareProfile {
     public final int ARM_2_RESTING_INTAKE=100;
     public final int ARM_2_RESTING_TSE=-150;
 
+    //TSE angle adjustments
+    public final int ARM2_TSE_ADJ=35;
+    public final int ARM1_TSE_ADJ=70;
+
 //turret constants
     public final int TURRET_MAX_POSITION = 275;
     public final int TURRET_INCREMENTS = 3;

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
@@ -248,9 +247,17 @@ public class TeleOpDuoDriver extends LinearOpMode {
                     mechControl.TSEtop();
                     upFlag=true;
                 }else if(bumpCount==3&&upFlag){
-                    if(gamepad2.right_trigger > 0.5){
+                    // give driver 2 the ability to move arm 2 for placing TSE
+                    if(gamepad2.right_bumper){
+                        mechControl.TSEBumperUp();
+                    } else if(gamepad2.left_bumper){
+                        mechControl.TSEBumperDown();
+                    }
+
+                    // give driver 2 the ability to move arm 1 for placing TSE
+                    if(gamepad2.right_trigger>0.5){
                         mechControl.TSETriggerUp();
-                    } else if(gamepad2.left_trigger > 0.5){
+                    }else if(gamepad2.left_trigger>0.5){
                         mechControl.TSETriggerDown();
                     }
                 }

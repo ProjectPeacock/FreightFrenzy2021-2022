@@ -143,13 +143,15 @@ public class MechControlLibrary implements Runnable{
         angle2=-1116;
     }
 
-    public void TSETriggerUp(){
-        angle2 = localRobot.motorArmAngle2.getCurrentPosition() + 35;
+    //TSE Bumper Controls, GP2, Bumpers
+    public void TSEBumperUp(){angle2 = localRobot.motorArmAngle2.getCurrentPosition() + localRobot.ARM2_TSE_ADJ;}
+    public void TSEBumperDown(){
+        angle2 = localRobot.motorArmAngle2.getCurrentPosition() - localRobot.ARM2_TSE_ADJ;
     }
 
-    public void TSETriggerDown(){
-        angle2 = localRobot.motorArmAngle2.getCurrentPosition() - 35;
-    }
+    //TSE Trigger Controls, GP2, triggers
+    public void TSETriggerUp(){angle1 = localRobot.motorArmAngle2.getCurrentPosition() + localRobot.ARM1_TSE_ADJ;}
+    public void TSETriggerDown(){angle1 = localRobot.motorArmAngle2.getCurrentPosition() - localRobot.ARM1_TSE_ADJ;}
 
 //hard arm reset method (DO NOT USE IF POSSIBLE)
     public void resetArm(){
