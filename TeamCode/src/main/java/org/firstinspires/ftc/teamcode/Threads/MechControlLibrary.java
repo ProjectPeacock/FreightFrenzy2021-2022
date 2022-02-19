@@ -150,8 +150,8 @@ public class MechControlLibrary implements Runnable{
     }
 
     //TSE Trigger Controls, GP2, triggers
-    public void TSETriggerUp(){angle1 = localRobot.motorArmAngle2.getCurrentPosition() + localRobot.ARM1_TSE_ADJ;}
-    public void TSETriggerDown(){angle1 = localRobot.motorArmAngle2.getCurrentPosition() - localRobot.ARM1_TSE_ADJ;}
+    public void TSETriggerUp(){angle1 = localRobot.motorArmAngle1.getCurrentPosition() + localRobot.ARM1_TSE_ADJ;}
+    public void TSETriggerDown(){angle1 = localRobot.motorArmAngle1.getCurrentPosition() - localRobot.ARM1_TSE_ADJ;}
 
 //hard arm reset method (DO NOT USE IF POSSIBLE)
     public void resetArm(){
