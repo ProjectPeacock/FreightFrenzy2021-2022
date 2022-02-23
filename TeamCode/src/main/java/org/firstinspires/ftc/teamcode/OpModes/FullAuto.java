@@ -40,14 +40,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.ReadWriteFile;
-import com.vuforia.State;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
-import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 
 @Autonomous(name="FullAuto", group="Competition")
@@ -385,7 +382,7 @@ public class FullAuto extends LinearOpMode {
                 sleep(350);
 
                 //drive forward until distance sensor is tripped
-                while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>29) {
+                while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM)>29) {
                     drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                     robot.motorChainsaw.setPower(-robot.CHAIN_POW*0.75);
                 }
@@ -428,7 +425,7 @@ public class FullAuto extends LinearOpMode {
                 drive.driveTurn(0,turnError);
                 sleep(350);
 
-                while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
+                while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM)>30) {
                     drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                     robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
                 }

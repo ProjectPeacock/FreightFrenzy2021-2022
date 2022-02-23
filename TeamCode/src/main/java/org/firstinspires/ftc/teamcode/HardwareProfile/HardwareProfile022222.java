@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class HardwareProfile {
+public class HardwareProfile022222 {
 
     /*
      * Constants
@@ -108,14 +108,13 @@ public class HardwareProfile {
 //    public DistanceSensor sensorDistBlue=null;
     public DigitalChannel turretMagSensor = null;
 
-    public DistanceSensor frontDistanceSensorPink =null;
-    public DistanceSensor frontDistanceSensorBlue =null;
+    public DistanceSensor frontDistanceSensor=null;
   //  public RevBlinkinLedDriver LEDPort;
 
    // public WebcamName webcam = null;
 
     /* Constructor */
-    public HardwareProfile() {
+    public HardwareProfile022222() {
 
     }   // end of HardwareProfile method
 
@@ -211,8 +210,7 @@ public class HardwareProfile {
 //initialize sensors
 //        sensorDistBlue=hwMap.get(DistanceSensor.class, "sensorDistBlue");
 //        sensorDistPink=hwMap.get(DistanceSensor.class, "sensorDistPink");
-        frontDistanceSensorPink =hwMap.get(DistanceSensor.class,"frontDistanceSensorPink");
-        frontDistanceSensorBlue =hwMap.get(DistanceSensor.class,"frontDistanceSensorBlue");
+        frontDistanceSensor=hwMap.get(DistanceSensor.class,"frontDistanceSensor");
         turretMagSensor = hwMap.get(DigitalChannel.class, "turretMagSensor");
         turretMagSensor.setMode(DigitalChannel.Mode.INPUT);
 

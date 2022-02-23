@@ -669,12 +669,12 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     drive.driveTurn(90 * hubFactor, turnError);
                     sleep(350);
 
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 25) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 25) {
                         drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
 
                         telemetry.addData("Headed towards ","outside wall");
-                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM));
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
 
@@ -715,7 +715,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     sleep(350);
 
                     //drive forward until distance sensor is tripped
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 30) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 30) {
                         drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                         robot.motorChainsaw.setPower(-robot.CHAIN_POW * 0.75);
                     }   // end while(robot.frontDistance...
@@ -756,7 +756,7 @@ public class AutoBonusTestV2 extends LinearOpMode {
                     // turn towards the carousel
                     drive.driveTurn(0,1);
 
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM)>30) {
                         drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
                     }   // end of while(robot.frontDistanceSensor

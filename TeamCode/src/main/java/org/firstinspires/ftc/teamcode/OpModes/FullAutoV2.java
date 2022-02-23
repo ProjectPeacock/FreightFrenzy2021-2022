@@ -516,7 +516,7 @@ public class FullAutoV2 extends LinearOpMode {
                 sleep(350);
 
                 //drive forward until distance sensor is tripped
-                while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>29) {
+                while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM)>29) {
                     drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                     robot.motorChainsaw.setPower(-robot.CHAIN_POW*0.75);
                 }
@@ -559,7 +559,7 @@ public class FullAutoV2 extends LinearOpMode {
                 drive.driveTurn(0,turnError);
                 sleep(350);
 
-                while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
+                while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM)>30) {
                     drive.setDrivePower(forwardSpeed, forwardSpeed, forwardSpeed, forwardSpeed);
                     robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
                 }

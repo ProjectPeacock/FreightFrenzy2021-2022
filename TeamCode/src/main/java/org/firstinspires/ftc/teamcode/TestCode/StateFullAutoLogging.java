@@ -49,7 +49,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.AutoParams;
-import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 import org.firstinspires.ftc.teamcode.Libs.DriveClassLogging;
 import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 import org.firstinspires.ftc.teamcode.Threads.TurretControlThread;
@@ -625,13 +624,13 @@ public class StateFullAutoLogging extends LinearOpMode {
                     sleep(350);
 
                     // drive towards the outside wall
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 30) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 30) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
 
                         telemetry.addData("Headed towards ","outside wall");
-                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM));
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
 
@@ -670,7 +669,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                     sleep(350);
 
                     //drive forward until distance sensor is tripped
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 30) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 30) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(-robot.CHAIN_POW * 0.75);
@@ -708,7 +707,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                     // turn towards the carousel
                     drive.driveTurn(0, params.turnError);
 
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>30) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM)>30) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);

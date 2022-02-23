@@ -672,13 +672,13 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(350);
 
                     // drive towards the outside wall using distance sensor
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 32) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 32) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
 
                         telemetry.addData("Headed towards ","outside wall");
-                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM));
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
 
@@ -692,7 +692,7 @@ public class StateFullAuto extends LinearOpMode {
 
                     //drive forward until distance sensor is tripped
                     // drive towards the carousel
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 30) {
+                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 30) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(-robot.CHAIN_POW * 0.75);
@@ -708,7 +708,7 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveTurn(0,params.turnError);
 
                     // drive away from the carousel
-                    drive.driveStraight(params.reverseSpeed, 1);
+                    drive.driveStraight(params.reverseSpeed, 2);
                     /*
                     while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 30) {
                         drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
@@ -740,13 +740,13 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(350);
 
                     // drive towards the outside wall using distance sensor
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) > 32) {
+                    while(robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM) > 32) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
 
                         telemetry.addData("Headed towards ","outside wall");
-                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM));
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
 
@@ -761,9 +761,10 @@ public class StateFullAuto extends LinearOpMode {
 
                     // turn towards the carousel
                     drive.driveTurn(0, params.turnError);
+                    sleep(350);
                     drive.driveTurn(0, params.turnError);
 
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)>32) {
+                    while(robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM)>30) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -773,21 +774,25 @@ public class StateFullAuto extends LinearOpMode {
                     drive.setDrivePower(0.1,0.1,0.1,0.1);
                     sleep(4000);
 
+                    drive.driveTurn(0,params.turnError);
+
                     drive.driveStraight(params.reverseSpeed, 2);
                     // turn towards the storage
-                    drive.driveTurn(0,params.turnError);
 
                     robot.motorChainsaw.setPower(0);
 
                     // drive away from the carousel to make room to rotate
-                    while(robot.frontDistanceSensor.getDistance(DistanceUnit.CM) < 20) {
+                 /*   while(robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM) < 30) {
 //                        drive.setDrivePower(params.reverseSpeed, params.reverseSpeed,
 //                                params.reverseSpeed, params.reverseSpeed);
 
                         telemetry.addData("Headed towards ","outside wall");
-                        telemetry.addData("distance to wall = ", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                        telemetry.addData("distance to wall = ", robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM));
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
+*/
+                    // drive away from the carousel
+                 //   drive.driveStraight(params.reverseSpeed, 1);
 
                     if(!warehousePark) {
                         runState = State.STORAGE_PARK;
@@ -805,7 +810,7 @@ public class StateFullAuto extends LinearOpMode {
                     }
                     drive.driveStraight(params.reverseSpeed, 1);
                     drive.driveTurn((-15 * params.hubFactor), params.turnError);
-                    drive.driveStraight(params.reverseSpeed,10);
+                    drive.driveStraight(params.reverseSpeed,12);
 
                     drive.driveTurn(0, params.turnError);
                     runState = State.HALT;
@@ -949,7 +954,7 @@ public class StateFullAuto extends LinearOpMode {
         Dl.addField(String.valueOf(runState));
         Dl.addField(String.valueOf(action));
         Dl.addField(String.valueOf(drive.getZAngle()));
-        Dl.addField(String.valueOf(robot.frontDistanceSensor.getDistance(DistanceUnit.CM)));
+        Dl.addField(String.valueOf(robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM)));
         Dl.addField(String.valueOf(robot.motorL1.getCurrentPosition()));
         Dl.addField(String.valueOf(robot.motorL2.getCurrentPosition()));
         Dl.addField(String.valueOf(robot.motorR1.getCurrentPosition()));

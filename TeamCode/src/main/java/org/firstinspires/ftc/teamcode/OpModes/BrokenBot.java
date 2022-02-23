@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.HardwareProfile.HardwareProfile;
 import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
-import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 @TeleOp(name = "Broken Bot TS", group = "Troubleshooting")
   //  @Disabled
@@ -80,7 +75,7 @@ import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
             waitForStart();
             //mechController.start();
             while(opModeIsActive()) {
-                telemetry.addData("DistanceUnit (CM)", robot.frontDistanceSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("DistanceUnit (CM)", robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM));
                 telemetry.addData("Arm Angle 1 = ", robot.motorArmAngle1.getCurrentPosition());
                 telemetry.addData("Arm Angle 2 = ", robot.motorArmAngle2.getCurrentPosition());
                 telemetry.addData("Turret Angle:",robot.turrentEncoder.getCurrentPosition());
