@@ -671,8 +671,10 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveTurn((90 * params.hubFactor), turnError);
                     sleep(350);
 
+                    // set elapsedtime to current time
+                    timeElapsed = runtime.time();
                     // drive towards the outside wall using distance sensor
-                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 32) {
+                    while(((robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 32) && opModeIsActive()&&((runtime.time()-timeElapsed)<1.5))) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -690,9 +692,11 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(350);
                     drive.driveTurn(0, params.turnError);       // double check angle towards carousel
 
+                    // set elapsedtime to current time
+                    timeElapsed = runtime.time();
                     //drive forward until distance sensor is tripped
                     // drive towards the carousel
-                    while(robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 30) {
+                    while(((robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 30)&&opModeIsActive()&&((runtime.time()-timeElapsed)<1.25))) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(-robot.CHAIN_POW * 0.75);
@@ -739,8 +743,10 @@ public class StateFullAuto extends LinearOpMode {
                     drive.driveTurn((90 * params.hubFactor), turnError);
                     sleep(350);
 
+                    // set elapsedtime to current time
+                    timeElapsed = runtime.time();
                     // drive towards the outside wall using distance sensor
-                    while(robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM) > 32) {
+                    while(((robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM) > 32)&&opModeIsActive()&&((runtime.time()-timeElapsed)<1.5))) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
@@ -764,7 +770,9 @@ public class StateFullAuto extends LinearOpMode {
                     sleep(350);
                     drive.driveTurn(0, params.turnError);
 
-                    while(robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM)>30) {
+                    // set elapsedtime to current time
+                    timeElapsed = runtime.time();
+                    while(((robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM)>30)&&opModeIsActive()&&((runtime.time()-timeElapsed)<1.25))) {
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                     params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
