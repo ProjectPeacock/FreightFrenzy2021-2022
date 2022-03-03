@@ -487,7 +487,8 @@ public class StateFullAuto extends LinearOpMode {
 
         runtime.reset();
 
-        startTime = runtime.time() + startDelay;
+//        startTime = runtime.time() + startDelay;
+startTime=runtime.time();
 
         while (opModeIsActive() && (running)) {
             robot.motorArmAngle1.setTargetPosition(0);
@@ -841,8 +842,8 @@ public class StateFullAuto extends LinearOpMode {
                     robot.motorChainsaw.setPower(0.2);
 
                     // wait until there is just a few seconds to go park
-                    while(((runtime.time() - startTime) < params.warehouseParkDelay) && opModeIsActive()){
-                        telemetry.addData("Time Left = ", (runtime.time() - startTime));
+                    while(((runtime.time()) < params.warehouseParkDelay) && opModeIsActive()){
+                        telemetry.addData("Time Left = ", (runtime.time()));
                         telemetry.addData("Hubfactor = ", params.hubFactor);
                         telemetry.update();
                         // do nothing

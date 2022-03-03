@@ -75,7 +75,7 @@ public class AutoParams {
     }   // end method redCarousel
 
     private void redWarehouse() {
-        this.warehouseParkDelay = 0;   // Time consumed before parking in the warehouse
+        this.warehouseParkDelay = 13;   // Time consumed before parking in the warehouse
         this.arcTime = 1.3;               // length of time for the arc turn
         this.powerLeft = -0.2;          // power to put on the left side of the robot for arc turn
         this.powerRight = -0.5;         // power to put on the right side of the robot for arc turn
@@ -125,7 +125,7 @@ public class AutoParams {
     }   // end method blueCarousel
 
     private void blueWarehouse() {
-        this.warehouseParkDelay = 0;   // Time consumed before parking in the warehouse
+        this.warehouseParkDelay = 13;   // Time consumed before parking in the warehouse
         this.arcTime = 1.6;               // length of time for the arc turn
         this.powerLeft = -0.55;          // power to put on the left side of the robot for arc turn
         this.powerRight = -0.2;         // power to put on the right side of the robot for arc turn
