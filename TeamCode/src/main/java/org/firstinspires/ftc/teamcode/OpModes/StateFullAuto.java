@@ -675,18 +675,23 @@ startTime=runtime.time();
                     // set elapsedtime to current time
                     timeElapsed = runtime.time();
                     // drive towards the outside wall using distance sensor
-                    while(((robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 32) && opModeIsActive()&&((runtime.time()-timeElapsed)<1.5))) {
+                    while(((robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM) > 32) && opModeIsActive()&&((runtime.time()-timeElapsed)<1.00))) {
+                        if (((runtime.time()-timeElapsed)>1.5)){
+                          break;
+                        }
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
 
                         telemetry.addData("Headed towards ","outside wall");
                         telemetry.addData("distance to wall = ", robot.frontDistanceSensorPink.getDistance(DistanceUnit.CM));
+                    //   telemetry.addData("elapsed time = ", runtime.time()-timeElapsed);
                         telemetry.update();
                     }   // end of while(robot.frontDistanceSensor
 
                     drive.motorsHalt();
-
+                    telemetry.addData("Reached","Wall");
+                    telemetry.update();
                     //go to carousel, red
                     //turn to face carousel
                     drive.driveTurn(0, params.turnError);
@@ -747,7 +752,10 @@ startTime=runtime.time();
                     // set elapsedtime to current time
                     timeElapsed = runtime.time();
                     // drive towards the outside wall using distance sensor
-                    while(((robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM) > 32)&&opModeIsActive()&&((runtime.time()-timeElapsed)<1.5))) {
+                    while(((robot.frontDistanceSensorBlue.getDistance(DistanceUnit.CM) > 32)&&opModeIsActive()&&((runtime.time()-timeElapsed)<1.0))) {
+                        if (((runtime.time()-timeElapsed)>1.5)){
+                            break;
+                        }
                         drive.setDrivePower(params.forwardSpeed, params.forwardSpeed,
                                 params.forwardSpeed, params.forwardSpeed);
                         robot.motorChainsaw.setPower(robot.CHAIN_POW*0.75);
