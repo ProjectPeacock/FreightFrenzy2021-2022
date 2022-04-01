@@ -45,6 +45,27 @@ public class ArmControlCLass {
 
 //deploy intake method
     public void intakeOn(){
+        angle1=localRobot.ARM_1_INTAKE;
+        localRobot.motorArmAngle1.setTargetPosition(angle1);
+        while(localRobot.motorArmAngle1.getCurrentPosition()<900){
+
+        }
+        angle2=localRobot.ARM_2_INTAKE;
+        localRobot.motorArmAngle2.setTargetPosition(angle2);
+    }
+
+    public void intakeOff(){
+        angle1=0;
+        localRobot.motorArmAngle1.setTargetPosition(angle1);
+        while(localRobot.motorArmAngle1.getCurrentPosition()>300){
+
+        }
+        angle2=localRobot.ARM_2_RESTING_INTAKE;
+        localRobot.motorArmAngle2.setTargetPosition(angle2);
+    }
+
+
+    public void zintakeOn(){
 /*
         localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
         localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
@@ -69,17 +90,17 @@ public class ArmControlCLass {
         if(localRobot.motorArmAngle1.getCurrentPosition()<0) {
             angle1 = 0;
         }
-        if(localRobot.motorArmAngle2.getCurrentPosition()>1000){
-            angle2=75;
-        }
-        if(localRobot.motorArmAngle2.getCurrentPosition()>=65&&localRobot.motorArmAngle2.getCurrentPosition()<100){
+        angle1=localRobot.ARM_1_INTAKE;
+
+        if(localRobot.motorArmAngle2.getCurrentPosition()>=65&&localRobot.motorArmAngle2.getCurrentPosition()<200){
             angle1=localRobot.ARM_1_INTAKE;
-            if(localRobot.motorArmAngle1.getCurrentPosition()>300){
-                angle2=localRobot.ARM_2_INTAKE;
+            localRobot.motorArmAngle1.setTargetPosition(angle1);
+            while(localRobot.motorArmAngle1.getCurrentPosition()<300){
+
             }
+            angle2=localRobot.ARM_2_INTAKE;
+            localRobot.motorArmAngle2.setTargetPosition(angle2);
         }
-        localRobot.motorArmAngle1.setTargetPosition(angle1);
-        localRobot.motorArmAngle2.setTargetPosition(angle2);
     }       // end of intakeOn()
 
     public void beaterForward(){
@@ -92,7 +113,7 @@ public class ArmControlCLass {
 //end of deploy intake method
 
 //retract intake method
-    public void intakeOff(){
+    public void zintakeOff(){
         angle1=0;
         localRobot.motorArmAngle1.setPower(arm1Power);
         localRobot.motorArmAngle1.setTargetPosition(angle1);
