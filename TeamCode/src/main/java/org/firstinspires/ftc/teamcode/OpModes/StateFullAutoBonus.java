@@ -88,7 +88,7 @@ public class StateFullAutoBonus extends LinearOpMode {
     private State setupState = State.ALLIANCE_SELECT;     // default setupState configuration
     private State runState = State.SET_DISTANCES;
     private DriveClass drive = new DriveClass(robot, opMode);
-    boolean debugMode = true;
+    boolean debugMode = false;
     private MechControlLibrary mechControl=new MechControlLibrary(robot,0);
 
     /* Declare DataLogger variables */
