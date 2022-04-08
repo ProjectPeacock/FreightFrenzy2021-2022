@@ -26,7 +26,7 @@ public class AutoParams {
     public double powerRight = 0;
     public double powerLeft = 0;
     public double arcTime =0;
-
+    public double bonusDistance = 0;
     public AutoParams(){
 
     }
@@ -92,10 +92,11 @@ public class AutoParams {
         this.bucketAngle2 = -0.55;        // angle of the bucket if placing in level 1
         this.bucketAngle3 = -1.0;        // angle of the bucket if placing in level 1
         this.parkDistance = 35;         // distance to travel to get in storage parking location
-        this.extraDistance = 0;         // extra distance to back up from the hub after X_SCORE
+        this.extraDistance = 4;         // extra distance to back up from the hub after X_SCORE
         this.warehouseParkDistance = 30;   // distance to travel to get in warehouse parking location
         this.turnError = 2;             // error to use when turning
         this.hubFactor = 1;             // sets direction to rotate depending on where the hub is
+        this.bonusDistance = 20;
     }   // end method redWarehouse
 
     private void blueCarousel(){

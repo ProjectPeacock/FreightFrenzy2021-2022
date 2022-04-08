@@ -896,7 +896,8 @@ startTime=runtime.time();
                     drive.driveTurn(-90, turnError);
 
                     //drive forward over the barrier into the warehouse
-                    drive.driveTime(1, 0.65);
+                   // drive.driveTime(1, 0.65);
+                    drive.driveStraight(1, params.bonusDistance);
 
                     //turn towards scoring elements
                     drive.driveTurn(-45, turnError);
@@ -925,7 +926,8 @@ startTime=runtime.time();
                     drive.driveTime(-0.4, 0.5);
 
                     // drive over barrier
-                    drive.driveTime(-1, 0.65);
+//                    drive.driveTime(-1, 0.65);
+                    drive.driveStraight(-1, params.bonusDistance);
 
                     // turn towards hub
                     drive.driveTurn(-45, turnError);

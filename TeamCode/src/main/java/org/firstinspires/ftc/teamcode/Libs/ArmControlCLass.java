@@ -45,6 +45,8 @@ public class ArmControlCLass {
 
 //deploy intake method
     public void intakeOn(){
+        localRobot.motorArmAngle1.setPower(1);
+        localRobot.motorArmAngle2.setPower(1);
         localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO - localRobot.INTAKE_DEPLOY_BLUE);
         localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO + localRobot.INTAKE_DEPLOY_PINK);
         localRobot.intakeTilt.setPosition(localRobot.INTAKE_TILT_INPUT);
@@ -59,6 +61,8 @@ public class ArmControlCLass {
 
     public void intakeOff(){
         angle1=0;
+        localRobot.motorArmAngle1.setPower(1);
+        localRobot.motorArmAngle2.setPower(1);
         localRobot.motorArmAngle1.setTargetPosition(angle1);
         while(localRobot.motorArmAngle1.getCurrentPosition()>300){
 
@@ -66,10 +70,11 @@ public class ArmControlCLass {
         angle2=localRobot.ARM_2_RESTING_INTAKE;
         localRobot.motorArmAngle2.setTargetPosition(angle2);
         while(localRobot.motorArmAngle1.getCurrentPosition()<750){
-            localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
-            localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
-            localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
+
         }
+        localRobot.intakeDeployBlue.setPosition(localRobot.BLUE_ZERO);
+        localRobot.intakeDeployPink.setPosition(localRobot.PINK_ZERO);
+        localRobot.intakeTilt.setPosition(localRobot.INTAKE_STARTING_POS);
     }
 
 
