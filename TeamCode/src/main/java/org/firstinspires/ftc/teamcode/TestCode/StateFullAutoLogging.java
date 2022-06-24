@@ -122,7 +122,8 @@ public class StateFullAutoLogging extends LinearOpMode {
         boolean bonusElements = false;
 
         //carousel if false, warehouse if true
-        boolean warehouseSide = false;
+//        boolean warehouseSide = false;
+        String fieldPosition = "warehouseSide";
 
         // warehouse park
         boolean warehousePark = true;
@@ -258,9 +259,9 @@ public class StateFullAutoLogging extends LinearOpMode {
                     telemetry.update();
 
                     if(gamepad1.dpad_left || gamepad1.dpad_right){
-                        warehouseSide = !gamepad1.dpad_left;
+//                        warehouseSide = !gamepad1.dpad_left;
 
-                        if(!warehouseSide) {
+                        if(fieldPosition != "warehouseSide") {
                             telemetry.addData("Side of the field == ", "CAROUSEL Side");
                             setupState = State.SELECT_PARK;
                         } else {
@@ -323,13 +324,13 @@ public class StateFullAutoLogging extends LinearOpMode {
                         sleep(2000);
                         setupState = State.VERIFY_CONFIG;
                         //red carousel
-                        if (!blueAlliance && !warehouseSide) {
+                        if (!blueAlliance && (fieldPosition != "warehouseSide")) {
                             hubFactor = 1;
                             //blue carousel
-                        } else if (blueAlliance && !warehouseSide) {
+                        } else if (blueAlliance && (fieldPosition != "warehouseSide")) {
                             hubFactor = -1;
                             //red warehouse
-                        } else if (!blueAlliance && warehouseSide) {
+                        } else if (!blueAlliance && (fieldPosition == "warehouseSide")) {
                             hubFactor = -1;
                             //blue warehouse
                         } else {
@@ -357,7 +358,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                         telemetry.addData("Alliance          == ", "RED");
                     }   // end of if(alliance)
                     telemetry.addData("Start Delay == ", startDelay);
-                    if(!warehouseSide){
+                    if(fieldPosition != "warehouseSide"){
                         telemetry.addData("Side of the field ==  ", "WAREHOUSE");
                     } else {
                         telemetry.addData("Side of the field ==  ", "CAROUSEL");
@@ -392,7 +393,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                 case TEST_CONFIG:
                     blueAlliance = false;        // true for blue, false for red
                     startDelay = 0;          // put start delay in ms
-                    warehouseSide = false;       // true for warehouse, false for carousel
+                    fieldPosition = "warehouseSide";       // true for warehouse, false for carousel
                     warehousePark = false;   // true for warehouse, false for storage
                     hubFactor = 1;   // red carousel
 
@@ -402,7 +403,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                         telemetry.addData("Alliance          == ", "RED");
                     }   // end of if(alliance)
                     telemetry.addData("Start Delay == ", startDelay);
-                    if(warehouseSide){
+                    if(fieldPosition == "warehouseSide"){
                         telemetry.addData("Side of the field ==  ", "WAREHOUSE");
                     } else {
                         telemetry.addData("Side of the field ==  ", "CAROUSEL");
@@ -497,7 +498,7 @@ public class StateFullAutoLogging extends LinearOpMode {
             switch(runState){
                 case SET_DISTANCES:
                     // Setup parameters per settings
-                    params.initParams(blueAlliance, warehouseSide);
+                    params.initParams(blueAlliance, fieldPosition);
 
                     runState = State.LEVEL_ADJUST;
                     break;
@@ -530,7 +531,7 @@ public class StateFullAutoLogging extends LinearOpMode {
                     runState = State.MOVE_TSE_STRAIGHT; // default to STRAIGHT
 
                     // If the TSE is straight in front of the robot, go straight, otherwise, arc
-                    if(!warehouseSide) {
+                    if(fieldPosition != "warehouseSide") {
                         if (!blueAlliance && scoreLevel == 1){  // red alliance, level 1
                             runState = State.MOVE_TSE_ARC; // default to STRAIGHT
                         }
@@ -638,15 +639,15 @@ public class StateFullAutoLogging extends LinearOpMode {
 
                     // reset the sweeper bar
                     drive.resetTSEBar();
-                    if(blueAlliance && !warehouseSide){        // blue_Carousel
+                    if(blueAlliance && (fieldPosition != "warehouseSide")){        // blue_Carousel
                         runState = State.BLUE_CAROUSEL;
-                    } else if(blueAlliance && warehouseSide){  // blue warehouse
+                    } else if(blueAlliance && (fieldPosition == "warehouseSide")){  // blue warehouse
                         if(bonusElements) {
                             runState = State.BLUE_WAREHOUSE_BONUS;
                         } else {
                             runState = State.WAREHOUSE_PARK;
                         }
-                    } else if(!blueAlliance && !warehouseSide){  // red carousel
+                    } else if(!blueAlliance && (fieldPosition != "warehouseSide")){  // red carousel
                         runState = State.RED_CAROUSEL;
                     } else {
                         if(bonusElements) {             // red_warehouse

@@ -50,13 +50,12 @@ import org.firstinspires.ftc.teamcode.Libs.ArmControlCLass;
 import org.firstinspires.ftc.teamcode.Libs.AutoParams;
 import org.firstinspires.ftc.teamcode.Libs.DataLogger;
 import org.firstinspires.ftc.teamcode.Libs.DriveClass;
-import org.firstinspires.ftc.teamcode.Threads.MechControlLibrary;
 
 import java.util.List;
 
-@Autonomous(name="State Auto Bonus", group="Competition")
+@Autonomous(name="CRI Auto - Blue", group="Competition")
 //@Disabled
-public class StateFullAutoBonus extends LinearOpMode {
+public class CRIAutoBlue extends LinearOpMode {
 
     public static final String TFOD_MODEL_ASSET = "PP_FF_TSEv3-Green.tflite";
     public static final String[] LABELS = {
@@ -89,7 +88,6 @@ public class StateFullAutoBonus extends LinearOpMode {
     private State runState = State.SET_DISTANCES;
     private DriveClass drive = new DriveClass(robot, opMode);
     boolean debugMode = false;
-    private MechControlLibrary mechControl=new MechControlLibrary(robot,0);
 
     /* Declare DataLogger variables */
     private String action = "";
@@ -127,11 +125,10 @@ public class StateFullAutoBonus extends LinearOpMode {
         boolean bonusElements = false;
 
         //carousel if false, warehouse if true
-        boolean warehouseSide = false;
+        String fieldPosition = "warehouseSide";
 
         // warehouse park
         boolean warehousePark = true;
-        String fieldPosition = "warehouseSide";
 
         if(debugMode){
             setupState = State.TEST_CONFIG;           // manually created config for testing only
@@ -189,6 +186,7 @@ public class StateFullAutoBonus extends LinearOpMode {
 
         // Allow drivers to setup for the game.
 
+        autoReady = true;
         while (!autoReady){
 
             switch (setupState) {
@@ -267,14 +265,14 @@ public class StateFullAutoBonus extends LinearOpMode {
                     telemetry.update();
 
                     if(gamepad1.dpad_left || gamepad1.dpad_right){
-                        warehouseSide = !gamepad1.dpad_left;
+//                        warehouseSide = !gamepad1.dpad_left;
 
-                        if(!warehouseSide) {
+                        if(fieldPosition != "warehouseSide") {
                             telemetry.addData("Side of the field == ", "CAROUSEL Side");
-                            setupState = State.SELECT_BONUS;
+                            setupState = State.SELECT_PARK;
                         } else {
                             telemetry.addData("Side of the field == ", "WAREHOUSE Side");
-                            setupState = State.SELECT_BONUS;
+                            setupState = State.SELECT_PARK;
                         }
                         telemetry.update();
                         sleep(2000);
@@ -314,7 +312,7 @@ public class StateFullAutoBonus extends LinearOpMode {
                     break;
 
                 case SELECT_PARK:
-                    if(!warehouseSide) {
+                    if(fieldPosition != "warehouseSide") {
                         telemetry.addData("Where to park?", "");
                         telemetry.addData("Press DPAD Up  == ", " Park in Warehouse");
                         telemetry.addData("Press DPAD Down == ", " Park in Storage");
@@ -354,7 +352,7 @@ public class StateFullAutoBonus extends LinearOpMode {
                         telemetry.addData("Alliance          == ", "RED");
                     }   // end of if(alliance)
                     telemetry.addData("Start Delay == ", startDelay);
-                    if(warehouseSide){
+                    if((fieldPosition == "warehouseSide")){
                         telemetry.addData("Side of the field ==  ", "WAREHOUSE");
                     } else {
                         telemetry.addData("Side of the field ==  ", "CAROUSEL");
@@ -386,11 +384,10 @@ public class StateFullAutoBonus extends LinearOpMode {
                     break;
 
                 case TEST_CONFIG:
-                    blueAlliance = false;        // true for blue, false for red
+                    blueAlliance = true;        // true for blue, false for red
                     startDelay = 0;          // put start delay in ms
-                    warehouseSide = true;       // true for warehouse, false for carousel
+                    fieldPosition = "warehouseSide";       // true for warehouse, false for carousel
                     warehousePark = false;   // true for warehouse, false for storage
-                    bonusElements = true;
 
                     if(blueAlliance){
                         telemetry.addData("Alliance          == ", "BLUE");
@@ -398,7 +395,7 @@ public class StateFullAutoBonus extends LinearOpMode {
                         telemetry.addData("Alliance          == ", "RED");
                     }   // end of if(alliance)
                     telemetry.addData("Start Delay == ", startDelay);
-                    if(warehouseSide){
+                    if((fieldPosition == "warehouseSide")){
                         telemetry.addData("Side of the field ==  ", "WAREHOUSE");
                     } else {
                         telemetry.addData("Side of the field ==  ", "CAROUSEL");
@@ -540,7 +537,7 @@ startTime=runtime.time();
                     runState = State.MOVE_TSE_STRAIGHT; // default to STRAIGHT
 
                     // If the TSE is straight in front of the robot, go straight, otherwise, arc
-                    if(!warehouseSide) {
+                    if(fieldPosition != "warehouseSide") {
                         if (!blueAlliance && scoreLevel == 1){  // red alliance, level 1
                             runState = State.MOVE_TSE_ARC; // default to STRAIGHT
                         }
@@ -612,6 +609,15 @@ startTime=runtime.time();
                     //turn towards the hub
                     drive.driveTurn(params.turnAngle, params.turnError);
 
+                    // drive over barrier
+                    drive.driveStraight(1, 20);
+
+                    // straighten the bot
+                    drive.driveTurn(params.turnAngle, params.turnError);
+
+                    // realign position by reversing into the bar
+                    drive.driveTime(-0.2, params.driveByTime);
+
                     //move arm to scoring positions
                     if(scoreLevel ==1){             //bottom
                         armControl.scoringPos3();
@@ -646,15 +652,15 @@ startTime=runtime.time();
 
                     // reset the sweeper bar
                     drive.resetTSEBar();
-                    if(blueAlliance && !warehouseSide){        // blue_Carousel
+                    if(blueAlliance && (fieldPosition != "warehouseSide")){        // blue_Carousel
                         runState = State.BLUE_CAROUSEL;
-                    } else if(blueAlliance && warehouseSide){  // blue warehouse
+                    } else if(blueAlliance && (fieldPosition == "warehouseSide")){  // blue warehouse
                         if(bonusElements) {
                             runState = State.BLUE_WAREHOUSE_BONUS;
                         } else {
                             runState = State.WAREHOUSE_PARK;
                         }
-                    } else if(!blueAlliance && !warehouseSide){  // red carousel
+                    } else if(!blueAlliance && (fieldPosition != "warehouseSide")){  // red carousel
                         runState = State.RED_CAROUSEL;
                     } else {
                         if(bonusElements) {             // red_warehouse
@@ -820,144 +826,6 @@ startTime=runtime.time();
                         runState = State.WAREHOUSE_PARK;
                     }
 
-                    break;
-                case BLUE_WAREHOUSE_BONUS:
-                    if(debugMode) {
-                        telemetry.addData("Working on Blue Warehouse = ", "Now");
-                        telemetry.update();
-//                        sleep(5000);
-                    }
-                    // turn towards the warehouse
-                    drive.driveTurn(90, turnError);
-
-                    //drive forward over the barrier into the warehouse
-                    drive.driveTime(1, 0.65);
-
-                    //turn towards scoring elements
-                    drive.driveTurn(45, turnError);
-
-                    // turn on intake
-                    armControl.intakeOn();
-                    sleep(350);
-                    robot.motorIntake.setPower(1);
-
-                    // drive towards the elements to collect an element
-                    drive.driveTime(0.3, 1);
-                    robot.motorIntake.setPower(-1); // reverse motor to kick out any excess elements
-                    drive.driveTime(-0.3, 1);
-                    robot.motorIntake.setPower(0);
-
-                    // put the intake away
-                    armControl.intakeOff();
-
-                    // turn towards barrier
-                    drive.driveTurn(90, turnError);
-
-                    // drive towards barrier
-                    drive.driveTime(-0.4, 0.5);
-
-                    // drive over barrier
-                    drive.driveTime(-1, 0.65);
-
-                    // turn towards hub
-                    drive.driveTurn(45, turnError);
-
-                    // set the arm in scoring position - Level 1
-                    armControl.scoringPos1();
-
-                    // drive towards hub
-                    drive.driveStraight(0.3, 10);
-
-                    //dump bucket
-                    robot.bucketDump.setPosition(bucketAngle);
-                    sleep(500);
-
-                    //reset arms
-                    robot.bucketDump.setPosition(0.5);
-                    armControl.moveToZero();
-
-                    // drive back to the barrier
-                    drive.driveStraight(0.3, -10);
-
-                    // turn towards barrier
-                    drive.driveTurn(90, turnError);
-
-                    if(runtime.time() > 25) {
-                        runState = State.WAREHOUSE_PARK;
-                     //   warehouseParkDistance = 20;
-                    }
-                    break;
-
-                case RED_WAREHOUSE_BONUS:
-                    if(debugMode) {
-                        telemetry.addData("Working on Red_Bonus = ", "Now");
-                        telemetry.update();
-//                        sleep(5000);
-                    }
-                    // turn towards the warehouse
-                    drive.driveTurn(-90, turnError);
-
-                    //drive forward over the barrier into the warehouse
-                   // drive.driveTime(1, 0.65);
-                    drive.driveStraight(1, params.bonusDistance);
-
-                    //turn towards scoring elements
-                    drive.driveTurn(-45, turnError);
-
-                    // turn on intake
-                    //mechControl.intakeOn(false);
-                    //mechControl.beaterOn(true,950);
-                    armControl.intakeOn();
-                    sleep(350);
-                    robot.motorIntake.setPower(1);
-
-                    // drive towards the elements to collect an element
-                    drive.driveTime(0.3, 1);
-                    robot.motorIntake.setPower(-1); // reverse motor to kick out any excess elements
-                    drive.driveTime(-0.3, 1);
-                    robot.motorIntake.setPower(0);
-
-                    // put the intake away
-                    //mechControl.intakeOff(true,false);
-                    armControl.intakeOff();
-
-                    // turn towards barrier
-                    drive.driveTurn(-90, turnError);
-
-                    // drive towards barrier
-                    drive.driveTime(-0.4, 0.5);
-
-                    // drive over barrier
-//                    drive.driveTime(-1, 0.65);
-                    drive.driveStraight(-1, params.bonusDistance);
-
-                    // turn towards hub
-                    drive.driveTurn(-45, turnError);
-
-                    // set the arm in scoring position - Level 1
-                    armControl.scoringPos1();
-
-                    // drive towards hub
-                    drive.driveStraight(-0.3, 10);
-
-                    //dump bucket
-                    robot.bucketDump.setPosition(bucketAngle);
-                    sleep(500);
-
-                    //reset arms
-                    robot.bucketDump.setPosition(0.5);
-                    armControl.moveToZero();
-
-                    // drive back to the barrier
-                    drive.driveStraight(0.3, -10);
-
-                    // turn towards barrier
-                    drive.driveTurn(-90, turnError);
-
-                    if(runtime.time() > 25) {
-                        runState = State.WAREHOUSE_PARK;
-                     //   warehouseParkDistance = 20;
-                    }
                     break;
 
                 case STORAGE_PARK:

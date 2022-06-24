@@ -129,6 +129,7 @@ public class CRIAuto extends LinearOpMode {
 
         // warehouse park
         boolean warehousePark = true;
+        String fieldPosition = "warehouseSide";
 
         if(debugMode){
             setupState = State.TEST_CONFIG;           // manually created config for testing only
@@ -499,7 +500,7 @@ startTime=runtime.time();
                     break;
                 case SET_DISTANCES:
                     // Setup parameters per settings
-                    params.initParams(blueAlliance, warehouseSide);
+                    params.initParams(blueAlliance, fieldPosition);
 
                     if (debugMode) {
                         logData();      // Write data to the data logger

@@ -128,6 +128,7 @@ public class StateFullAuto extends LinearOpMode {
 
         //carousel if false, warehouse if true
         boolean warehouseSide = false;
+        String fieldPosition = "warehouseSide";
 
         // warehouse park
         boolean warehousePark = true;
@@ -500,7 +501,7 @@ startTime=runtime.time();
                     break;
                 case SET_DISTANCES:
                     // Setup parameters per settings
-                    params.initParams(blueAlliance, warehouseSide);
+                    params.initParams(blueAlliance, fieldPosition);
 
                     if (debugMode) {
                         logData();      // Write data to the data logger
